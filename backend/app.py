@@ -2364,6 +2364,350 @@ def database_tables():
             connection.close()
 
 
+
+# ============================================================
+# CUSTOMER - PLACE ORDER
+# ============================================================
+
+@app.route("/api/customer/place-order", methods=["POST"])
+def customer_place_order():
+
+    data = get_json_data()
+
+    customer_name = data.get("customer_name")
+    phone = data.get("phone")
+    table_number = data.get("table_number")
+    items = data.get("items", [])
+
+    # --------------------------------------------------------
+    # VALIDATION
+    # --------------------------------------------------------
+
+    if not customer_name:
+        return jsonify({
+            "success": False,
+            "message": "Customer name is required."
+        }), 400
+
+    if not phone:
+        return jsonify({
+            "success": False,
+            "message": "Phone number is required."
+        }), 400
+
+    if table_number is None or str(table_number).strip() == "":
+        return jsonify({
+            "success": False,
+            "message": "Table number is required."
+        }), 400
+
+    if not items or not isinstance(items, list):
+        return jsonify({
+            "success": False,
+            "message": "Cart is empty."
+        }), 400
+
+    connection = None
+
+    try:
+
+        connection = get_connection()
+        cursor = connection.cursor()
+
+        # ----------------------------------------------------
+        # FIND OR CREATE CUSTOMER
+        # ----------------------------------------------------
+
+        cursor.execute(
+            """
+            SELECT CustomerID
+            FROM Customers
+            WHERE Phone = ?
+            """,
+            phone
+        )
+
+        customer_row = cursor.fetchone()
+
+        if customer_row:
+
+            customer_id = customer_row[0]
+
+            # Update customer name if required
+            cursor.execute(
+                """
+                UPDATE Customers
+                SET CustomerName = ?
+                WHERE CustomerID = ?
+                """,
+                (
+                    customer_name,
+                    customer_id
+                )
+            )
+
+        else:
+
+            cursor.execute(
+                """
+                INSERT INTO Customers
+                (
+                    CustomerName,
+                    Phone
+                )
+                OUTPUT INSERTED.CustomerID
+                VALUES
+                (
+                    ?,
+                    ?
+                )
+                """,
+                (
+                    customer_name,
+                    phone
+                )
+            )
+
+            customer_id = cursor.fetchone()[0]
+
+        # ----------------------------------------------------
+        # VALIDATE CART AND CALCULATE TOTAL
+        # ----------------------------------------------------
+
+        order_items = []
+        total_amount = 0
+
+        for item in items:
+
+            dish_id = item.get("dish_id")
+            quantity = item.get("quantity")
+
+            if dish_id is None:
+                raise ValueError(
+                    "Invalid dish in cart."
+                )
+
+            try:
+                dish_id = int(dish_id)
+                quantity = int(quantity)
+            except (TypeError, ValueError):
+                raise ValueError(
+                    "Invalid dish ID or quantity."
+                )
+
+            if quantity <= 0:
+                raise ValueError(
+                    "Quantity must be greater than zero."
+                )
+
+            cursor.execute(
+                """
+                SELECT
+                    DishID,
+                    DishName,
+                    Price,
+                    AvailableQuantity,
+                    IsAvailable
+                FROM Dishes
+                WHERE DishID = ?
+                """,
+                dish_id
+            )
+
+            dish = cursor.fetchone()
+
+            if not dish:
+                raise ValueError(
+                    f"Dish ID {dish_id} not found."
+                )
+
+            db_dish_id = dish[0]
+            dish_name = dish[1]
+            price = float(dish[2])
+            available_quantity = int(dish[3])
+            is_available = dish[4]
+
+            if not is_available:
+                raise ValueError(
+                    f"{dish_name} is currently unavailable."
+                )
+
+            if quantity > available_quantity:
+                raise ValueError(
+                    f"Only {available_quantity} "
+                    f"quantity available for {dish_name}."
+                )
+
+            subtotal = price * quantity
+
+            total_amount += subtotal
+
+            order_items.append({
+                "dish_id": db_dish_id,
+                "dish_name": dish_name,
+                "quantity": quantity,
+                "unit_price": price,
+                "subtotal": subtotal
+            })
+
+        # ----------------------------------------------------
+        # CREATE ORDER
+        # ----------------------------------------------------
+
+        cursor.execute(
+            """
+            INSERT INTO Orders
+            (
+                CustomerID,
+                TableNumber,
+                TotalAmount,
+                Status
+            )
+            OUTPUT INSERTED.OrderID
+            VALUES
+            (
+                ?,
+                ?,
+                ?,
+                'PENDING'
+            )
+            """,
+            (
+                customer_id,
+                table_number,
+                total_amount
+            )
+        )
+
+        order_id = cursor.fetchone()[0]
+
+        # ----------------------------------------------------
+        # CREATE ORDER DETAILS
+        # ----------------------------------------------------
+
+        for item in order_items:
+
+            cursor.execute(
+    """
+    INSERT INTO OrderDetails
+    (
+        OrderID,
+        DishID,
+        Quantity,
+        UnitPrice
+    )
+    VALUES
+    (
+        ?,
+        ?,
+        ?,
+        ?
+    )
+    """,
+    (
+        order_id,
+        item["dish_id"],
+        item["quantity"],
+        item["unit_price"]
+    )
+)
+            # Reduce available quantity
+            cursor.execute(
+                """
+                UPDATE Dishes
+                SET
+                    AvailableQuantity =
+                        AvailableQuantity - ?,
+                    IsAvailable =
+                        CASE
+                            WHEN AvailableQuantity - ? <= 0
+                            THEN 0
+                            ELSE IsAvailable
+                        END,
+                    UpdatedAt = SYSDATETIME()
+                WHERE DishID = ?
+                """,
+                (
+                    item["quantity"],
+                    item["quantity"],
+                    item["dish_id"]
+                )
+            )
+
+        # ----------------------------------------------------
+        # ORDER STATUS HISTORY
+        # ----------------------------------------------------
+
+        cursor.execute(
+            """
+            INSERT INTO OrderStatusHistory
+            (
+                OrderID,
+                OldStatus,
+                NewStatus,
+                ChangedBy
+            )
+            VALUES
+            (
+                ?,
+                NULL,
+                'PENDING',
+                NULL
+            )
+            """,
+            order_id
+        )
+
+        connection.commit()
+
+        # ----------------------------------------------------
+        # RESPONSE
+        # ----------------------------------------------------
+
+        return jsonify({
+            "success": True,
+            "message": "Order placed successfully.",
+            "order": {
+                "order_id": order_id,
+                "customer_id": customer_id,
+                "customer_name": customer_name,
+                "phone": phone,
+                "table_number": table_number,
+                "total_amount": total_amount,
+                "status": "PENDING",
+                "items": order_items
+            }
+        }), 201
+
+    except ValueError as error:
+
+        if connection:
+            connection.rollback()
+
+        return jsonify({
+            "success": False,
+            "message": str(error)
+        }), 400
+
+    except Exception as error:
+
+        if connection:
+            connection.rollback()
+
+        print("========================================")
+        print("PLACE ORDER ERROR:", repr(error))
+        print("========================================")    
+        return jsonify({
+        "success": False,
+        "message": "Unable to place order.",
+        "error": str(error)
+    }), 500
+
+    finally:
+
+        if connection:
+            connection.close()
+
 # ============================================================
 # ERROR HANDLERS
 # ============================================================
