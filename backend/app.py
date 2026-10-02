@@ -2708,7 +2708,553 @@ def customer_place_order():
         if connection:
             connection.close()
 
+
 # ============================================================
+# WAITER LOGIN - PHONE + PASSWORD
+# ============================================================
+# ============================================================
+# WAITER REGISTRATION
+# Waiter registers -> Manager approval required
+# ============================================================
+
+@app.route(
+    "/api/waiter/register",
+    methods=["POST"]
+)
+def waiter_register():
+
+    data = get_json_data()
+
+    full_name = data.get("full_name")
+    phone = data.get("phone")
+    email = data.get("email")
+    password = data.get("password")
+
+    # --------------------------------------------------------
+    # VALIDATION
+    # --------------------------------------------------------
+
+    if not full_name:
+        return jsonify({
+            "success": False,
+            "message": "Full name is required."
+        }), 400
+
+    if not phone:
+        return jsonify({
+            "success": False,
+            "message": "Phone number is required."
+        }), 400
+
+    if not email:
+        return jsonify({
+            "success": False,
+            "message": "Email is required."
+        }), 400
+
+    if not password:
+        return jsonify({
+            "success": False,
+            "message": "Password is required."
+        }), 400
+
+    connection = None
+
+    try:
+
+        connection = get_connection()
+        cursor = connection.cursor()
+
+        # ----------------------------------------------------
+        # CHECK PHONE
+        # ----------------------------------------------------
+
+        cursor.execute(
+            """
+            SELECT UserID
+            FROM Users
+            WHERE Phone = ?
+            """,
+            phone
+        )
+
+        if cursor.fetchone():
+
+            return jsonify({
+                "success": False,
+                "message": "Phone number already registered."
+            }), 409
+
+        # ----------------------------------------------------
+        # CHECK EMAIL
+        # ----------------------------------------------------
+
+        cursor.execute(
+            """
+            SELECT UserID
+            FROM Users
+            WHERE Email = ?
+            """,
+            email
+        )
+
+        if cursor.fetchone():
+
+            return jsonify({
+                "success": False,
+                "message": "Email already registered."
+            }), 409
+
+        # ----------------------------------------------------
+        # HASH PASSWORD
+        # ----------------------------------------------------
+
+        password_hash = generate_password_hash(
+            password
+        )
+
+        # ----------------------------------------------------
+        # CREATE WAITER
+        #
+        # IsActive = 0
+        # means Manager must approve first.
+        # ----------------------------------------------------
+
+        cursor.execute(
+            """
+            INSERT INTO Users
+            (
+                FullName,
+                Phone,
+                Email,
+                PasswordHash,
+                Role,
+                IsActive
+            )
+            OUTPUT INSERTED.UserID
+            VALUES
+            (
+                ?,
+                ?,
+                ?,
+                ?,
+                'WAITER',
+                0
+            )
+            """,
+            (
+                full_name,
+                phone,
+                email,
+                password_hash
+            )
+        )
+
+        waiter_id = cursor.fetchone()[0]
+
+        connection.commit()
+
+        return jsonify({
+            "success": True,
+            "message": "Registration successful. Waiting for Manager approval.",
+            "user": {
+                "UserID": waiter_id,
+                "FullName": full_name,
+                "Phone": phone,
+                "Email": email,
+                "Role": "WAITER",
+                "IsActive": False
+            }
+        }), 201
+
+    except Exception as error:
+
+        if connection:
+            connection.rollback()
+
+        return jsonify({
+            "success": False,
+            "message": "Waiter registration failed.",
+            "error": str(error)
+        }), 500
+
+    finally:
+
+        if connection:
+            connection.close()
+
+
+# ============================================================
+# WAITER LOGIN
+# Login using PHONE + PASSWORD
+# Manager approval required
+# ============================================================
+@app.route(
+    "/api/waiter/login",
+    methods=["POST"]
+)
+def waiter_login():
+
+    data = get_json_data()
+
+    phone = str(data.get("phone", "")).strip()
+    password = str(data.get("password", ""))
+
+    if not phone or not password:
+
+        return jsonify({
+            "success": False,
+            "message": "Phone number and password are required."
+        }), 400
+
+    connection = None
+
+    try:
+
+        connection = get_connection()
+        cursor = connection.cursor()
+
+        cursor.execute(
+            """
+            SELECT
+                UserID,
+                FullName,
+                Phone,
+                Email,
+                PasswordHash,
+                Role,
+                IsActive,
+                CreatedAt
+            FROM Users
+            WHERE LTRIM(RTRIM(CAST(Phone AS VARCHAR(50)))) = ?
+              AND UPPER(LTRIM(RTRIM(Role))) = 'WAITER'
+            """,
+            phone
+        )
+
+        row = cursor.fetchone()
+
+        if not row:
+
+            return jsonify({
+                "success": False,
+                "message": "Waiter account not found."
+            }), 401
+
+        waiter = row_to_dict(
+            cursor,
+            row
+        )
+
+        # =====================================================
+        # APPROVAL CHECK
+        # =====================================================
+
+        is_active = waiter.get("IsActive")
+
+        if is_active in (False, 0, None):
+
+            return jsonify({
+                "success": False,
+                "message": "Your account is waiting for Manager approval."
+            }), 403
+
+        # =====================================================
+        # PASSWORD CHECK
+        # =====================================================
+
+        stored_password = waiter.get("PasswordHash")
+
+        password_valid = False
+
+        try:
+
+            password_valid = check_password_hash(
+                stored_password,
+                password
+            )
+
+        except Exception:
+
+            password_valid = False
+
+        # Compatibility with plain-text passwords
+        if not password_valid:
+
+            password_valid = (
+                str(stored_password) == password
+            )
+
+        if not password_valid:
+
+            return jsonify({
+                "success": False,
+                "message": "Invalid phone number or password."
+            }), 401
+
+        # Never send password to frontend
+        waiter.pop(
+            "PasswordHash",
+            None
+        )
+
+        return jsonify({
+            "success": True,
+            "message": "Waiter login successful.",
+            "user": waiter
+        }), 200
+
+    except Exception as error:
+
+        print(
+            "WAITER LOGIN ERROR:",
+            str(error)
+        )
+
+        return jsonify({
+            "success": False,
+            "message": "Waiter login failed.",
+            "error": str(error)
+        }), 500
+
+    finally:
+
+        if connection:
+            connection.close()
+
+# ============================================================
+# WAITER APPROVE
+# ============================================================
+@app.route("/api/users/<int:user_id>/approve", methods=["PUT"])
+def approve_user(user_id):
+
+    connection = None
+
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+
+        # Make sure user exists and is a waiter
+        cursor.execute(
+            """
+            SELECT UserID, Role
+            FROM Users
+            WHERE UserID = ?
+            """,
+            user_id
+        )
+
+        user = cursor.fetchone()
+
+        if not user:
+            return jsonify({
+                "success": False,
+                "message": "User not found."
+            }), 404
+
+        if str(user[1]).upper() != "WAITER":
+            return jsonify({
+                "success": False,
+                "message": "Only waiter accounts can be approved."
+            }), 400
+
+        cursor.execute(
+            """
+            UPDATE Users
+            SET IsActive = 1
+            WHERE UserID = ?
+            """,
+            user_id
+        )
+
+        connection.commit()
+
+        return jsonify({
+            "success": True,
+            "message": "Waiter approved successfully."
+        })
+
+    except Exception as error:
+
+        if connection:
+            connection.rollback()
+
+        return jsonify({
+            "success": False,
+            "message": "Unable to approve waiter.",
+            "error": str(error)
+        }), 500
+
+    finally:
+
+        if connection:
+            connection.close()
+
+
+@app.route("/api/users/<int:user_id>/deny", methods=["PUT"])
+def deny_user(user_id):
+
+    connection = None
+
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+
+        # Make sure user exists and is a waiter
+        cursor.execute(
+            """
+            SELECT UserID, Role
+            FROM Users
+            WHERE UserID = ?
+            """,
+            user_id
+        )
+
+        user = cursor.fetchone()
+
+        if not user:
+            return jsonify({
+                "success": False,
+                "message": "User not found."
+            }), 404
+
+        if str(user[1]).upper() != "WAITER":
+            return jsonify({
+                "success": False,
+                "message": "Only waiter accounts can be denied."
+            }), 400
+
+        # Denied waiter remains inactive
+        cursor.execute(
+            """
+            UPDATE Users
+            SET IsActive = 0
+            WHERE UserID = ?
+            """,
+            user_id
+        )
+
+        connection.commit()
+
+        return jsonify({
+            "success": True,
+            "message": "Waiter denied successfully."
+        })
+
+    except Exception as error:
+
+        if connection:
+            connection.rollback()
+
+        return jsonify({
+            "success": False,
+            "message": "Unable to deny waiter.",
+            "error": str(error)
+        }), 500
+
+    finally:
+
+        if connection:
+            connection.close()              
+# @app.route("/api/users/<int:user_id>/approve", methods=["PUT"])
+def approve_waiter(user_id):
+    connection = None
+
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+
+        cursor.execute("""
+            UPDATE Users
+            SET IsActive = 1
+            WHERE UserID = ?
+              AND Role = 'WAITER'
+        """, user_id)
+
+        if cursor.rowcount == 0:
+            connection.rollback()
+
+            return jsonify({
+                "success": False,
+                "message": "Waiter not found."
+            }), 404
+
+        connection.commit()
+
+        return jsonify({
+            "success": True,
+            "message": "Waiter approved successfully."
+        })
+
+    except Exception as error:
+
+        if connection:
+            connection.rollback()
+
+        print("APPROVE WAITER ERROR:", repr(error))
+
+        return jsonify({
+            "success": False,
+            "message": "Unable to approve waiter.",
+            "error": str(error)
+        }), 500
+
+    finally:
+
+        if connection:
+            connection.close()
+
+
+@app.route("/api/users/<int:user_id>/deny", methods=["PUT"])
+def deny_waiter(user_id):
+    connection = None
+
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+
+        cursor.execute("""
+            DELETE FROM Users
+            WHERE UserID = ?
+              AND Role = 'WAITER'
+              AND IsActive = 0
+        """, user_id)
+
+        if cursor.rowcount == 0:
+            connection.rollback()
+
+            return jsonify({
+                "success": False,
+                "message": "Pending waiter not found."
+            }), 404
+
+        connection.commit()
+
+        return jsonify({
+            "success": True,
+            "message": "Waiter registration denied."
+        })
+
+    except Exception as error:
+
+        if connection:
+            connection.rollback()
+
+        print("DENY WAITER ERROR:", repr(error))
+
+        return jsonify({
+            "success": False,
+            "message": "Unable to deny waiter.",
+            "error": str(error)
+        }), 500
+
+    finally:
+
+        if connection:
+            connection.close()
+
+
+#============================================================
 # ERROR HANDLERS
 # ============================================================
 
