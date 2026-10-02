@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hotel Restaurant Management System</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background:
+                linear-gradient(
+                    135deg,
+                    #eef2f7 0%,
+                    #f8fafc 50%,
+                    #e8edf5 100%
+                );
+            color: #172033;
+            min-height: 100vh;
+        }
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        header {
+            background: #111b31;
+            color: white;
+            padding: 22px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.18);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #3563ff, #6246ea);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 25px;
+            box-shadow: 0 6px 18px rgba(53, 99, 255, 0.35);
+        }
+
+        .logo-text h1 {
+            font-size: 21px;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+        }
+
+        .logo-text p {
+            margin-top: 4px;
+            font-size: 12px;
+            color: #b9c5dc;
+        }
+
+        .header-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #22c55e;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.8);
+        }
+
+        .status-text {
+            font-size: 13px;
+            color: #dbe4f5;
+        }
+
+        /* =====================================================
+           HERO
+        ===================================================== */
+
+        .hero {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 30px 55px;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 30px;
+            background: #e4ebff;
+            color: #315bea;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .hero h2 {
+            font-size: clamp(36px, 5vw, 58px);
+            line-height: 1.1;
+            font-weight: 800;
+            color: #111b31;
+            margin-bottom: 18px;
+        }
+
+        .hero h2 span {
+            color: #3563ff;
+        }
+
+        .hero-description {
+            max-width: 720px;
+            margin: 0 auto;
+            color: #61708a;
+            font-size: 17px;
+            line-height: 1.7;
+        }
+
+        /* =====================================================
+           ROLE SECTION
+        ===================================================== */
+
+        .roles-section {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 15px 30px 80px;
+        }
+
+        .section-heading {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .section-heading h3 {
+            font-size: 27px;
+            color: #172033;
+            margin-bottom: 8px;
+        }
+
+        .section-heading p {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .role-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(4, minmax(0, 1fr));
+            gap: 22px;
+        }
+
+        /* =====================================================
+           ROLE CARD
+        ===================================================== */
+
+        .role-card {
+            position: relative;
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 18px;
+            padding: 30px 25px;
+            min-height: 355px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #e4e9f1;
+            box-shadow:
+                0 10px 30px rgba(22, 34, 55, 0.08);
+
+            transition:
+                transform 0.3s ease,
+                box-shadow 0.3s ease,
+                border-color 0.3s ease;
+            overflow: hidden;
+        }
+
+        .role-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+        }
+
+        .role-card:hover {
+            transform: translateY(-9px);
+            box-shadow:
+                0 20px 45px rgba(22, 34, 55, 0.15);
+        }
+
+        /* Customer */
+
+        .customer-card::before {
+            background: #3563ff;
+        }
+
+        .customer-card:hover {
+            border-color: #3563ff;
+        }
+
+        /* Waiter */
+
+        .waiter-card::before {
+            background: #12a86b;
+        }
+
+        .waiter-card:hover {
+            border-color: #12a86b;
+        }
+
+        /* Manager */
+
+        .manager-card::before {
+            background: #f59e0b;
+        }
+
+        .manager-card:hover {
+            border-color: #f59e0b;
+        }
+
+        /* Head */
+
+        .head-card::before {
+            background: #7c3aed;
+        }
+
+        .head-card:hover {
+            border-color: #7c3aed;
+        }
+
+        /* =====================================================
+           ICON
+        ===================================================== */
+
+        .role-icon {
+            width: 66px;
+            height: 66px;
+            border-radius: 17px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 31px;
+            margin-bottom: 23px;
+        }
+
+        .customer-icon {
+            background: #e7edff;
+            color: #3563ff;
+        }
+
+        .waiter-icon {
+            background: #e3f8ef;
+            color: #12a86b;
+        }
+
+        .manager-icon {
+            background: #fff4d8;
+            color: #d97706;
+        }
+
+        .head-icon {
+            background: #eee7ff;
+            color: #7c3aed;
+        }
+
+        .role-card h4 {
+            font-size: 23px;
+            color: #172033;
+            margin-bottom: 11px;
+        }
+
+        .role-card .role-subtitle {
+            font-size: 13px;
+            font-weight: 700;
+            color: #6b7890;
+            margin-bottom: 14px;
+        }
+
+        .role-card p {
+            color: #68758b;
+            font-size: 14px;
+            line-height: 1.65;
+            flex-grow: 1;
+        }
+
+        /* =====================================================
+           FEATURES
+        ===================================================== */
+
+        .features {
+            margin-top: 20px;
+            margin-bottom: 25px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-bottom: 9px;
+            color: #4e5c73;
+            font-size: 13px;
+        }
+
+        .feature span {
+            font-size: 15px;
+        }
+
+        /* =====================================================
+           BUTTON
+        ===================================================== */
+
+        .role-button {
+            width: 100%;
+            border: none;
+            padding: 13px 18px;
+            border-radius: 10px;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition:
+                transform 0.2s ease,
+                opacity 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .role-button:hover {
+            transform: translateY(-2px);
+            opacity: 0.94;
+        }
+
+        .role-button:active {
+            transform: translateY(0);
+        }
+
+        .customer-button {
+            background: #3563ff;
+            box-shadow:
+                0 6px 15px rgba(53, 99, 255, 0.25);
+        }
+
+        .waiter-button {
+            background: #12a86b;
+            box-shadow:
+                0 6px 15px rgba(18, 168, 107, 0.25);
+        }
+
+        .manager-button {
+            background: #f59e0b;
+            box-shadow:
+                0 6px 15px rgba(245, 158, 11, 0.25);
+        }
+
+        .head-button {
+            background: #7c3aed;
+            box-shadow:
+                0 6px 15px rgba(124, 58, 237, 0.25);
+        }
+
+        /* =====================================================
+           INFO SECTION
+        ===================================================== */
+
+        .info-section {
+            max-width: 1200px;
+            margin: 0 auto 75px;
+            padding: 0 30px;
+        }
+
+        .info-box {
+            background: #111b31;
+            border-radius: 20px;
+            padding: 34px 38px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 30px;
+            box-shadow:
+                0 15px 35px rgba(17, 27, 49, 0.18);
+        }
+
+        .info-box h3 {
+            font-size: 22px;
+            margin-bottom: 8px;
+        }
+
+        .info-box p {
+            color: #b9c5dc;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .info-badge {
+            flex-shrink: 0;
+            padding: 13px 20px;
+            border-radius: 10px;
+            background: #263653;
+            color: #dbe4f5;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        footer {
+            background: #0c1426;
+            color: #91a0ba;
+            text-align: center;
+            padding: 25px 20px;
+            font-size: 13px;
+        }
+
+        footer strong {
+            color: #e4eaf5;
+        }
+
+        /* =====================================================
+           MODAL
+        ===================================================== */
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(8, 15, 30, 0.65);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 2000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            width: 100%;
+            max-width: 430px;
+            background: white;
+            border-radius: 18px;
+            padding: 30px;
+            box-shadow:
+                0 25px 70px rgba(0, 0, 0, 0.25);
+            animation: modalIn 0.25s ease;
+        }
+
+        @keyframes modalIn {
+            from {
+                transform: translateY(15px) scale(0.97);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal h3 {
+            color: #172033;
+            margin-bottom: 10px;
+            font-size: 23px;
+        }
+
+        .modal p {
+            color: #68758b;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 22px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .modal-actions button {
+            flex: 1;
+            border: none;
+            padding: 12px;
+            border-radius: 9px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .cancel-button {
+            background: #edf1f6;
+            color: #37445b;
+        }
+
+        .continue-button {
+            background: #3563ff;
+            color: white;
+        }
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 1100px) {
+            .role-grid {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 700px) {
+
+            header {
+                padding: 17px 20px;
+            }
+
+            .header-status {
+                display: none;
+            }
+
+            .logo-text h1 {
+                font-size: 17px;
+            }
+
+            .hero {
+                padding: 55px 20px 40px;
+            }
+
+            .hero h2 {
+                font-size: 36px;
+            }
+
+            .hero-description {
+                font-size: 15px;
+            }
+
+            .roles-section {
+                padding: 10px 20px 55px;
+            }
+
+            .role-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .info-section {
+                padding: 0 20px;
+            }
+
+            .info-box {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 28px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header>
+
+        <div class="logo-area">
+
+            <div class="logo">
+                🏨
+            </div>
+
+            <div class="logo-text">
+                <h1>Hotel Restaurant Management System</h1>
+                <p>Smart • Simple • Efficient Restaurant Management</p>
+            </div>
+
+        </div>
+
+        <div class="header-status">
+
+            <div class="status-dot"></div>
+
+            <div class="status-text">
+                System Online
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
+
+    <section class="hero">
+
+        <div class="hero-badge">
+            RESTAURANT MANAGEMENT PORTAL
+        </div>
+
+        <h2>
+            Welcome to
+            <span>Hotel Restaurant</span>
+            Management
+        </h2>
+
+        <p class="hero-description">
+            A centralized platform for managing restaurant operations,
+            customer orders, bookings, dishes, staff activities and
+            hotel administration.
+        </p>
+
+    </section>
+
+
+    <!-- =====================================================
+         ROLE SELECTION
+    ====================================================== -->
+
+    <section class="roles-section">
+
+        <div class="section-heading">
+
+            <h3>
+                Choose Your Role
+            </h3>
+
+            <p>
+                Select the appropriate portal to continue.
+            </p>
+
+        </div>
+
+
+        <div class="role-grid">
+
+
+            <!-- =================================================
+                 CUSTOMER
+            ================================================== -->
+
+            <div class="role-card customer-card">
+
+                <div class="role-icon customer-icon">
+                    👤
+                </div>
+
+                <h4>
+                    Customer
+                </h4>
+
+                <div class="role-subtitle">
+                    Restaurant Guest
+                </div>
+
+                <p>
+                    Browse the restaurant menu, check dish prices
+                    and ratings, place orders and manage your
+                    restaurant bookings.
+                </p>
+
+                <div class="features">
+
+                    <div class="feature">
+                        <span>🍽️</span>
+                        View Menu
+                    </div>
+
+                    <div class="feature">
+                        <span>🛒</span>
+                        Place Orders
+                    </div>
+
+                    <div class="feature">
+                        <span>📅</span>
+                        Book a Table
+                    </div>
+
+                </div>
+
+                <button
+                    class="role-button customer-button"
+                    onclick="openPortal('customer')"
+                >
+                    Enter Customer Portal →
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 WAITER
+            ================================================== -->
+
+            <div class="role-card waiter-card">
+
+                <div class="role-icon waiter-icon">
+                    🍽️
+                </div>
+
+                <h4>
+                    Waiter
+                </h4>
+
+                <div class="role-subtitle">
+                    Restaurant Staff
+                </div>
+
+                <p>
+                    View available dishes, assist customers,
+                    create orders and monitor order information
+                    for restaurant service.
+                </p>
+
+                <div class="features">
+
+                    <div class="feature">
+                        <span>📋</span>
+                        View Dishes
+                    </div>
+
+                    <div class="feature">
+                        <span>🛎️</span>
+                        Manage Orders
+                    </div>
+
+                    <div class="feature">
+                        <span>👥</span>
+                        Assist Customers
+                    </div>
+
+                </div>
+
+                <button
+                    class="role-button waiter-button"
+                    onclick="openPortal('waiter')"
+                >
+                    Enter Waiter Portal →
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 MANAGER
+            ================================================== -->
+
+            <div class="role-card manager-card">
+
+                <div class="role-icon manager-icon">
+                    📊
+                </div>
+
+                <h4>
+                    Manager
+                </h4>
+
+                <div class="role-subtitle">
+                    Restaurant Management
+                </div>
+
+                <p>
+                    Manage dishes, monitor orders, customers,
+                    bookings and restaurant operations from
+                    the management dashboard.
+                </p>
+
+                <div class="features">
+
+                    <div class="feature">
+                        <span>🍴</span>
+                        Manage Dishes
+                    </div>
+
+                    <div class="feature">
+                        <span>📦</span>
+                        Manage Orders
+                    </div>
+
+                    <div class="feature">
+                        <span>📈</span>
+                        Monitor Operations
+                    </div>
+
+                </div>
+
+                <button
+                    class="role-button manager-button"
+                    onclick="openPortal('manager')"
+                >
+                    Manager Login →
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 HEAD
+            ================================================== -->
+
+            <div class="role-card head-card">
+
+                <div class="role-icon head-icon">
+                    👔
+                </div>
+
+                <h4>
+                    Head of Hotel
+                </h4>
+
+                <div class="role-subtitle">
+                    Hotel Administration
+                </div>
+
+                <p>
+                    Monitor the complete restaurant system,
+                    users, dishes, orders, customers and
+                    bookings from one central dashboard.
+                </p>
+
+                <div class="features">
+
+                    <div class="feature">
+                        <span>📊</span>
+                        Hotel Overview
+                    </div>
+
+                    <div class="feature">
+                        <span>👥</span>
+                        Monitor Users
+                    </div>
+
+                    <div class="feature">
+                        <span>📋</span>
+                        Monitor Operations
+                    </div>
+
+                </div>
+
+                <button
+                    class="role-button head-button"
+                    onclick="openPortal('head')"
+                >
+                    Head Login →
+                </button>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         INFORMATION
+    ====================================================== -->
+
+    <section class="info-section">
+
+        <div class="info-box">
+
+            <div>
+
+                <h3>
+                    One System. Four Roles. Complete Control.
+                </h3>
+
+                <p>
+                    The Hotel Restaurant Management System connects
+                    customers, waiters, managers and hotel administration
+                    through a single platform.
+                </p>
+
+            </div>
+
+            <div class="info-badge">
+                Secure Restaurant Management
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer>
+
+        <p>
+            © 2026
+            <strong>Hotel Restaurant Management System</strong>.
+            All Rights Reserved.
+        </p>
+
+    </footer>
+
+
+    <!-- =====================================================
+         LOGIN / PORTAL MODAL
+    ====================================================== -->
+
+    <div
+        class="modal-overlay"
+        id="portalModal"
+        onclick="closeModalOutside(event)"
+    >
+
+        <div class="modal">
+
+            <h3 id="modalTitle">
+                Continue
+            </h3>
+
+            <p id="modalMessage">
+                Continue to the selected portal.
+            </p>
+
+            <div class="modal-actions">
+
+                <button
+                    class="cancel-button"
+                    onclick="closeModal()"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    class="continue-button"
+                    id="continueButton"
+                >
+                    Continue →
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script>
+
+        let selectedPortal = null;
+
+
+        function openPortal(role) {
+
+            selectedPortal = role;
+
+            const modal = document.getElementById(
+                "portalModal"
+            );
+
+            const title = document.getElementById(
+                "modalTitle"
+            );
+
+            const message = document.getElementById(
+                "modalMessage"
+            );
+
+            const continueButton =
+                document.getElementById(
+                    "continueButton"
+                );
+
+
+            if (role === "customer") {
+
+                title.textContent =
+                    "Customer Portal";
+
+                message.textContent =
+                    "Continue to the Customer portal to browse dishes, place orders and manage bookings.";
+
+                continueButton.textContent =
+                    "Enter Customer Portal →";
+
+            }
+
+            else if (role === "waiter") {
+
+                title.textContent =
+                    "Waiter Portal";
+
+                message.textContent =
+                    "Continue to the Waiter portal to view dishes and manage restaurant orders.";
+
+                continueButton.textContent =
+                    "Enter Waiter Portal →";
+
+            }
+
+            else if (role === "manager") {
+
+                title.textContent =
+                    "Manager Login";
+
+                message.textContent =
+                    "Manager access is restricted. Continue to the Manager login/dashboard.";
+
+                continueButton.textContent =
+                    "Continue to Manager →";
+
+            }
+
+            else if (role === "head") {
+
+                title.textContent =
+                    "Head of Hotel Login";
+
+                message.textContent =
+                    "Head of Hotel access is restricted. Continue to the Head dashboard.";
+
+                continueButton.textContent =
+                    "Continue to Head →";
+
+            }
+
+
+            continueButton.onclick =
+                function () {
+
+                    goToPortal(
+                        selectedPortal
+                    );
+
+                };
+
+
+            modal.classList.add(
+                "active"
+            );
+        }
+
+
+        function closeModal() {
+
+            document
+                .getElementById("portalModal")
+                .classList.remove("active");
+
+            selectedPortal = null;
+        }
+
+
+        function closeModalOutside(event) {
+
+            if (
+                event.target.id ===
+                "portalModal"
+            ) {
+
+                closeModal();
+
+            }
+
+        }
+
+
+        function goToPortal(role) {
+
+            /*
+             * These paths match the Flask routes
+             * already present in your current app.py.
+             */
+
+            if (role === "customer") {
+
+                window.location.href =
+                    "/customer.html";
+
+            }
+
+            else if (role === "waiter") {
+
+                window.location.href =
+                    "/waiter.html";
+
+            }
+
+            else if (role === "manager") {
+
+                window.location.href =
+                    "/manager.html";
+
+            }
+
+            else if (role === "head") {
+
+                window.location.href =
+                    "/head.html";
+
+            }
+
+        }
+
+
+        /* ESC key closes modal */
+
+        document.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (
+                    event.key === "Escape"
+                ) {
+
+                    closeModal();
+
+                }
+
+            }
+        );
+
+    </script>
+
+</body>
+</html>
