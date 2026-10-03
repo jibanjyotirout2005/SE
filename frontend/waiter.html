@@ -1,555 +1,558 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Waiter | Hotel Restaurant Management System</title>
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        body {
-            min-height: 100vh;
-            background:
-                radial-gradient(circle at top left, #243b55 0%, transparent 40%),
-                radial-gradient(circle at bottom right, #141e30 0%, transparent 45%),
-                #0b1220;
-            color: #ffffff;
-        }
-
-        button,
-        input {
-            font: inherit;
-        }
-
-        button {
-            cursor: pointer;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .page {
-            min-height: 100vh;
-            padding: 25px;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1250px;
-            margin: auto;
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 18px;
-            backdrop-filter: blur(14px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
-        }
-
-        .primary-btn {
-            border: none;
-            padding: 12px 22px;
-            border-radius: 10px;
-            background: #00c6ff;
-            color: #07111d;
-            font-weight: 700;
-            transition: 0.2s;
-        }
-
-        .primary-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 198, 255, 0.25);
-        }
-
-        .secondary-btn {
-            border: 1px solid rgba(255,255,255,0.2);
-            padding: 11px 20px;
-            border-radius: 10px;
-            background: rgba(255,255,255,0.06);
-            color: #ffffff;
-            font-weight: 600;
-        }
-
-        .danger-btn {
-            border: none;
-            padding: 10px 18px;
-            border-radius: 9px;
-            background: #ef4444;
-            color: white;
-            font-weight: 700;
-        }
-
-        .success-btn {
-            border: none;
-            padding: 10px 18px;
-            border-radius: 9px;
-            background: #22c55e;
-            color: #07111d;
-            font-weight: 700;
-        }
-
-        .message {
-            padding: 12px 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            display: none;
-            font-size: 14px;
-        }
-
-        .message.show {
-            display: block;
-        }
-
-        .message.error {
-            background: rgba(239, 68, 68, 0.15);
-            border: 1px solid rgba(239, 68, 68, 0.35);
-            color: #fecaca;
-        }
-
-        .message.success {
-            background: rgba(34, 197, 94, 0.15);
-            border: 1px solid rgba(34, 197, 94, 0.35);
-            color: #bbf7d0;
-        }
-
-        .message.info {
-            background: rgba(0, 198, 255, 0.12);
-            border: 1px solid rgba(0, 198, 255, 0.3);
-            color: #bae6fd;
-        }
-
-        .auth-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 35px;
-        }
-
-        .brand {
-            font-size: 24px;
-            font-weight: 800;
-        }
-
-        .brand span {
-            color: #00c6ff;
-        }
-
-        .back-btn {
-            color: #ffffff;
-            text-decoration: none;
-            padding: 10px 16px;
-            border-radius: 9px;
-            border: 1px solid rgba(255,255,255,0.15);
-            background: rgba(255,255,255,0.05);
-        }
-
-        .auth-wrapper {
-            min-height: calc(100vh - 100px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .auth-card {
-            width: 100%;
-            max-width: 470px;
-            padding: 35px;
-        }
-
-        .auth-title {
-            text-align: center;
-            margin-bottom: 8px;
-            font-size: 30px;
-        }
-
-        .auth-subtitle {
-            text-align: center;
-            color: #aeb8c8;
-            margin-bottom: 28px;
-            line-height: 1.5;
-        }
-
-        .form-group {
-            margin-bottom: 17px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #d9e2ef;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 13px 14px;
-            border: 1px solid rgba(255,255,255,0.14);
-            border-radius: 10px;
-            outline: none;
-            background: rgba(0,0,0,0.2);
-            color: #ffffff;
-        }
-
-        .form-group input:focus {
-            border-color: #00c6ff;
-            box-shadow: 0 0 0 2px rgba(0,198,255,0.1);
-        }
-
-        .form-actions {
-            margin-top: 22px;
-        }
-
-        .form-actions button {
-            width: 100%;
-        }
-
-        .switch-auth {
-            text-align: center;
-            margin-top: 22px;
-            color: #aeb8c8;
-            font-size: 14px;
-        }
-
-        .switch-auth button {
-            background: none;
-            border: none;
-            color: #00c6ff;
-            font-weight: 700;
-        }
-
-        .pending-card {
-            max-width: 620px;
-            margin: 100px auto;
-            padding: 45px;
-            text-align: center;
-        }
-
-        .pending-icon {
-            width: 80px;
-            height: 80px;
-            margin: auto auto 22px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0,198,255,0.12);
-            border: 1px solid rgba(0,198,255,0.3);
-            font-size: 36px;
-        }
-
-        .pending-card h2 {
-            margin-bottom: 12px;
-        }
-
-        .pending-card p {
-            color: #aeb8c8;
-            line-height: 1.6;
-            margin-bottom: 25px;
-        }
-
-        .dashboard-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px;
-            margin-bottom: 25px;
-        }
-
-        .dashboard-title h1 {
-            font-size: 30px;
-            margin-bottom: 5px;
-        }
-
-        .dashboard-title p {
-            color: #9ca8ba;
-        }
-
-        .user-info {
-            text-align: right;
-        }
-
-        .user-info strong {
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        .user-info span {
-            color: #00c6ff;
-            font-size: 13px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            margin-bottom: 25px;
-        }
-
-        .stat-card {
-            padding: 22px;
-        }
-
-        .stat-label {
-            color: #aeb8c8;
-            font-size: 13px;
-            margin-bottom: 10px;
-        }
-
-        .stat-value {
-            font-size: 30px;
-            font-weight: 800;
-        }
-
-        .dashboard-nav {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 25px;
-            padding: 10px;
-        }
-
-        .nav-btn {
-            border: none;
-            background: transparent;
-            color: #aeb8c8;
-            padding: 11px 16px;
-            border-radius: 9px;
-            font-weight: 600;
-        }
-
-        .nav-btn.active,
-        .nav-btn:hover {
-            background: rgba(0,198,255,0.12);
-            color: #00c6ff;
-        }
-
-        .content-card {
-            padding: 25px;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 22px;
-            gap: 15px;
-        }
-
-        .section-header h2 {
-            font-size: 22px;
-        }
-
-        .section-header p {
-            color: #9ca8ba;
-            font-size: 13px;
-        }
-
-        .dish-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 18px;
-        }
-
-        .dish-card {
-            padding: 20px;
-        }
-
-        .dish-card h3 {
-            margin-bottom: 7px;
-        }
-
-        .dish-category {
-            color: #00c6ff;
-            font-size: 12px;
-            margin-bottom: 10px;
-        }
-
-        .dish-description {
-            color: #aeb8c8;
-            font-size: 13px;
-            line-height: 1.5;
-            min-height: 40px;
-        }
-
-        .dish-bottom {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 17px;
-        }
-
-        .dish-price {
-            font-size: 20px;
-            font-weight: 800;
-        }
-
-        .dish-rating {
-            color: #facc15;
-            font-size: 13px;
-        }
-
-        .quantity-control {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .quantity-control button {
-            width: 32px;
-            height: 32px;
-            border-radius: 7px;
-            border: 1px solid rgba(255,255,255,0.15);
-            background: rgba(255,255,255,0.05);
-            color: white;
-        }
-
-        .quantity-control span {
-            min-width: 20px;
-            text-align: center;
-        }
-
-        .customer-form {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .cart-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            border-radius: 10px;
-            background: rgba(255,255,255,0.04);
-        }
-
-        .cart-item-name {
-            font-weight: 700;
-        }
-
-        .cart-item-info {
-            color: #9ca8ba;
-            font-size: 13px;
-            margin-top: 4px;
-        }
-
-        .cart-total {
-            display: flex;
-            justify-content: space-between;
-            padding: 18px 0;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            font-size: 21px;
-            font-weight: 800;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 45px 20px;
-            color: #9ca8ba;
-        }
-
-        .orders-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .order-row {
-            display: grid;
-            grid-template-columns: 80px 1.5fr 100px 120px 120px;
-            gap: 15px;
-            align-items: center;
-            padding: 17px;
-            background: rgba(255,255,255,0.04);
-            border-radius: 10px;
-        }
-
-        .order-id {
-            color: #00c6ff;
-            font-weight: 800;
-        }
-
-        .status {
-            display: inline-block;
-            padding: 6px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 800;
-            text-align: center;
-            background: rgba(0,198,255,0.12);
-            color: #00c6ff;
-        }
-
-        @media (max-width: 950px) {
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .dish-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .customer-form {
-                grid-template-columns: 1fr;
-            }
-
-            .order-row {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        @media (max-width: 650px) {
-            .page {
-                padding: 15px;
-            }
-
-            .auth-card {
-                padding: 25px;
-            }
-
-            .dashboard-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .user-info {
-                text-align: left;
-            }
-
-            .stats-grid,
-            .dish-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .dashboard-nav {
-                overflow-x: auto;
-                flex-wrap: nowrap;
-            }
-
-            .nav-btn {
-                white-space: nowrap;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Waiter | Hotel Restaurant Management System</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at top left,#243b55 0%,transparent 40%),
+        radial-gradient(circle at bottom right,#141e30 0%,transparent 45%),
+        #0b1220;
+    color:#fff;
+}
+
+button,input{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.hidden{
+    display:none!important;
+}
+
+.page{
+    min-height:100vh;
+    padding:25px;
+}
+
+.container{
+    width:100%;
+    max-width:1250px;
+    margin:auto;
+}
+
+.card{
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:18px;
+    backdrop-filter:blur(14px);
+    box-shadow:0 15px 40px rgba(0,0,0,.25);
+}
+
+.primary-btn{
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    background:#00c6ff;
+    color:#07111d;
+    font-weight:700;
+    transition:.2s;
+}
+
+.primary-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 20px rgba(0,198,255,.25);
+}
+
+.secondary-btn{
+    border:1px solid rgba(255,255,255,.2);
+    padding:11px 20px;
+    border-radius:10px;
+    background:rgba(255,255,255,.06);
+    color:#fff;
+    font-weight:600;
+}
+
+.danger-btn{
+    border:none;
+    padding:10px 18px;
+    border-radius:9px;
+    background:#ef4444;
+    color:#fff;
+    font-weight:700;
+}
+
+.message{
+    padding:12px 15px;
+    border-radius:10px;
+    margin-bottom:15px;
+    display:none;
+    font-size:14px;
+}
+
+.message.show{
+    display:block;
+}
+
+.message.error{
+    background:rgba(239,68,68,.15);
+    border:1px solid rgba(239,68,68,.35);
+    color:#fecaca;
+}
+
+.message.success{
+    background:rgba(34,197,94,.15);
+    border:1px solid rgba(34,197,94,.35);
+    color:#bbf7d0;
+}
+
+.message.info{
+    background:rgba(0,198,255,.12);
+    border:1px solid rgba(0,198,255,.3);
+    color:#bae6fd;
+}
+
+/* AUTH */
+
+.auth-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:35px;
+}
+
+.brand{
+    font-size:24px;
+    font-weight:800;
+}
+
+.brand span{
+    color:#00c6ff;
+}
+
+.back-btn{
+    color:#fff;
+    text-decoration:none;
+    padding:10px 16px;
+    border-radius:9px;
+    border:1px solid rgba(255,255,255,.15);
+    background:rgba(255,255,255,.05);
+}
+
+.auth-wrapper{
+    min-height:calc(100vh - 100px);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.auth-card{
+    width:100%;
+    max-width:470px;
+    padding:35px;
+}
+
+.auth-title{
+    text-align:center;
+    margin-bottom:8px;
+    font-size:30px;
+}
+
+.auth-subtitle{
+    text-align:center;
+    color:#aeb8c8;
+    margin-bottom:28px;
+    line-height:1.5;
+}
+
+.form-group{
+    margin-bottom:17px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:8px;
+    color:#d9e2ef;
+    font-size:14px;
+    font-weight:600;
+}
+
+.form-group input{
+    width:100%;
+    padding:13px 14px;
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:10px;
+    outline:none;
+    background:rgba(0,0,0,.2);
+    color:#fff;
+}
+
+.form-group input:focus{
+    border-color:#00c6ff;
+    box-shadow:0 0 0 2px rgba(0,198,255,.1);
+}
+
+.form-actions{
+    margin-top:22px;
+}
+
+.form-actions button{
+    width:100%;
+}
+
+.switch-auth{
+    text-align:center;
+    margin-top:22px;
+    color:#aeb8c8;
+    font-size:14px;
+}
+
+.switch-auth button{
+    background:none;
+    border:none;
+    color:#00c6ff;
+    font-weight:700;
+}
+
+/* PENDING */
+
+.pending-card{
+    max-width:620px;
+    margin:100px auto;
+    padding:45px;
+    text-align:center;
+}
+
+.pending-icon{
+    width:80px;
+    height:80px;
+    margin:auto auto 22px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(0,198,255,.12);
+    border:1px solid rgba(0,198,255,.3);
+    font-size:36px;
+}
+
+.pending-card h2{
+    margin-bottom:12px;
+}
+
+.pending-card p{
+    color:#aeb8c8;
+    line-height:1.6;
+    margin-bottom:25px;
+}
+
+/* DASHBOARD */
+
+.dashboard-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    margin-bottom:25px;
+}
+
+.dashboard-title h1{
+    font-size:30px;
+    margin-bottom:5px;
+}
+
+.dashboard-title p{
+    color:#9ca8ba;
+}
+
+.user-info{
+    text-align:right;
+}
+
+.user-info strong{
+    display:block;
+    margin-bottom:4px;
+}
+
+.user-info span{
+    color:#00c6ff;
+    font-size:13px;
+}
+
+.stats-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+    margin-bottom:25px;
+}
+
+.stat-card{
+    padding:22px;
+}
+
+.stat-label{
+    color:#aeb8c8;
+    font-size:13px;
+    margin-bottom:10px;
+}
+
+.stat-value{
+    font-size:30px;
+    font-weight:800;
+}
+
+.dashboard-nav{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-bottom:25px;
+    padding:10px;
+}
+
+.nav-btn{
+    border:none;
+    background:transparent;
+    color:#aeb8c8;
+    padding:11px 16px;
+    border-radius:9px;
+    font-weight:600;
+}
+
+.nav-btn.active,
+.nav-btn:hover{
+    background:rgba(0,198,255,.12);
+    color:#00c6ff;
+}
+
+.content-card{
+    padding:25px;
+}
+
+.section-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:22px;
+    gap:15px;
+}
+
+.section-header h2{
+    font-size:22px;
+}
+
+.section-header p{
+    color:#9ca8ba;
+    font-size:13px;
+}
+
+/* DISHES */
+
+.dish-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+.dish-card{
+    padding:20px;
+}
+
+.dish-card h3{
+    margin-bottom:7px;
+}
+
+.dish-category{
+    color:#00c6ff;
+    font-size:12px;
+    margin-bottom:10px;
+}
+
+.dish-description{
+    color:#aeb8c8;
+    font-size:13px;
+    line-height:1.5;
+    min-height:40px;
+}
+
+.dish-bottom{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:17px;
+}
+
+.dish-price{
+    font-size:20px;
+    font-weight:800;
+}
+
+.dish-rating{
+    color:#facc15;
+    font-size:13px;
+}
+
+.quantity-control{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:15px;
+}
+
+.quantity-control button{
+    width:32px;
+    height:32px;
+    border-radius:7px;
+    border:1px solid rgba(255,255,255,.15);
+    background:rgba(255,255,255,.05);
+    color:#fff;
+}
+
+.quantity-control span{
+    min-width:20px;
+    text-align:center;
+}
+
+/* ORDER */
+
+.customer-form{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.cart-list{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.cart-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px;
+    border-radius:10px;
+    background:rgba(255,255,255,.04);
+}
+
+.cart-item-name{
+    font-weight:700;
+}
+
+.cart-item-info{
+    color:#9ca8ba;
+    font-size:13px;
+    margin-top:4px;
+}
+
+.cart-total{
+    display:flex;
+    justify-content:space-between;
+    padding:18px 0;
+    border-top:1px solid rgba(255,255,255,.1);
+    font-size:21px;
+    font-weight:800;
+}
+
+.empty-state{
+    text-align:center;
+    padding:45px 20px;
+    color:#9ca8ba;
+}
+
+/* ORDERS */
+
+.orders-list{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.order-row{
+    display:grid;
+    grid-template-columns:80px 1.5fr 100px 120px 120px;
+    gap:15px;
+    align-items:center;
+    padding:17px;
+    background:rgba(255,255,255,.04);
+    border-radius:10px;
+}
+
+.order-id{
+    color:#00c6ff;
+    font-weight:800;
+}
+
+.status{
+    display:inline-block;
+    padding:6px 10px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:800;
+    text-align:center;
+    background:rgba(0,198,255,.12);
+    color:#00c6ff;
+}
+
+@media(max-width:950px){
+
+    .stats-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .dish-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .customer-form{
+        grid-template-columns:1fr;
+    }
+
+    .order-row{
+        grid-template-columns:1fr 1fr;
+    }
+}
+
+@media(max-width:650px){
+
+    .page{
+        padding:15px;
+    }
+
+    .auth-card{
+        padding:25px;
+    }
+
+    .dashboard-header{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .user-info{
+        text-align:left;
+    }
+
+    .stats-grid,
+    .dish-grid{
+        grid-template-columns:1fr;
+    }
+
+    .dashboard-nav{
+        overflow-x:auto;
+        flex-wrap:nowrap;
+    }
+
+    .nav-btn{
+        white-space:nowrap;
+    }
+}
+</style>
 </head>
 
 <body>
@@ -560,201 +563,207 @@
 
 <div id="authSection" class="page">
 
-    <div class="container">
+<div class="container">
 
-        <div class="auth-header">
+<div class="auth-header">
 
-            <div class="brand">
-                HOTEL <span>RESTAURANT</span>
-            </div>
+<div class="brand">
+HOTEL <span>RESTAURANT</span>
+</div>
 
-            <a href="/" class="back-btn">
-                ← Back
-            </a>
+<a href="/" class="back-btn">
+← Back
+</a>
 
-        </div>
-
-
-        <!-- ================= REGISTER ================= -->
-
-        <div id="registerView" class="auth-wrapper">
-
-            <div class="card auth-card">
-
-                <h1 class="auth-title">
-                    Waiter Registration
-                </h1>
-
-                <p class="auth-subtitle">
-                    Create your waiter account. Your account
-                    must be approved by the Manager before login.
-                </p>
-
-                <div id="registerMessage" class="message"></div>
-
-                <form id="registerForm">
-
-                    <div class="form-group">
-                        <label>Full Name</label>
-
-                        <input
-                            type="text"
-                            id="registerName"
-                            placeholder="Enter full name"
-                            required
-                        >
-                    </div>
-
-                    <div class="form-group">
-                        <label>Phone Number</label>
-
-                        <input
-                            type="tel"
-                            id="registerPhone"
-                            placeholder="Enter phone number"
-                            maxlength="10"
-                            required
-                        >
-                    </div>
-
-                    <div class="form-group">
-                        <label>Email</label>
-
-                        <input
-                            type="email"
-                            id="registerEmail"
-                            placeholder="Enter email"
-                            required
-                        >
-                    </div>
-
-                    <div class="form-group">
-                        <label>Password</label>
-
-                        <input
-                            type="password"
-                            id="registerPassword"
-                            placeholder="Create password"
-                            required
-                        >
-                    </div>
-
-                    <div class="form-actions">
-
-                        <button
-                            type="submit"
-                            class="primary-btn"
-                        >
-                            Register as Waiter
-                        </button>
-
-                    </div>
-
-                </form>
-
-                <div class="switch-auth">
-
-                    Already registered?
-
-                    <button
-                        type="button"
-                        onclick="showLogin()"
-                    >
-                        Login
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
+</div>
 
 
-        <!-- ================= LOGIN ================= -->
+<!-- REGISTER -->
 
-        <div id="loginView" class="auth-wrapper hidden">
+<div id="registerView" class="auth-wrapper">
 
-            <div class="card auth-card">
+<div class="card auth-card">
 
-                <h1 class="auth-title">
-                    Waiter Login
-                </h1>
+<h1 class="auth-title">
+Waiter Registration
+</h1>
 
-                <p class="auth-subtitle">
-                    Login only after your Manager approves
-                    your waiter account.
-                </p>
+<p class="auth-subtitle">
+Create your waiter account. Your account must be approved by the Manager before login.
+</p>
 
-                <div id="loginMessage" class="message"></div>
+<div id="registerMessage" class="message"></div>
 
-                <form id="loginForm">
+<form id="registerForm">
 
-                    <div class="form-group">
+<div class="form-group">
 
-                        <label for="loginPhone">
-                            Phone Number
-                        </label>
+<label>Full Name</label>
 
-                        <input
-                            type="tel"
-                            id="loginPhone"
-                            placeholder="Phone Number"
-                            maxlength="10"
-                            pattern="[0-9]{10}"
-                            required
-                        >
+<input
+type="text"
+id="registerName"
+placeholder="Enter full name"
+required
+>
 
-                    </div>
+</div>
 
 
-                    <div class="form-group">
+<div class="form-group">
 
-                        <label for="loginPassword">
-                            Password
-                        </label>
+<label>Phone Number</label>
 
-                        <input
-                            type="password"
-                            id="loginPassword"
-                            placeholder="Enter password"
-                            required
-                        >
+<input
+type="tel"
+id="registerPhone"
+placeholder="10-digit phone number"
+maxlength="10"
+required
+>
 
-                    </div>
-
-
-                    <div class="form-actions">
-
-                        <button
-                            type="submit"
-                            class="primary-btn"
-                        >
-                            Login
-                        </button>
-
-                    </div>
-
-                </form>
+</div>
 
 
-                <div class="switch-auth">
+<div class="form-group">
 
-                    New waiter?
+<label>Email</label>
 
-                    <button
-                        type="button"
-                        onclick="showRegister()"
-                    >
-                        Register
-                    </button>
+<input
+type="email"
+id="registerEmail"
+placeholder="Enter email"
+required
+>
 
-                </div>
+</div>
 
-            </div>
 
-        </div>
+<div class="form-group">
 
-    </div>
+<label>Password</label>
+
+<input
+type="password"
+id="registerPassword"
+placeholder="Create password"
+required
+>
+
+</div>
+
+
+<div class="form-actions">
+
+<button
+type="submit"
+class="primary-btn"
+>
+Register as Waiter
+</button>
+
+</div>
+
+</form>
+
+
+<div class="switch-auth">
+
+Already registered?
+
+<button
+type="button"
+onclick="showLogin()"
+>
+Login
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- LOGIN -->
+
+<div id="loginView" class="auth-wrapper hidden">
+
+<div class="card auth-card">
+
+<h1 class="auth-title">
+Waiter Login
+</h1>
+
+<p class="auth-subtitle">
+Login after your Manager approves your account.
+</p>
+
+<div id="loginMessage" class="message"></div>
+
+<form id="loginForm">
+
+<div class="form-group">
+
+<label>Phone Number</label>
+
+<input
+type="tel"
+id="loginPhone"
+placeholder="10-digit phone number"
+maxlength="10"
+required
+>
+
+</div>
+
+
+<div class="form-group">
+
+<label>Password</label>
+
+<input
+type="password"
+id="loginPassword"
+placeholder="Enter password"
+required
+>
+
+</div>
+
+
+<div class="form-actions">
+
+<button
+type="submit"
+class="primary-btn"
+>
+Login
+</button>
+
+</div>
+
+</form>
+
+
+<div class="switch-auth">
+
+New waiter?
+
+<button
+type="button"
+onclick="showRegister()"
+>
+Register
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
 
 </div>
 
@@ -765,42 +774,42 @@
 
 <div id="pendingSection" class="page hidden">
 
-    <div class="container">
+<div class="container">
 
-        <div class="card pending-card">
+<div class="card pending-card">
 
-            <div class="pending-icon">
-                ⏳
-            </div>
+<div class="pending-icon">
+⏳
+</div>
 
-            <h2>
-                Waiting for Manager Approval
-            </h2>
+<h2>
+Waiting for Manager Approval
+</h2>
 
-            <p>
-                Your waiter account has been created successfully.
-                You can login after the Manager approves your account.
-            </p>
+<p>
+Your waiter account has been created successfully.
+The Manager must approve your account before you can login.
+</p>
 
-            <button
-                class="primary-btn"
-                onclick="checkApproval()"
-            >
-                Check Approval Status
-            </button>
+<button
+class="primary-btn"
+onclick="checkApproval()"
+>
+Check Approval Status
+</button>
 
-            <br><br>
+<br><br>
 
-            <button
-                class="secondary-btn"
-                onclick="showLoginFromPending()"
-            >
-                Go to Login
-            </button>
+<button
+class="secondary-btn"
+onclick="showLoginFromPending()"
+>
+Go to Login
+</button>
 
-        </div>
+</div>
 
-    </div>
+</div>
 
 </div>
 
@@ -811,627 +820,675 @@
 
 <div id="dashboardSection" class="page hidden">
 
-    <div class="container">
+<div class="container">
 
-        <div class="dashboard-header">
 
-            <div class="dashboard-title">
+<div class="dashboard-header">
 
-                <h1>
-                    Waiter Dashboard
-                </h1>
+<div class="dashboard-title">
 
-                <p>
-                    Take and manage restaurant orders
-                </p>
+<h1>
+Waiter Dashboard
+</h1>
 
-            </div>
+<p>
+Take and manage restaurant orders
+</p>
 
-            <div class="user-info">
+</div>
 
-                <strong id="waiterName">
-                    Waiter
-                </strong>
 
-                <span>
-                    WAITER
-                </span>
+<div class="user-info">
 
-                <br><br>
+<strong id="waiterName">
+Waiter
+</strong>
 
-                <button
-                    class="secondary-btn"
-                    onclick="logout()"
-                >
-                    Logout
-                </button>
+<span>
+WAITER
+</span>
 
-            </div>
+<br><br>
 
-        </div>
+<button
+class="secondary-btn"
+onclick="logout()"
+>
+Logout
+</button>
 
+</div>
 
-        <!-- STATS -->
+</div>
 
-        <div class="stats-grid">
 
-            <div class="card stat-card">
+<!-- STATS -->
 
-                <div class="stat-label">
-                    Available Dishes
-                </div>
+<div class="stats-grid">
 
-                <div
-                    class="stat-value"
-                    id="availableDishes"
-                >
-                    0
-                </div>
+<div class="card stat-card">
 
-            </div>
+<div class="stat-label">
+Available Dishes
+</div>
 
+<div
+class="stat-value"
+id="availableDishes"
+>
+0
+</div>
 
-            <div class="card stat-card">
+</div>
 
-                <div class="stat-label">
-                    Total Orders
-                </div>
 
-                <div
-                    class="stat-value"
-                    id="totalOrders"
-                >
-                    0
-                </div>
+<div class="card stat-card">
 
-            </div>
+<div class="stat-label">
+Total Orders
+</div>
 
+<div
+class="stat-value"
+id="totalOrders"
+>
+0
+</div>
 
-            <div class="card stat-card">
+</div>
 
-                <div class="stat-label">
-                    Pending Orders
-                </div>
 
-                <div
-                    class="stat-value"
-                    id="pendingOrders"
-                >
-                    0
-                </div>
+<div class="card stat-card">
 
-            </div>
+<div class="stat-label">
+Pending Orders
+</div>
 
+<div
+class="stat-value"
+id="pendingOrders"
+>
+0
+</div>
 
-            <div class="card stat-card">
+</div>
 
-                <div class="stat-label">
-                    Ready Orders
-                </div>
 
-                <div
-                    class="stat-value"
-                    id="readyOrders"
-                >
-                    0
-                </div>
+<div class="card stat-card">
 
-            </div>
+<div class="stat-label">
+Ready Orders
+</div>
 
-        </div>
+<div
+class="stat-value"
+id="readyOrders"
+>
+0
+</div>
 
+</div>
 
-        <!-- NAV -->
+</div>
 
-        <div class="card dashboard-nav">
 
-            <button
-                class="nav-btn active"
-                onclick="showDashboardTab('takeOrder', this)"
-            >
-                Take Order
-            </button>
+<!-- NAV -->
 
-            <button
-                class="nav-btn"
-                onclick="showDashboardTab('orders', this)"
-            >
-                Orders
-            </button>
+<div class="card dashboard-nav">
 
-            <button
-                class="nav-btn"
-                onclick="showDashboardTab('dishes', this)"
-            >
-                Dishes
-            </button>
+<button
+class="nav-btn active"
+onclick="showDashboardTab('takeOrder',this)"
+>
+Take Order
+</button>
 
-        </div>
+<button
+class="nav-btn"
+onclick="showDashboardTab('orders',this)"
+>
+Orders
+</button>
 
+<button
+class="nav-btn"
+onclick="showDashboardTab('dishes',this)"
+>
+Dishes
+</button>
 
-        <!-- TAKE ORDER -->
+</div>
 
-        <div
-            id="takeOrderTab"
-            class="card content-card"
-        >
 
-            <div class="section-header">
+<!-- =====================================================
+     TAKE ORDER
+===================================================== -->
 
-                <div>
+<div
+id="takeOrderTab"
+class="card content-card"
+>
 
-                    <h2>
-                        Take New Order
-                    </h2>
+<div class="section-header">
 
-                    <p>
-                        Enter customer details and select dishes.
-                    </p>
+<div>
 
-                </div>
+<h2>
+Take New Order
+</h2>
 
-            </div>
+<p>
+Enter customer details and select dishes.
+</p>
 
+</div>
 
-            <div id="orderMessage" class="message"></div>
+</div>
 
 
-            <div class="customer-form">
+<div id="orderMessage" class="message"></div>
 
-                <div class="form-group">
 
-                    <label>
-                        Customer Name
-                    </label>
+<div class="customer-form">
 
-                    <input
-                        type="text"
-                        id="customerName"
-                        placeholder="Enter customer name"
-                    >
+<div class="form-group">
 
-                </div>
+<label>
+Customer Name
+</label>
 
+<input
+type="text"
+id="customerName"
+placeholder="Enter customer name"
+>
 
-                <div class="form-group">
+</div>
 
-                    <label>
-                        Phone Number
-                    </label>
 
-                    <input
-                        type="tel"
-                        id="customerPhone"
-                        placeholder="Enter phone number"
-                    >
+<div class="form-group">
 
-                </div>
+<label>
+Customer Phone
+</label>
 
+<input
+type="tel"
+id="customerPhone"
+placeholder="10-digit phone number"
+maxlength="10"
+>
 
-                <div class="form-group">
+</div>
 
-                    <label>
-                        Table Number
-                    </label>
 
-                    <input
-                        type="number"
-                        id="tableNumber"
-                        placeholder="Enter table number"
-                        min="1"
-                    >
+<div class="form-group">
 
-                </div>
+<label>
+Table Number
+</label>
 
-            </div>
+<input
+type="number"
+id="tableNumber"
+placeholder="Table number"
+min="1"
+>
 
+</div>
 
-            <div class="section-header">
+</div>
 
-                <div>
 
-                    <h2>
-                        Select Dishes
-                    </h2>
+<div class="section-header">
 
-                </div>
+<div>
 
-                <button
-                    class="secondary-btn"
-                    onclick="loadDishes()"
-                >
-                    Refresh
-                </button>
+<h2>
+Select Dishes
+</h2>
 
-            </div>
+</div>
 
+<button
+class="secondary-btn"
+onclick="loadDishes()"
+>
+Refresh
+</button>
 
-            <div
-                id="dishGrid"
-                class="dish-grid"
-            >
+</div>
 
-                <div class="empty-state">
-                    Loading dishes...
-                </div>
 
-            </div>
+<div
+id="dishGrid"
+class="dish-grid"
+>
 
+<div class="empty-state">
+Loading dishes...
+</div>
 
-            <div style="margin-top:35px;">
+</div>
 
-                <div class="section-header">
 
-                    <div>
+<div style="margin-top:35px;">
 
-                        <h2>
-                            Current Order
-                        </h2>
+<div class="section-header">
 
-                    </div>
+<div>
 
-                </div>
+<h2>
+Current Order
+</h2>
 
+</div>
 
-                <div
-                    id="cartList"
-                    class="cart-list"
-                >
+</div>
 
-                    <div class="empty-state">
-                        No dishes selected.
-                    </div>
 
-                </div>
+<div
+id="cartList"
+class="cart-list"
+>
 
+<div class="empty-state">
+No dishes selected.
+</div>
 
-                <div class="cart-total">
+</div>
 
-                    <span>
-                        Total
-                    </span>
 
-                    <span>
-                        ₹<span id="cartTotal">0.00</span>
-                    </span>
+<div class="cart-total">
 
-                </div>
+<span>
+Total
+</span>
 
+<span>
+₹<span id="cartTotal">0.00</span>
+</span>
 
-                <button
-                    class="primary-btn"
-                    style="width:100%;"
-                    onclick="placeWaiterOrder()"
-                >
-                    Place Order
-                </button>
+</div>
 
-            </div>
 
-        </div>
+<button
+class="primary-btn"
+style="width:100%;"
+onclick="placeWaiterOrder()"
+>
+Place Order
+</button>
 
+</div>
 
-        <!-- ORDERS -->
+</div>
 
-        <div
-            id="ordersTab"
-            class="card content-card hidden"
-        >
 
-            <div class="section-header">
+<!-- =====================================================
+     ORDERS
+===================================================== -->
 
-                <div>
+<div
+id="ordersTab"
+class="card content-card hidden"
+>
 
-                    <h2>
-                        Orders
-                    </h2>
+<div class="section-header">
 
-                    <p>
-                        Orders placed by customers and waiters.
-                    </p>
+<div>
 
-                </div>
+<h2>
+Orders
+</h2>
 
-                <button
-                    class="secondary-btn"
-                    onclick="loadOrders()"
-                >
-                    Refresh
-                </button>
+<p>
+Restaurant orders.
+</p>
 
-            </div>
+</div>
 
+<button
+class="secondary-btn"
+onclick="loadOrders()"
+>
+Refresh
+</button>
 
-            <div
-                id="ordersList"
-                class="orders-list"
-            >
+</div>
 
-                <div class="empty-state">
-                    Loading orders...
-                </div>
 
-            </div>
+<div
+id="ordersList"
+class="orders-list"
+>
 
-        </div>
+<div class="empty-state">
+Loading orders...
+</div>
 
+</div>
 
-        <!-- DISHES -->
+</div>
 
-        <div
-            id="dishesTab"
-            class="card content-card hidden"
-        >
 
-            <div class="section-header">
+<!-- =====================================================
+     DISHES
+===================================================== -->
 
-                <div>
+<div
+id="dishesTab"
+class="card content-card hidden"
+>
 
-                    <h2>
-                        Restaurant Dishes
-                    </h2>
+<div class="section-header">
 
-                    <p>
-                        Current dishes and availability.
-                    </p>
+<div>
 
-                </div>
+<h2>
+Restaurant Dishes
+</h2>
 
-                <button
-                    class="secondary-btn"
-                    onclick="loadDishes()"
-                >
-                    Refresh
-                </button>
+<p>
+Current dishes and availability.
+</p>
 
-            </div>
+</div>
 
+<button
+class="secondary-btn"
+onclick="loadAllDishes()"
+>
+Refresh
+</button>
 
-            <div
-                id="allDishesGrid"
-                class="dish-grid"
-            >
+</div>
 
-                <div class="empty-state">
-                    Loading dishes...
-                </div>
 
-            </div>
+<div
+id="allDishesGrid"
+class="dish-grid"
+>
 
-        </div>
+<div class="empty-state">
+Loading dishes...
+</div>
 
-    </div>
+</div>
+
+</div>
+
+</div>
 
 </div>
 
 
 <script>
 
-    /* =========================================================
-       CONFIGURATION
-    ========================================================= */
+/* =========================================================
+   CONFIGURATION
+========================================================= */
 
-    const API_BASE = window.location.origin;
+const API_BASE = window.location.origin;
 
-    let currentUser = null;
+let currentUser = null;
 
-    let dishes = [];
+let dishes = [];
 
-    let cart = {};
-
-
-    /* =========================================================
-       VIEW FUNCTIONS
-    ========================================================= */
-
-    function showRegister() {
-
-        document
-            .getElementById("registerView")
-            .classList.remove("hidden");
-
-        document
-            .getElementById("loginView")
-            .classList.add("hidden");
-
-        clearMessage("registerMessage");
-        clearMessage("loginMessage");
-    }
+let cart = {};
 
 
-    function showLogin() {
+/* =========================================================
+   VIEW FUNCTIONS
+========================================================= */
 
-        document
-            .getElementById("registerView")
-            .classList.add("hidden");
+function showRegister(){
 
-        document
-            .getElementById("loginView")
-            .classList.remove("hidden");
+    document
+        .getElementById("registerView")
+        .classList.remove("hidden");
 
-        clearMessage("registerMessage");
-        clearMessage("loginMessage");
-    }
+    document
+        .getElementById("loginView")
+        .classList.add("hidden");
 
-
-    function showLoginFromPending() {
-
-        document
-            .getElementById("pendingSection")
-            .classList.add("hidden");
-
-        document
-            .getElementById("authSection")
-            .classList.remove("hidden");
-
-        showLogin();
-    }
+    clearMessage("registerMessage");
+    clearMessage("loginMessage");
+}
 
 
-    function showDashboard() {
+function showLogin(){
 
-        document
-            .getElementById("authSection")
-            .classList.add("hidden");
+    document
+        .getElementById("registerView")
+        .classList.add("hidden");
 
-        document
-            .getElementById("pendingSection")
-            .classList.add("hidden");
+    document
+        .getElementById("loginView")
+        .classList.remove("hidden");
 
-        document
-            .getElementById("dashboardSection")
-            .classList.remove("hidden");
+    clearMessage("registerMessage");
+    clearMessage("loginMessage");
+}
 
-        if (currentUser) {
 
-            document
-                .getElementById("waiterName")
-                .textContent =
-                currentUser.FullName ||
-                currentUser.full_name ||
-                "Waiter";
+function showLoginFromPending(){
 
-        }
+    document
+        .getElementById("pendingSection")
+        .classList.add("hidden");
 
-        loadDishes();
+    document
+        .getElementById("authSection")
+        .classList.remove("hidden");
+
+    showLogin();
+}
+
+
+function showPending(){
+
+    document
+        .getElementById("authSection")
+        .classList.add("hidden");
+
+    document
+        .getElementById("dashboardSection")
+        .classList.add("hidden");
+
+    document
+        .getElementById("pendingSection")
+        .classList.remove("hidden");
+}
+
+
+function showDashboard(){
+
+    document
+        .getElementById("authSection")
+        .classList.add("hidden");
+
+    document
+        .getElementById("pendingSection")
+        .classList.add("hidden");
+
+    document
+        .getElementById("dashboardSection")
+        .classList.remove("hidden");
+
+    document
+        .getElementById("waiterName")
+        .textContent =
+        currentUser?.FullName ||
+        currentUser?.full_name ||
+        "Waiter";
+
+    loadDishes();
+    loadOrders();
+}
+
+
+function showDashboardTab(tab,button){
+
+    document
+        .getElementById("takeOrderTab")
+        .classList.add("hidden");
+
+    document
+        .getElementById("ordersTab")
+        .classList.add("hidden");
+
+    document
+        .getElementById("dishesTab")
+        .classList.add("hidden");
+
+
+    document
+        .getElementById(tab+"Tab")
+        .classList.remove("hidden");
+
+
+    document
+        .querySelectorAll(".nav-btn")
+        .forEach(btn=>{
+            btn.classList.remove("active");
+        });
+
+
+    button.classList.add("active");
+
+
+    if(tab==="orders"){
         loadOrders();
     }
 
-
-    function showPending() {
-
-        document
-            .getElementById("authSection")
-            .classList.add("hidden");
-
-        document
-            .getElementById("dashboardSection")
-            .classList.add("hidden");
-
-        document
-            .getElementById("pendingSection")
-            .classList.remove("hidden");
+    if(tab==="dishes"){
+        loadAllDishes();
     }
+}
 
 
-    function showDashboardTab(tab, button) {
+/* =========================================================
+   MESSAGE
+========================================================= */
 
-        document
-            .getElementById("takeOrderTab")
-            .classList.add("hidden");
+function showMessage(elementId,message,type="info"){
 
-        document
-            .getElementById("ordersTab")
-            .classList.add("hidden");
+    const element =
+        document.getElementById(elementId);
 
-        document
-            .getElementById("dishesTab")
-            .classList.add("hidden");
+    if(!element) return;
 
+    element.textContent = message;
 
-        document
-            .getElementById(tab + "Tab")
-            .classList.remove("hidden");
+    element.className =
+        "message show "+type;
+}
 
 
-        document
-            .querySelectorAll(".nav-btn")
-            .forEach(btn => {
-                btn.classList.remove("active");
-            });
+function clearMessage(elementId){
 
-        button.classList.add("active");
+    const element =
+        document.getElementById(elementId);
 
+    if(!element) return;
 
-        if (tab === "orders") {
-            loadOrders();
-        }
+    element.textContent = "";
 
-        if (tab === "dishes") {
-            loadAllDishes();
-        }
-
-    }
+    element.className = "message";
+}
 
 
-    /* =========================================================
-       MESSAGE
-    ========================================================= */
+/* =========================================================
+   REGISTER
+========================================================= */
 
-    function showMessage(
-        elementId,
-        message,
-        type = "info"
-    ) {
+document
+    .getElementById("registerForm")
+    .addEventListener(
+        "submit",
+        async function(event){
 
-        const element =
-            document.getElementById(elementId);
+            event.preventDefault();
 
-        if (!element) return;
-
-        element.textContent = message;
-
-        element.className =
-            "message show " + type;
-    }
+            clearMessage("registerMessage");
 
 
-    function clearMessage(elementId) {
-
-        const element =
-            document.getElementById(elementId);
-
-        if (!element) return;
-
-        element.textContent = "";
-
-        element.className = "message";
-    }
+            const full_name =
+                document
+                    .getElementById("registerName")
+                    .value
+                    .trim();
 
 
-    /* =========================================================
-       REGISTER
-    ========================================================= */
-
-    document
-        .getElementById("registerForm")
-        .addEventListener(
-            "submit",
-            async function(event) {
-
-                event.preventDefault();
-
-                clearMessage("registerMessage");
-
-                const full_name =
-                    document
-                        .getElementById("registerName")
-                        .value
-                        .trim();
-
-                const phone =
-                    document
-                        .getElementById("registerPhone")
-                        .value
-                        .trim();
-
-                const email =
-                    document
-                        .getElementById("registerEmail")
-                        .value
-                        .trim();
-
-                const password =
-                    document
-                        .getElementById("registerPassword")
-                        .value;
+            const phone =
+                document
+                    .getElementById("registerPhone")
+                    .value
+                    .trim();
 
 
-                if (!/^[0-9]{10}$/.test(phone)) {
+            const email =
+                document
+                    .getElementById("registerEmail")
+                    .value
+                    .trim();
+
+
+            const password =
+                document
+                    .getElementById("registerPassword")
+                    .value;
+
+
+            if(!/^[0-9]{10}$/.test(phone)){
+
+                showMessage(
+                    "registerMessage",
+                    "Please enter a valid 10-digit phone number.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            try{
+
+                const response =
+                    await fetch(
+                        API_BASE+
+                        "/api/waiter/register",
+                        {
+                            method:"POST",
+
+                            headers:{
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify({
+                                    full_name,
+                                    phone,
+                                    email,
+                                    password
+                                })
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if(!response.ok ||
+                   !result.success){
 
                     showMessage(
                         "registerMessage",
-                        "Please enter a valid 10-digit phone number.",
+                        result.message ||
+                        "Registration failed.",
                         "error"
                     );
 
@@ -1439,1310 +1496,1090 @@
                 }
 
 
-                try {
-
-                    const response =
-                        await fetch(
-                            API_BASE +
-                            "/api/waiter/register",
-                            {
-                                method: "POST",
-
-                                headers: {
-                                    "Content-Type":
-                                        "application/json"
-                                },
-
-                                body:
-                                    JSON.stringify({
-                                        full_name,
-                                        phone,
-                                        email,
-                                        password
-                                    })
-                            }
-                        );
-
-
-                    const result =
-                        await response.json();
-
-
-                    if (!response.ok ||
-                        !result.success) {
-
-                        showMessage(
-                            "registerMessage",
-                            result.message ||
-                            "Registration failed.",
-                            "error"
-                        );
-
-                        return;
-                    }
-
-
-                    showMessage(
-                        "registerMessage",
-                        result.message ||
-                        "Registration successful. Waiting for Manager approval.",
-                        "success"
-                    );
-
-
-                    localStorage.setItem(
-                        "waiterPhone",
-                        phone
-                    );
-
-
-                    setTimeout(
-                        showPending,
-                        1200
-                    );
-
-                }
-                catch (error) {
-
-                    console.error(
-                        "Waiter registration error:",
-                        error
-                    );
-
-                    showMessage(
-                        "registerMessage",
-                        "Unable to connect to server.",
-                        "error"
-                    );
-                }
-
-            }
-        );
-
-
-    /* =========================================================
-       LOGIN
-       IMPORTANT:
-       Uses ONLY /api/waiter/login
-       Uses phone + password
-    ========================================================= */
-
-    document
-        .getElementById("loginForm")
-        .addEventListener(
-            "submit",
-            waiterLogin
-        );
-
-
-    async function waiterLogin(event) {
-
-        event.preventDefault();
-
-        clearMessage("loginMessage");
-
-
-        const phone =
-            document
-                .getElementById("loginPhone")
-                .value
-                .trim();
-
-
-        const password =
-            document
-                .getElementById("loginPassword")
-                .value;
-
-
-        if (!phone || !password) {
-
-            showMessage(
-                "loginMessage",
-                "Please enter phone number and password.",
-                "error"
-            );
-
-            return;
-        }
-
-
-        if (!/^[0-9]{10}$/.test(phone)) {
-
-            showMessage(
-                "loginMessage",
-                "Please enter a valid 10-digit phone number.",
-                "error"
-            );
-
-            return;
-        }
-
-
-        try {
-
-            const response =
-                await fetch(
-                    API_BASE +
-                    "/api/waiter/login",
-                    {
-                        method: "POST",
-
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
-
-                        body:
-                            JSON.stringify({
-                                phone: phone,
-                                password: password
-                            })
-                    }
+                localStorage.setItem(
+                    "waiterPhone",
+                    phone
                 );
 
-
-            const result =
-                await response.json();
-
-
-            if (!response.ok ||
-                !result.success) {
 
                 showMessage(
-                    "loginMessage",
+                    "registerMessage",
                     result.message ||
-                    "Login failed.",
-                    "error"
+                    "Registration successful. Waiting for Manager approval.",
+                    "success"
                 );
 
-                return;
+
+                setTimeout(
+                    showPending,
+                    1200
+                );
+
             }
+            catch(error){
 
-
-            const user =
-                result.user;
-
-
-            if (
-                String(user.Role || "")
-                    .toUpperCase() !==
-                "WAITER"
-            ) {
+                console.error(error);
 
                 showMessage(
-                    "loginMessage",
-                    "This account is not a waiter account.",
+                    "registerMessage",
+                    "Unable to connect to server.",
                     "error"
                 );
-
-                return;
             }
-
-
-            if (
-                user.IsActive === false ||
-                user.IsActive === 0
-            ) {
-
-                showMessage(
-                    "loginMessage",
-                    "Your account has not been approved by the Manager.",
-                    "error"
-                );
-
-                return;
-            }
-
-
-            currentUser = user;
-
-
-            localStorage.setItem(
-                "waiterUser",
-                JSON.stringify(user)
-            );
-
-
-            showDashboard();
-
-        }
-        catch (error) {
-
-            console.error(
-                "Waiter login error:",
-                error
-            );
-
-            showMessage(
-                "loginMessage",
-                "Unable to connect to server.",
-                "error"
-            );
-
-        }
-
-    }
-
-
-    /* =========================================================
-       CHECK APPROVAL
-    ========================================================= */
-
-    async function checkApproval() {
-
-        const phone =
-            localStorage.getItem(
-                "waiterPhone"
-            );
-
-
-        if (!phone) {
-
-            showLoginFromPending();
-
-            return;
-        }
-
-
-        try {
-
-            const response =
-                await fetch(
-                    API_BASE +
-                    "/api/waiter/check-status?phone=" +
-                    encodeURIComponent(phone)
-                );
-
-
-            const result =
-                await response.json();
-
-
-            if (!response.ok ||
-                !result.success) {
-
-                alert(
-                    result.message ||
-                    "Unable to check approval status."
-                );
-
-                return;
-            }
-
-
-            if (result.is_active) {
-
-                alert(
-                    "Your account has been approved. You can login now."
-                );
-
-                showLogin();
-
-            }
-            else {
-
-                alert(
-                    "Your account is still waiting for Manager approval."
-                );
-
-            }
-
-        }
-        catch (error) {
-
-            console.error(
-                "Approval check error:",
-                error
-            );
-
-            alert(
-                "Unable to connect to server."
-            );
-        }
-
-    }
-
-
-    /* =========================================================
-       LOAD DISHES
-    ========================================================= */
-
-    async function loadDishes() {
-
-        try {
-
-            const response =
-                await fetch(
-                    API_BASE +
-                    "/api/dishes"
-                );
-
-
-            const result =
-                await response.json();
-
-
-            if (!response.ok ||
-                !result.success) {
-
-                throw new Error(
-                    result.message ||
-                    "Unable to load dishes."
-                );
-            }
-
-
-            dishes =
-                result.dishes || [];
-
-
-            document
-                .getElementById("availableDishes")
-                .textContent =
-                dishes.filter(
-                    dish =>
-                        Boolean(dish.IsAvailable) &&
-                        Number(dish.AvailableQuantity) > 0
-                ).length;
-
-
-            renderTakeOrderDishes();
-
-        }
-        catch (error) {
-
-            document
-                .getElementById("dishGrid")
-                .innerHTML = `
-                    <div class="empty-state">
-                        Unable to load dishes.
-                    </div>
-                `;
-
-            console.error(
-                "Load dishes error:",
-                error
-            );
-        }
-
-    }
-
-
-    function renderTakeOrderDishes() {
-
-        const grid =
-            document.getElementById(
-                "dishGrid"
-            );
-
-
-        const available =
-            dishes.filter(
-                dish =>
-                    Boolean(dish.IsAvailable) &&
-                    Number(dish.AvailableQuantity) > 0
-            );
-
-
-        if (!available.length) {
-
-            grid.innerHTML = `
-                <div class="empty-state">
-                    No dishes are currently available.
-                </div>
-            `;
-
-            return;
-        }
-
-
-        grid.innerHTML =
-            available.map(
-                dish => {
-
-                    const quantity =
-                        cart[dish.DishID] || 0;
-
-
-                    return `
-                        <div class="card dish-card">
-
-                            <div class="dish-category">
-                                ${escapeHtml(
-                                    dish.Category || ""
-                                )}
-                            </div>
-
-                            <h3>
-                                ${escapeHtml(
-                                    dish.DishName || ""
-                                )}
-                            </h3>
-
-                            <div class="dish-description">
-                                ${escapeHtml(
-                                    dish.Description || ""
-                                )}
-                            </div>
-
-                            <div class="dish-bottom">
-
-                                <div class="dish-price">
-                                    ₹${Number(
-                                        dish.Price || 0
-                                    ).toFixed(2)}
-                                </div>
-
-                                <div class="dish-rating">
-                                    ★ ${Number(
-                                        dish.Rating || 0
-                                    ).toFixed(1)}
-                                </div>
-
-                            </div>
-
-                            <div class="quantity-control">
-
-                                <button
-                                    type="button"
-                                    onclick="changeQuantity(
-                                        ${dish.DishID},
-                                        -1
-                                    )"
-                                >
-                                    −
-                                </button>
-
-                                <span>
-                                    ${quantity}
-                                </span>
-
-                                <button
-                                    type="button"
-                                    onclick="changeQuantity(
-                                        ${dish.DishID},
-                                        1
-                                    )"
-                                >
-                                    +
-                                </button>
-
-                            </div>
-
-                        </div>
-                    `;
-                }
-            ).join("");
-
-    }
-
-
-    /* =========================================================
-       QUANTITY
-    ========================================================= */
-
-    function changeQuantity(
-        dishId,
-        change
-    ) {
-
-        const dish =
-            dishes.find(
-                item =>
-                    Number(item.DishID) ===
-                    Number(dishId)
-            );
-
-
-        if (!dish) return;
-
-
-        let quantity =
-            cart[dishId] || 0;
-
-
-        quantity += change;
-
-
-        if (quantity < 0) {
-            quantity = 0;
-        }
-
-
-        const available =
-            Number(
-                dish.AvailableQuantity
-            );
-
-
-        if (quantity > available) {
-
-            quantity = available;
-
-        }
-
-
-        if (quantity === 0) {
-
-            delete cart[dishId];
-
-        }
-        else {
-
-            cart[dishId] =
-                quantity;
-
-        }
-
-
-        renderTakeOrderDishes();
-
-        renderCart();
-
-    }
-
-
-    /* =========================================================
-       CART
-    ========================================================= */
-
-    function renderCart() {
-
-        const cartList =
-            document.getElementById(
-                "cartList"
-            );
-
-
-        const selected =
-            Object.entries(cart);
-
-
-        if (!selected.length) {
-
-            cartList.innerHTML = `
-                <div class="empty-state">
-                    No dishes selected.
-                </div>
-            `;
-
-            document
-                .getElementById("cartTotal")
-                .textContent = "0.00";
-
-            return;
-        }
-
-
-        let total = 0;
-
-
-        cartList.innerHTML =
-            selected.map(
-                ([dishId, quantity]) => {
-
-                    const dish =
-                        dishes.find(
-                            item =>
-                                Number(
-                                    item.DishID
-                                ) ===
-                                Number(dishId)
-                        );
-
-
-                    if (!dish) return "";
-
-
-                    const subtotal =
-                        Number(dish.Price) *
-                        Number(quantity);
-
-
-                    total += subtotal;
-
-
-                    return `
-                        <div class="cart-item">
-
-                            <div>
-
-                                <div class="cart-item-name">
-                                    ${escapeHtml(
-                                        dish.DishName
-                                    )}
-                                </div>
-
-                                <div class="cart-item-info">
-                                    ${quantity}
-                                    × ₹${Number(
-                                        dish.Price
-                                    ).toFixed(2)}
-                                    =
-                                    ₹${subtotal.toFixed(2)}
-                                </div>
-
-                            </div>
-
-                            <button
-                                type="button"
-                                class="danger-btn"
-                                onclick="removeFromCart(
-                                    ${dish.DishID}
-                                )"
-                            >
-                                Remove
-                            </button>
-
-                        </div>
-                    `;
-                }
-            ).join("");
-
-
-        document
-            .getElementById("cartTotal")
-            .textContent =
-            total.toFixed(2);
-
-    }
-
-
-    function removeFromCart(dishId) {
-
-        delete cart[dishId];
-
-        renderTakeOrderDishes();
-
-        renderCart();
-
-    }
-
-
-    /* =========================================================
-       PLACE ORDER
-    ========================================================= */
-
-    async function placeWaiterOrder() {
-
-        clearMessage(
-            "orderMessage"
-        );
-
-
-        const customer_name =
-            document
-                .getElementById(
-                    "customerName"
-                )
-                .value
-                .trim();
-
-
-        const phone =
-            document
-                .getElementById(
-                    "customerPhone"
-                )
-                .value
-                .trim();
-
-
-        const table_number =
-            document
-                .getElementById(
-                    "tableNumber"
-                )
-                .value
-                .trim();
-
-
-        const selected =
-            Object.entries(cart);
-
-
-        if (!customer_name) {
-
-            showMessage(
-                "orderMessage",
-                "Customer name is required.",
-                "error"
-            );
-
-            return;
-        }
-
-
-        if (!phone) {
-
-            showMessage(
-                "orderMessage",
-                "Customer phone number is required.",
-                "error"
-            );
-
-            return;
-        }
-
-
-        if (!table_number) {
-
-            showMessage(
-                "orderMessage",
-                "Table number is required.",
-                "error"
-            );
-
-            return;
-        }
-
-
-        if (!selected.length) {
-
-            showMessage(
-                "orderMessage",
-                "Please select at least one dish.",
-                "error"
-            );
-
-            return;
-        }
-
-
-        const items =
-            selected.map(
-                ([dish_id, quantity]) => ({
-                    dish_id: Number(dish_id),
-                    quantity: Number(quantity)
-                })
-            );
-
-
-        try {
-
-            const response =
-                await fetch(
-                    API_BASE +
-                    "/api/customer/place-order",
-                    {
-                        method: "POST",
-
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
-
-                        body:
-                            JSON.stringify({
-                                customer_name,
-                                phone,
-                                table_number,
-                                items
-                            })
-                    }
-                );
-
-
-            const result =
-                await response.json();
-
-
-            if (!response.ok ||
-                !result.success) {
-
-                showMessage(
-                    "orderMessage",
-                    result.message ||
-                    "Unable to place order.",
-                    "error"
-                );
-
-                return;
-            }
-
-
-            showMessage(
-                "orderMessage",
-                "Order placed successfully. Order ID: " +
-                result.order.order_id,
-                "success"
-            );
-
-
-            cart = {};
-
-
-            document
-                .getElementById(
-                    "customerName"
-                )
-                .value = "";
-
-
-            document
-                .getElementById(
-                    "customerPhone"
-                )
-                .value = "";
-
-
-            document
-                .getElementById(
-                    "tableNumber"
-                )
-                .value = "";
-
-
-            renderCart();
-
-            await loadDishes();
-
-            await loadOrders();
-
-        }
-        catch (error) {
-
-            console.error(
-                "Place waiter order error:",
-                error
-            );
-
-            showMessage(
-                "orderMessage",
-                "Unable to connect to server.",
-                "error"
-            );
-        }
-
-    }
-
-
-    /* =========================================================
-       LOAD ORDERS
-    ========================================================= */
-
-    async function loadOrders() {
-
-        try {
-
-            const response =
-                await fetch(
-                    API_BASE +
-                    "/api/orders"
-                );
-
-
-            const result =
-                await response.json();
-
-
-            if (!response.ok ||
-                !result.success) {
-
-                throw new Error(
-                    result.message ||
-                    "Unable to load orders."
-                );
-            }
-
-
-            const orders =
-                result.orders || [];
-
-
-            document
-                .getElementById(
-                    "totalOrders"
-                )
-                .textContent =
-                orders.length;
-
-
-            document
-                .getElementById(
-                    "pendingOrders"
-                )
-                .textContent =
-                orders.filter(
-                    order =>
-                        String(
-                            order.Status
-                        ).toUpperCase() ===
-                        "PENDING"
-                ).length;
-
-
-            document
-                .getElementById(
-                    "readyOrders"
-                )
-                .textContent =
-                orders.filter(
-                    order =>
-                        String(
-                            order.Status
-                        ).toUpperCase() ===
-                        "READY"
-                ).length;
-
-
-            renderOrders(orders);
-
-        }
-        catch (error) {
-
-            document
-                .getElementById(
-                    "ordersList"
-                )
-                .innerHTML = `
-                    <div class="empty-state">
-                        Unable to load orders.
-                    </div>
-                `;
-
-            console.error(
-                "Load orders error:",
-                error
-            );
-        }
-
-    }
-
-
-    function renderOrders(orders) {
-
-        const list =
-            document.getElementById(
-                "ordersList"
-            );
-
-
-        if (!orders.length) {
-
-            list.innerHTML = `
-                <div class="empty-state">
-                    No orders found.
-                </div>
-            `;
-
-            return;
-        }
-
-
-        list.innerHTML =
-            orders.map(
-                order => {
-
-                    return `
-                        <div class="order-row">
-
-                            <div class="order-id">
-                                #${order.OrderID}
-                            </div>
-
-                            <div>
-
-                                <strong>
-                                    ${escapeHtml(
-                                        order.CustomerName ||
-                                        ""
-                                    )}
-                                </strong>
-
-                                <div
-                                    style="
-                                        color:#9ca8ba;
-                                        font-size:12px;
-                                        margin-top:4px;
-                                    "
-                                >
-                                    Table ${escapeHtml(
-                                        String(
-                                            order.TableNumber ||
-                                            ""
-                                        )
-                                    )}
-                                </div>
-
-                            </div>
-
-                            <div>
-                                ₹${Number(
-                                    order.TotalAmount ||
-                                    0
-                                ).toFixed(2)}
-                            </div>
-
-                            <div>
-
-                                <span class="status">
-                                    ${escapeHtml(
-                                        order.Status ||
-                                        ""
-                                    )}
-                                </span>
-
-                            </div>
-
-                            <div>
-                                ${escapeHtml(
-                                    order.MobileNumber ||
-                                    ""
-                                )}
-                            </div>
-
-                        </div>
-                    `;
-                }
-            ).join("");
-
-    }
-
-
-    /* =========================================================
-       ALL DISHES
-    ========================================================= */
-
-    async function loadAllDishes() {
-
-        await loadDishes();
-
-
-        const grid =
-            document.getElementById(
-                "allDishesGrid"
-            );
-
-
-        if (!dishes.length) {
-
-            grid.innerHTML = `
-                <div class="empty-state">
-                    No dishes found.
-                </div>
-            `;
-
-            return;
-        }
-
-
-        grid.innerHTML =
-            dishes.map(
-                dish => {
-
-                    const available =
-                        Boolean(dish.IsAvailable) &&
-                        Number(
-                            dish.AvailableQuantity
-                        ) > 0;
-
-
-                    return `
-                        <div class="card dish-card">
-
-                            <div class="dish-category">
-                                ${escapeHtml(
-                                    dish.Category || ""
-                                )}
-                            </div>
-
-                            <h3>
-                                ${escapeHtml(
-                                    dish.DishName || ""
-                                )}
-                            </h3>
-
-                            <div class="dish-description">
-                                ${escapeHtml(
-                                    dish.Description || ""
-                                )}
-                            </div>
-
-                            <div class="dish-bottom">
-
-                                <div class="dish-price">
-                                    ₹${Number(
-                                        dish.Price || 0
-                                    ).toFixed(2)}
-                                </div>
-
-                                <div class="dish-rating">
-                                    ★ ${Number(
-                                        dish.Rating || 0
-                                    ).toFixed(1)}
-                                </div>
-
-                            </div>
-
-                            <div
-                                style="
-                                    margin-top:15px;
-                                    color:${
-                                        available
-                                        ? '#22c55e'
-                                        : '#ef4444'
-                                    };
-                                    font-size:13px;
-                                    font-weight:700;
-                                "
-                            >
-                                ${
-                                    available
-                                    ? "Available • " +
-                                      dish.AvailableQuantity +
-                                      " left"
-                                    : "Unavailable"
-                                }
-                            </div>
-
-                        </div>
-                    `;
-                }
-            ).join("");
-
-    }
-
-
-    /* =========================================================
-       LOGOUT
-    ========================================================= */
-
-    function logout() {
-
-        currentUser = null;
-
-        localStorage.removeItem(
-            "waiterUser"
-        );
-
-        cart = {};
-
-
-        document
-            .getElementById(
-                "dashboardSection"
-            )
-            .classList.add("hidden");
-
-
-        document
-            .getElementById(
-                "pendingSection"
-            )
-            .classList.add("hidden");
-
-
-        document
-            .getElementById(
-                "authSection"
-            )
-            .classList.remove("hidden");
-
-
-        showLogin();
-
-    }
-
-
-    /* =========================================================
-       HTML ESCAPE
-    ========================================================= */
-
-    function escapeHtml(value) {
-
-        return String(value ?? "")
-            .replace(
-                /&/g,
-                "&amp;"
-            )
-            .replace(
-                /</g,
-                "&lt;"
-            )
-            .replace(
-                />/g,
-                "&gt;"
-            )
-            .replace(
-                /"/g,
-                "&quot;"
-            )
-            .replace(
-                /'/g,
-                "&#039;"
-            );
-
-    }
-
-
-    /* =========================================================
-       INITIALIZE
-    ========================================================= */
-
-    window.addEventListener(
-        "DOMContentLoaded",
-        function() {
-
-            const savedUser =
-                localStorage.getItem(
-                    "waiterUser"
-                );
-
-
-            if (savedUser) {
-
-                try {
-
-                    currentUser =
-                        JSON.parse(
-                            savedUser
-                        );
-
-
-                    if (
-                        String(
-                            currentUser.Role ||
-                            ""
-                        ).toUpperCase() ===
-                        "WAITER" &&
-                        (
-                            currentUser.IsActive === true ||
-                            currentUser.IsActive === 1
-                        )
-                    ) {
-
-                        showDashboard();
-
-                        return;
-                    }
-
-
-                    localStorage.removeItem(
-                        "waiterUser"
-                    );
-
-                }
-                catch (error) {
-
-                    console.error(
-                        "Saved waiter user error:",
-                        error
-                    );
-
-                    localStorage.removeItem(
-                        "waiterUser"
-                    );
-                }
-
-            }
-
-
-            showRegister();
 
         }
     );
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+document
+    .getElementById("loginForm")
+    .addEventListener(
+        "submit",
+        waiterLogin
+    );
+
+
+async function waiterLogin(event){
+
+    event.preventDefault();
+
+    clearMessage("loginMessage");
+
+
+    const phone =
+        document
+            .getElementById("loginPhone")
+            .value
+            .trim();
+
+
+    const password =
+        document
+            .getElementById("loginPassword")
+            .value;
+
+
+    if(!/^[0-9]{10}$/.test(phone)){
+
+        showMessage(
+            "loginMessage",
+            "Please enter a valid 10-digit phone number.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if(!password){
+
+        showMessage(
+            "loginMessage",
+            "Password is required.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    try{
+
+        const response =
+            await fetch(
+                API_BASE+
+                "/api/waiter/login",
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            phone,
+                            password
+                        })
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if(!response.ok ||
+           !result.success){
+
+            showMessage(
+                "loginMessage",
+                result.message ||
+                "Login failed.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        const user =
+            result.user;
+
+
+        if(
+            String(user.Role||"")
+            .toUpperCase() !== "WAITER"
+        ){
+
+            showMessage(
+                "loginMessage",
+                "This account is not a waiter account.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        if(
+            user.IsActive === false ||
+            user.IsActive === 0
+        ){
+
+            showMessage(
+                "loginMessage",
+                "Your account is waiting for Manager approval.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        currentUser = user;
+
+
+        localStorage.setItem(
+            "waiterUser",
+            JSON.stringify(user)
+        );
+
+
+        showDashboard();
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        showMessage(
+            "loginMessage",
+            "Unable to connect to server.",
+            "error"
+        );
+    }
+}
+
+
+/* =========================================================
+   CHECK APPROVAL
+========================================================= */
+
+async function checkApproval(){
+
+    const phone =
+        localStorage.getItem("waiterPhone");
+
+
+    if(!phone){
+
+        showLoginFromPending();
+
+        return;
+    }
+
+
+    try{
+
+        const response =
+            await fetch(
+                API_BASE+
+                "/api/waiter/check-status?phone="+
+                encodeURIComponent(phone)
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if(!response.ok ||
+           !result.success){
+
+            alert(
+                result.message ||
+                "Unable to check approval."
+            );
+
+            return;
+        }
+
+
+        if(result.is_active){
+
+            alert(
+                "Your account has been approved. You can login now."
+            );
+
+            showLogin();
+
+        }
+        else{
+
+            alert(
+                "Your account is still waiting for Manager approval."
+            );
+        }
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        alert(
+            "Unable to connect to server."
+        );
+    }
+}
+
+
+/* =========================================================
+   LOAD DISHES
+========================================================= */
+
+async function loadDishes(){
+
+    try{
+
+        const response =
+            await fetch(
+                API_BASE+
+                "/api/dishes"
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if(!response.ok ||
+           !result.success){
+
+            throw new Error(
+                result.message ||
+                "Unable to load dishes."
+            );
+        }
+
+
+        dishes =
+            result.dishes || [];
+
+
+        document
+            .getElementById("availableDishes")
+            .textContent =
+            dishes.filter(
+                dish =>
+                    Boolean(dish.IsAvailable) &&
+                    Number(dish.AvailableQuantity)>0
+            ).length;
+
+
+        renderTakeOrderDishes();
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        document
+            .getElementById("dishGrid")
+            .innerHTML =
+            `<div class="empty-state">
+                Unable to load dishes.
+            </div>`;
+    }
+}
+
+
+/* =========================================================
+   RENDER DISHES
+========================================================= */
+
+function renderTakeOrderDishes(){
+
+    const grid =
+        document.getElementById("dishGrid");
+
+
+    const available =
+        dishes.filter(
+            dish =>
+                Boolean(dish.IsAvailable) &&
+                Number(dish.AvailableQuantity)>0
+        );
+
+
+    if(!available.length){
+
+        grid.innerHTML =
+            `<div class="empty-state">
+                No dishes are currently available.
+            </div>`;
+
+        return;
+    }
+
+
+    grid.innerHTML =
+        available.map(dish=>{
+
+            const quantity =
+                cart[dish.DishID] || 0;
+
+
+            return `
+            <div class="card dish-card">
+
+                <div class="dish-category">
+                    ${escapeHtml(dish.Category||"")}
+                </div>
+
+                <h3>
+                    ${escapeHtml(dish.DishName||"")}
+                </h3>
+
+                <div class="dish-description">
+                    ${escapeHtml(dish.Description||"")}
+                </div>
+
+                <div class="dish-bottom">
+
+                    <div class="dish-price">
+                        ₹${Number(dish.Price||0).toFixed(2)}
+                    </div>
+
+                    <div class="dish-rating">
+                        ★ ${Number(dish.Rating||0).toFixed(1)}
+                    </div>
+
+                </div>
+
+                <div class="quantity-control">
+
+                    <button
+                        type="button"
+                        onclick="changeQuantity(${dish.DishID},-1)"
+                    >
+                        −
+                    </button>
+
+                    <span>
+                        ${quantity}
+                    </span>
+
+                    <button
+                        type="button"
+                        onclick="changeQuantity(${dish.DishID},1)"
+                    >
+                        +
+                    </button>
+
+                </div>
+
+            </div>`;
+        }).join("");
+}
+
+
+/* =========================================================
+   QUANTITY
+========================================================= */
+
+function changeQuantity(dishId,change){
+
+    const dish =
+        dishes.find(
+            item =>
+                Number(item.DishID) ===
+                Number(dishId)
+        );
+
+
+    if(!dish) return;
+
+
+    let quantity =
+        cart[dishId] || 0;
+
+
+    quantity += change;
+
+
+    if(quantity<0)
+        quantity=0;
+
+
+    const available =
+        Number(dish.AvailableQuantity);
+
+
+    if(quantity>available)
+        quantity=available;
+
+
+    if(quantity===0)
+        delete cart[dishId];
+
+    else
+        cart[dishId]=quantity;
+
+
+    renderTakeOrderDishes();
+
+    renderCart();
+}
+
+
+/* =========================================================
+   CART
+========================================================= */
+
+function renderCart(){
+
+    const cartList =
+        document.getElementById("cartList");
+
+
+    const selected =
+        Object.entries(cart);
+
+
+    if(!selected.length){
+
+        cartList.innerHTML =
+            `<div class="empty-state">
+                No dishes selected.
+            </div>`;
+
+        document
+            .getElementById("cartTotal")
+            .textContent="0.00";
+
+        return;
+    }
+
+
+    let total=0;
+
+
+    cartList.innerHTML =
+        selected.map(
+            ([dishId,quantity])=>{
+
+                const dish =
+                    dishes.find(
+                        item =>
+                            Number(item.DishID) ===
+                            Number(dishId)
+                    );
+
+
+                if(!dish)
+                    return "";
+
+
+                const subtotal =
+                    Number(dish.Price)*
+                    Number(quantity);
+
+
+                total+=subtotal;
+
+
+                return `
+                <div class="cart-item">
+
+                    <div>
+
+                        <div class="cart-item-name">
+                            ${escapeHtml(dish.DishName)}
+                        </div>
+
+                        <div class="cart-item-info">
+                            ${quantity}
+                            × ₹${Number(dish.Price).toFixed(2)}
+                            =
+                            ₹${subtotal.toFixed(2)}
+                        </div>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="danger-btn"
+                        onclick="removeFromCart(${dish.DishID})"
+                    >
+                        Remove
+                    </button>
+
+                </div>`;
+            }
+        ).join("");
+
+
+    document
+        .getElementById("cartTotal")
+        .textContent =
+        total.toFixed(2);
+}
+
+
+function removeFromCart(dishId){
+
+    delete cart[dishId];
+
+    renderTakeOrderDishes();
+
+    renderCart();
+}
+
+
+/* =========================================================
+   PLACE ORDER
+========================================================= */
+
+async function placeWaiterOrder(){
+
+    clearMessage("orderMessage");
+
+
+    const customer_name =
+        document
+            .getElementById("customerName")
+            .value
+            .trim();
+
+
+    const phone =
+        document
+            .getElementById("customerPhone")
+            .value
+            .trim();
+
+
+    const table_number =
+        document
+            .getElementById("tableNumber")
+            .value
+            .trim();
+
+
+    const selected =
+        Object.entries(cart);
+
+
+    if(!customer_name){
+
+        showMessage(
+            "orderMessage",
+            "Customer name is required.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if(!/^[0-9]{10}$/.test(phone)){
+
+        showMessage(
+            "orderMessage",
+            "Customer phone must contain 10 digits.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if(!table_number){
+
+        showMessage(
+            "orderMessage",
+            "Table number is required.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if(!selected.length){
+
+        showMessage(
+            "orderMessage",
+            "Please select at least one dish.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    const items =
+        selected.map(
+            ([dish_id,quantity])=>({
+                dish_id:Number(dish_id),
+                quantity:Number(quantity)
+            })
+        );
+
+
+    try{
+
+        const response =
+            await fetch(
+                API_BASE+
+                "/api/customer/place-order",
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            customer_name,
+                            phone,
+                            table_number,
+                            items
+                        })
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if(!response.ok ||
+           !result.success){
+
+            showMessage(
+                "orderMessage",
+                result.message ||
+                "Unable to place order.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        showMessage(
+            "orderMessage",
+            "Order placed successfully. Order ID: "+
+            result.order.order_id,
+            "success"
+        );
+
+
+        cart={};
+
+
+        document
+            .getElementById("customerName")
+            .value="";
+
+
+        document
+            .getElementById("customerPhone")
+            .value="";
+
+
+        document
+            .getElementById("tableNumber")
+            .value="";
+
+
+        renderCart();
+
+        await loadDishes();
+
+        await loadOrders();
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        showMessage(
+            "orderMessage",
+            "Unable to connect to server.",
+            "error"
+        );
+    }
+}
+
+
+/* =========================================================
+   LOAD ORDERS
+========================================================= */
+
+async function loadOrders(){
+
+    try{
+
+        const response =
+            await fetch(
+                API_BASE+
+                "/api/orders"
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if(!response.ok ||
+           !result.success){
+
+            throw new Error(
+                result.message ||
+                "Unable to load orders."
+            );
+        }
+
+
+        const orders =
+            result.orders || [];
+
+
+        document
+            .getElementById("totalOrders")
+            .textContent =
+            orders.length;
+
+
+        document
+            .getElementById("pendingOrders")
+            .textContent =
+            orders.filter(
+                order =>
+                    String(order.Status||"")
+                    .toUpperCase()==="PENDING"
+            ).length;
+
+
+        document
+            .getElementById("readyOrders")
+            .textContent =
+            orders.filter(
+                order =>
+                    String(order.Status||"")
+                    .toUpperCase()==="READY"
+            ).length;
+
+
+        renderOrders(orders);
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        document
+            .getElementById("ordersList")
+            .innerHTML =
+            `<div class="empty-state">
+                Unable to load orders.
+            </div>`;
+    }
+}
+
+
+/* =========================================================
+   RENDER ORDERS
+========================================================= */
+
+function renderOrders(orders){
+
+    const list =
+        document.getElementById("ordersList");
+
+
+    if(!orders.length){
+
+        list.innerHTML =
+            `<div class="empty-state">
+                No orders found.
+            </div>`;
+
+        return;
+    }
+
+
+    list.innerHTML =
+        orders.map(order=>{
+
+            return `
+            <div class="order-row">
+
+                <div class="order-id">
+                    #${order.OrderID}
+                </div>
+
+                <div>
+
+                    <strong>
+                        ${escapeHtml(order.CustomerName||"")}
+                    </strong>
+
+                    <div
+                        style="
+                            color:#9ca8ba;
+                            font-size:12px;
+                            margin-top:4px;
+                        "
+                    >
+                        Table ${escapeHtml(
+                            String(order.TableNumber||"")
+                        )}
+                    </div>
+
+                </div>
+
+                <div>
+                    ₹${Number(
+                        order.TotalAmount||0
+                    ).toFixed(2)}
+                </div>
+
+                <div>
+                    <span class="status">
+                        ${escapeHtml(order.Status||"")}
+                    </span>
+                </div>
+
+                <div>
+                    ${escapeHtml(
+                        order.MobileNumber||""
+                    )}
+                </div>
+
+            </div>`;
+        }).join("");
+}
+
+
+/* =========================================================
+   ALL DISHES
+========================================================= */
+
+async function loadAllDishes(){
+
+    await loadDishes();
+
+
+    const grid =
+        document.getElementById(
+            "allDishesGrid"
+        );
+
+
+    if(!dishes.length){
+
+        grid.innerHTML =
+            `<div class="empty-state">
+                No dishes found.
+            </div>`;
+
+        return;
+    }
+
+
+    grid.innerHTML =
+        dishes.map(dish=>{
+
+            const available =
+                Boolean(dish.IsAvailable) &&
+                Number(dish.AvailableQuantity)>0;
+
+
+            return `
+            <div class="card dish-card">
+
+                <div class="dish-category">
+                    ${escapeHtml(dish.Category||"")}
+                </div>
+
+                <h3>
+                    ${escapeHtml(dish.DishName||"")}
+                </h3>
+
+                <div class="dish-description">
+                    ${escapeHtml(dish.Description||"")}
+                </div>
+
+                <div class="dish-bottom">
+
+                    <div class="dish-price">
+                        ₹${Number(dish.Price||0).toFixed(2)}
+                    </div>
+
+                    <div class="dish-rating">
+                        ★ ${Number(dish.Rating||0).toFixed(1)}
+                    </div>
+
+                </div>
+
+                <div
+                    style="
+                        margin-top:15px;
+                        color:${available?"#22c55e":"#ef4444"};
+                        font-size:13px;
+                        font-weight:700;
+                    "
+                >
+                    ${
+                        available
+                        ? "Available • "+
+                          dish.AvailableQuantity+
+                          " left"
+                        : "Unavailable"
+                    }
+                </div>
+
+            </div>`;
+        }).join("");
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+function logout(){
+
+    currentUser=null;
+
+    cart={};
+
+    localStorage.removeItem("waiterUser");
+
+
+    document
+        .getElementById("dashboardSection")
+        .classList.add("hidden");
+
+
+    document
+        .getElementById("pendingSection")
+        .classList.add("hidden");
+
+
+    document
+        .getElementById("authSection")
+        .classList.remove("hidden");
+
+
+    showLogin();
+}
+
+
+/* =========================================================
+   HTML ESCAPE
+========================================================= */
+
+function escapeHtml(value){
+
+    return String(value??"")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+window.addEventListener(
+    "DOMContentLoaded",
+    function(){
+
+        const savedUser =
+            localStorage.getItem(
+                "waiterUser"
+            );
+
+
+        if(savedUser){
+
+            try{
+
+                currentUser =
+                    JSON.parse(savedUser);
+
+
+                if(
+                    String(
+                        currentUser.Role||""
+                    ).toUpperCase()==="WAITER" &&
+                    (
+                        currentUser.IsActive===true ||
+                        currentUser.IsActive===1
+                    )
+                ){
+
+                    showDashboard();
+
+                    return;
+                }
+
+
+                localStorage.removeItem(
+                    "waiterUser"
+                );
+
+            }
+            catch(error){
+
+                console.error(error);
+
+                localStorage.removeItem(
+                    "waiterUser"
+                );
+            }
+        }
+
+
+        showRegister();
+
+    }
+);
 
 </script>
 

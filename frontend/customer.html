@@ -1,861 +1,508 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Customer | Hotel Restaurant Management System</title>
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        body {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #07111f, #0d1b2a, #12263a);
-            color: #ffffff;
-        }
-
-        /* =====================================================
-           HEADER
-        ===================================================== */
-
-        header {
-            width: 100%;
-            height: 75px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 45px;
-            background: rgba(7, 17, 31, 0.96);
-            border-bottom: 1px solid rgba(255,255,255,0.12);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-
-        .logo span {
-            color: #00e5ff;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .customer-name-display {
-            color: #d8e8f5;
-            font-size: 14px;
-        }
-
-        .cart-header-btn {
-            border: 1px solid #00e5ff;
-            background: rgba(0,229,255,0.08);
-            color: #ffffff;
-            padding: 10px 18px;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .cart-header-btn:hover {
-            background: #00e5ff;
-            color: #07111f;
-        }
-
-        /* =====================================================
-           MAIN
-        ===================================================== */
-
-        main {
-            width: 92%;
-            max-width: 1400px;
-            margin: 35px auto;
-        }
-
-        .welcome {
-            margin-bottom: 30px;
-        }
-
-        .welcome h1 {
-            font-size: 34px;
-            margin-bottom: 8px;
-        }
-
-        .welcome h1 span {
-            color: #00e5ff;
-        }
-
-        .welcome p {
-            color: #aebdca;
-        }
-
-        /* =====================================================
-           DASHBOARD CARDS
-        ===================================================== */
-
-        .dashboard-cards {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 18px;
-            margin-bottom: 35px;
-        }
-
-        .dashboard-card {
-            padding: 22px;
-            border-radius: 15px;
-            background: rgba(255,255,255,0.055);
-            border: 1px solid rgba(255,255,255,0.10);
-        }
-
-        .dashboard-card h3 {
-            color: #9fb0bf;
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-
-        .dashboard-card .value {
-            font-size: 28px;
-            font-weight: 700;
-            color: #00e5ff;
-        }
-
-        /* =====================================================
-           SECTION
-        ===================================================== */
-
-        .section-title {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .section-title h2 {
-            font-size: 25px;
-        }
-
-        .refresh-btn {
-            padding: 9px 18px;
-            border: 1px solid #00e5ff;
-            background: transparent;
-            color: #ffffff;
-            border-radius: 20px;
-            cursor: pointer;
-        }
-
-        .refresh-btn:hover {
-            background: #00e5ff;
-            color: #07111f;
-        }
-
-        /* =====================================================
-           DISHES
-        ===================================================== */
-
-        .dishes-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-        }
-
-        .dish-card {
-            background: rgba(255,255,255,0.055);
-            border: 1px solid rgba(255,255,255,0.10);
-            border-radius: 17px;
-            overflow: hidden;
-            transition: 0.3s;
-        }
-
-        .dish-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(0,229,255,0.5);
-        }
-
-        .dish-image {
-            width: 100%;
-            height: 170px;
-            background: linear-gradient(
-                135deg,
-                #10283b,
-                #17384d
-            );
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #7f95a7;
-            font-size: 14px;
-        }
-
-        .dish-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .dish-content {
-            padding: 18px;
-        }
-
-        .dish-category {
-            font-size: 12px;
-            color: #00e5ff;
-            margin-bottom: 7px;
-        }
-
-        .dish-name {
-            font-size: 19px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .dish-description {
-            min-height: 40px;
-            color: #aebdca;
-            font-size: 13px;
-            line-height: 1.4;
-            margin-bottom: 12px;
-        }
-
-        .dish-bottom {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 14px;
-        }
-
-        .price {
-            color: #ffffff;
-            font-weight: 700;
-            font-size: 18px;
-        }
-
-        .rating {
-            color: #00e5ff;
-            font-size: 13px;
-        }
-
-        .available {
-            color: #58e58b;
-            font-size: 12px;
-        }
-
-        .unavailable {
-            color: #ff7373;
-            font-size: 12px;
-        }
-
-        .add-btn {
-            width: 100%;
-            padding: 11px;
-            border: none;
-            border-radius: 9px;
-            background: #00e5ff;
-            color: #07111f;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .add-btn:hover {
-            opacity: 0.85;
-        }
-
-        .add-btn:disabled {
-            background: #43515d;
-            color: #aab4bc;
-            cursor: not-allowed;
-        }
-
-        /* =====================================================
-           CART DRAWER
-        ===================================================== */
-
-        .cart-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.65);
-            display: none;
-            z-index: 2000;
-        }
-
-        .cart-overlay.active {
-            display: block;
-        }
-
-        .cart-panel {
-            position: absolute;
-            right: 0;
-            top: 0;
-            height: 100%;
-            width: 430px;
-            max-width: 95%;
-            background: #0a1726;
-            border-left: 1px solid rgba(255,255,255,0.12);
-            padding: 25px;
-            overflow-y: auto;
-        }
-
-        .cart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-
-        .cart-header h2 {
-            font-size: 25px;
-        }
-
-        .close-cart {
-            background: transparent;
-            color: white;
-            border: none;
-            font-size: 28px;
-            cursor: pointer;
-        }
-
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            gap: 12px;
-            padding: 15px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.09);
-        }
-
-        .cart-item-name {
-            font-weight: 700;
-        }
-
-        .cart-item-price {
-            color: #00e5ff;
-            font-size: 13px;
-            margin-top: 5px;
-        }
-
-        .quantity-controls {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 8px;
-        }
-
-        .quantity-controls button {
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-            border: 1px solid #00e5ff;
-            background: transparent;
-            color: #ffffff;
-            cursor: pointer;
-        }
-
-        .quantity-controls span {
-            min-width: 20px;
-            text-align: center;
-        }
-
-        .remove-item {
-            background: transparent;
-            border: none;
-            color: #ff7373;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        .cart-total {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 25px;
-            font-size: 20px;
-            font-weight: 700;
-        }
-
-        .cart-total span:last-child {
-            color: #00e5ff;
-        }
-
-        .checkout-btn {
-            width: 100%;
-            margin-top: 20px;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            background: #00e5ff;
-            color: #07111f;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .empty-cart {
-            text-align: center;
-            color: #94a4b1;
-            padding: 50px 10px;
-        }
-
-        /* =====================================================
-           ORDER MODAL
-        ===================================================== */
-
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.72);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            z-index: 3000;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal {
-            width: 500px;
-            max-width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            background: #0a1726;
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 18px;
-            padding: 28px;
-        }
-
-        .modal h2 {
-            margin-bottom: 8px;
-        }
-
-        .modal-subtitle {
-            color: #9eacb8;
-            font-size: 13px;
-            margin-bottom: 22px;
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 7px;
-            color: #c8d4de;
-            font-size: 13px;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 12px 13px;
-            border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.15);
-            background: #101f30;
-            color: white;
-            outline: none;
-        }
-
-        .form-group input:focus {
-            border-color: #00e5ff;
-        }
-
-        .checkout-summary {
-            margin: 20px 0;
-            padding: 15px;
-            background: rgba(255,255,255,0.04);
-            border-radius: 10px;
-        }
-
-        .checkout-summary-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 0;
-            color: #b9c6d1;
-            font-size: 13px;
-        }
-
-        .checkout-summary-total {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        .checkout-summary-total span:last-child {
-            color: #00e5ff;
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .modal-actions button {
-            flex: 1;
-            padding: 12px;
-            border-radius: 9px;
-            cursor: pointer;
-            font-weight: 700;
-        }
-
-        .cancel-btn {
-            background: transparent;
-            border: 1px solid rgba(255,255,255,0.2);
-            color: white;
-        }
-
-        .place-order-btn {
-            background: #00e5ff;
-            border: none;
-            color: #07111f;
-        }
-
-        /* =====================================================
-           SUCCESS MODAL
-        ===================================================== */
-
-        .success-icon {
-            width: 70px;
-            height: 70px;
-            margin: 5px auto 20px;
-            border-radius: 50%;
-            border: 2px solid #00e5ff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #00e5ff;
-            font-size: 32px;
-        }
-
-        .success-content {
-            text-align: center;
-        }
-
-        .success-content h2 {
-            margin-bottom: 10px;
-        }
-
-        .success-content p {
-            color: #aebdca;
-            line-height: 1.5;
-        }
-
-        .order-id {
-            color: #00e5ff;
-            font-weight: 700;
-            font-size: 20px;
-            margin: 15px 0;
-        }
-
-        .success-close-btn {
-            width: 100%;
-            margin-top: 20px;
-            padding: 12px;
-            border: none;
-            border-radius: 9px;
-            background: #00e5ff;
-            color: #07111f;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        /* =====================================================
-           LOADING
-        ===================================================== */
-
-        .loading {
-            text-align: center;
-            padding: 60px;
-            color: #8fa1af;
-        }
-
-        .error-message {
-            text-align: center;
-            padding: 40px;
-            color: #ff8585;
-        }
-
-        /* =====================================================
-           RESPONSIVE
-        ===================================================== */
-
-        @media (max-width: 1100px) {
-
-            .dishes-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-
-            .dashboard-cards {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 750px) {
-
-            header {
-                padding: 0 20px;
-            }
-
-            .customer-name-display {
-                display: none;
-            }
-
-            main {
-                width: 94%;
-            }
-
-            .dishes-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .welcome h1 {
-                font-size: 27px;
-            }
-        }
-
-        @media (max-width: 500px) {
-
-            .dishes-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .dashboard-cards {
-                grid-template-columns: 1fr;
-            }
-
-            .cart-panel {
-                width: 100%;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Customer | Hotel Restaurant</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at top left,#243b55 0%,transparent 40%),
+        radial-gradient(circle at bottom right,#141e30 0%,transparent 45%),
+        #0b1220;
+    color:#fff;
+}
+
+button,input{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.hidden{
+    display:none!important;
+}
+
+.page{
+    min-height:100vh;
+    padding:25px;
+}
+
+.container{
+    width:100%;
+    max-width:1250px;
+    margin:auto;
+}
+
+.card{
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:18px;
+    backdrop-filter:blur(14px);
+    box-shadow:0 15px 40px rgba(0,0,0,.25);
+}
+
+.primary-btn{
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    background:#00c6ff;
+    color:#07111d;
+    font-weight:700;
+    transition:.2s;
+}
+
+.primary-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 20px rgba(0,198,255,.25);
+}
+
+.secondary-btn{
+    border:1px solid rgba(255,255,255,.2);
+    padding:11px 20px;
+    border-radius:10px;
+    background:rgba(255,255,255,.06);
+    color:#fff;
+    font-weight:600;
+}
+
+.danger-btn{
+    border:none;
+    padding:9px 15px;
+    border-radius:8px;
+    background:#ef4444;
+    color:white;
+    font-weight:700;
+}
+
+.message{
+    padding:12px 15px;
+    border-radius:10px;
+    margin-bottom:18px;
+    display:none;
+    font-size:14px;
+}
+
+.message.show{
+    display:block;
+}
+
+.message.error{
+    background:rgba(239,68,68,.15);
+    border:1px solid rgba(239,68,68,.35);
+    color:#fecaca;
+}
+
+.message.success{
+    background:rgba(34,197,94,.15);
+    border:1px solid rgba(34,197,94,.35);
+    color:#bbf7d0;
+}
+
+.message.info{
+    background:rgba(0,198,255,.12);
+    border:1px solid rgba(0,198,255,.3);
+    color:#bae6fd;
+}
+
+/* HEADER */
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    margin-bottom:30px;
+}
+
+.brand{
+    font-size:25px;
+    font-weight:800;
+}
+
+.brand span{
+    color:#00c6ff;
+}
+
+.header-actions{
+    display:flex;
+    gap:10px;
+}
+
+/* CUSTOMER INFO */
+
+.customer-info{
+    padding:25px;
+    margin-bottom:25px;
+}
+
+.customer-info h1{
+    font-size:30px;
+    margin-bottom:8px;
+}
+
+.customer-info p{
+    color:#aeb8c8;
+    line-height:1.5;
+}
+
+.customer-form{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-top:22px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:8px;
+    color:#d9e2ef;
+    font-size:14px;
+    font-weight:600;
+}
+
+.form-group input{
+    width:100%;
+    padding:13px 14px;
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:10px;
+    outline:none;
+    background:rgba(0,0,0,.2);
+    color:#fff;
+}
+
+.form-group input:focus{
+    border-color:#00c6ff;
+    box-shadow:0 0 0 2px rgba(0,198,255,.1);
+}
+
+/* MAIN LAYOUT */
+
+.main-grid{
+    display:grid;
+    grid-template-columns:1fr 360px;
+    gap:22px;
+    align-items:start;
+}
+
+.content-card{
+    padding:25px;
+}
+
+.section-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    margin-bottom:22px;
+}
+
+.section-header h2{
+    font-size:22px;
+}
+
+.section-header p{
+    color:#9ca8ba;
+    font-size:13px;
+    margin-top:5px;
+}
+
+/* DISHES */
+
+.dish-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:18px;
+}
+
+.dish-card{
+    padding:18px;
+    overflow:hidden;
+}
+
+.dish-image{
+    width:100%;
+    height:190px;
+    border-radius:13px;
+    object-fit:cover;
+    margin-bottom:15px;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(0,198,255,.15),
+            rgba(255,255,255,.04)
+        );
+}
+
+.no-image{
+    width:100%;
+    height:190px;
+    border-radius:13px;
+    margin-bottom:15px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(255,255,255,.05);
+    color:#7f8ba0;
+    font-size:14px;
+}
+
+.dish-category{
+    color:#00c6ff;
+    font-size:12px;
+    margin-bottom:7px;
+}
+
+.dish-card h3{
+    margin-bottom:7px;
+}
+
+.dish-description{
+    color:#aeb8c8;
+    font-size:13px;
+    line-height:1.5;
+    min-height:40px;
+}
+
+.dish-bottom{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:15px;
+}
+
+.dish-price{
+    font-size:20px;
+    font-weight:800;
+}
+
+.dish-rating{
+    color:#facc15;
+    font-size:13px;
+}
+
+.stock{
+    margin-top:10px;
+    color:#22c55e;
+    font-size:12px;
+    font-weight:700;
+}
+
+.unavailable{
+    color:#ef4444;
+}
+
+/* CART */
+
+.cart-card{
+    padding:25px;
+    position:sticky;
+    top:20px;
+}
+
+.cart-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.cart-header h2{
+    font-size:22px;
+}
+
+.cart-count{
+    background:rgba(0,198,255,.12);
+    color:#00c6ff;
+    border:1px solid rgba(0,198,255,.25);
+    padding:5px 10px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:700;
+}
+
+.cart-list{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    max-height:430px;
+    overflow-y:auto;
+}
+
+.cart-item{
+    padding:14px;
+    border-radius:11px;
+    background:rgba(255,255,255,.04);
+}
+
+.cart-item-top{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+}
+
+.cart-item-name{
+    font-weight:700;
+}
+
+.cart-item-info{
+    color:#9ca8ba;
+    font-size:12px;
+    margin-top:5px;
+}
+
+.cart-controls{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-top:10px;
+}
+
+.qty-btn{
+    width:28px;
+    height:28px;
+    border-radius:7px;
+    border:1px solid rgba(255,255,255,.15);
+    background:rgba(255,255,255,.05);
+    color:#fff;
+}
+
+.qty-number{
+    min-width:25px;
+    text-align:center;
+}
+
+.cart-total{
+    display:flex;
+    justify-content:space-between;
+    padding:18px 0;
+    margin-top:18px;
+    border-top:1px solid rgba(255,255,255,.1);
+    font-size:21px;
+    font-weight:800;
+}
+
+.empty-state{
+    text-align:center;
+    padding:40px 20px;
+    color:#9ca8ba;
+}
+
+/* ORDER RESULT */
+
+.order-result{
+    margin-top:20px;
+    padding:18px;
+    border-radius:12px;
+    background:rgba(34,197,94,.08);
+    border:1px solid rgba(34,197,94,.2);
+}
+
+.order-result h3{
+    color:#86efac;
+    margin-bottom:8px;
+}
+
+.order-result p{
+    color:#cbd5e1;
+    font-size:13px;
+    line-height:1.6;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1000px){
+
+    .main-grid{
+        grid-template-columns:1fr;
+    }
+
+    .cart-card{
+        position:static;
+    }
+
+}
+
+@media(max-width:750px){
+
+    .customer-form{
+        grid-template-columns:1fr;
+    }
+
+    .dish-grid{
+        grid-template-columns:1fr;
+    }
+
+    .header{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+}
+
+@media(max-width:500px){
+
+    .page{
+        padding:15px;
+    }
+
+    .customer-info,
+    .content-card,
+    .cart-card{
+        padding:18px;
+    }
+
+    .dish-image,
+    .no-image{
+        height:170px;
+    }
+
+}
+</style>
 </head>
 
 <body>
 
-<header>
+<div class="page">
 
-    <div class="logo">
+<div class="container">
+
+<!-- ======================================================
+     HEADER
+====================================================== -->
+
+<div class="header">
+
+    <div class="brand">
         HOTEL <span>RESTAURANT</span>
     </div>
 
-    <div class="header-right">
-
-        <div
-            class="customer-name-display"
-            id="headerCustomerName"
-        >
-            Customer
-        </div>
+    <div class="header-actions">
 
         <button
-            class="cart-header-btn"
-            onclick="openCart()"
+            class="secondary-btn"
+            onclick="loadDishes()"
         >
-            🛒 Cart
-            <span id="cartCount">0</span>
+            Refresh
         </button>
 
-    </div>
-
-</header>
-
-
-<main>
-
-    <!-- =====================================================
-         WELCOME
-    ====================================================== -->
-
-    <section class="welcome">
-
-        <h1>
-            Welcome,
-            <span id="welcomeCustomer">
-                Customer
-            </span>
-        </h1>
-
-        <p>
-            Browse our dishes and place your order.
-        </p>
-
-    </section>
-
-
-    <!-- =====================================================
-         DASHBOARD CARDS
-    ====================================================== -->
-
-    <section class="dashboard-cards">
-
-        <div class="dashboard-card">
-
-            <h3>Available Dishes</h3>
-
-            <div
-                class="value"
-                id="totalDishes"
-            >
-                0
-            </div>
-
-        </div>
-
-
-        <div class="dashboard-card">
-
-            <h3>Cart Items</h3>
-
-            <div
-                class="value"
-                id="dashboardCartCount"
-            >
-                0
-            </div>
-
-        </div>
-
-
-        <div class="dashboard-card">
-
-            <h3>Cart Total</h3>
-
-            <div
-                class="value"
-                id="dashboardCartTotal"
-            >
-                ₹0
-            </div>
-
-        </div>
-
-
-        <div class="dashboard-card">
-
-            <h3>Restaurant</h3>
-
-            <div
-                class="value"
-                style="font-size:20px;"
-            >
-                OPEN
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- =====================================================
-         DISHES
-    ====================================================== -->
-
-    <section>
-
-        <div class="section-title">
-
-            <h2>
-                Our Dishes
-            </h2>
-
-            <button
-                class="refresh-btn"
-                onclick="loadDishes()"
-            >
-                Refresh
-            </button>
-
-        </div>
-
-
-        <div
-            id="dishesContainer"
-            class="dishes-grid"
-        >
-
-            <div class="loading">
-                Loading dishes...
-            </div>
-
-        </div>
-
-    </section>
-
-</main>
-
-
-<!-- =========================================================
-     CART
-========================================================= -->
-
-<div
-    class="cart-overlay"
-    id="cartOverlay"
-    onclick="closeCartOutside(event)"
->
-
-    <div
-        class="cart-panel"
-        onclick="event.stopPropagation()"
-    >
-
-        <div class="cart-header">
-
-            <h2>
-                Your Cart
-            </h2>
-
-            <button
-                class="close-cart"
-                onclick="closeCart()"
-            >
-                ×
-            </button>
-
-        </div>
-
-
-        <div id="cartItems">
-
-            <div class="empty-cart">
-                Your cart is empty.
-            </div>
-
-        </div>
-
-
-        <div class="cart-total">
-
-            <span>
-                Total
-            </span>
-
-            <span id="cartTotal">
-                ₹0
-            </span>
-
-        </div>
-
-
         <button
-            class="checkout-btn"
-            onclick="openCheckout()"
+            class="secondary-btn"
+            onclick="clearCart()"
         >
-            Proceed to Order
+            Clear Cart
         </button>
 
     </div>
@@ -863,29 +510,30 @@
 </div>
 
 
-<!-- =========================================================
-     CHECKOUT MODAL
-========================================================= -->
+<!-- ======================================================
+     CUSTOMER INFORMATION
+====================================================== -->
 
-<div
-    class="modal-overlay"
-    id="checkoutModal"
->
+<div class="card customer-info">
 
-    <div class="modal">
+    <h1>
+        Welcome, Customer
+    </h1>
 
-        <h2>
-            Complete Your Order
-        </h2>
+    <p>
+        Browse our dishes and place your order.
+    </p>
 
-        <p class="modal-subtitle">
-            Enter your details before placing the order.
-        </p>
+    <div
+        id="orderMessage"
+        class="message"
+    ></div>
 
+    <div class="customer-form">
 
         <div class="form-group">
 
-            <label>
+            <label for="customerName">
                 Customer Name
             </label>
 
@@ -893,6 +541,7 @@
                 type="text"
                 id="customerName"
                 placeholder="Enter your name"
+                autocomplete="off"
             >
 
         </div>
@@ -900,15 +549,16 @@
 
         <div class="form-group">
 
-            <label>
+            <label for="customerPhone">
                 Phone Number
             </label>
 
             <input
                 type="tel"
                 id="customerPhone"
-                placeholder="Enter phone number"
+                placeholder="Enter 10-digit phone number"
                 maxlength="10"
+                autocomplete="off"
             >
 
         </div>
@@ -916,7 +566,7 @@
 
         <div class="form-group">
 
-            <label>
+            <label for="tableNumber">
                 Table Number
             </label>
 
@@ -929,46 +579,48 @@
 
         </div>
 
+    </div>
 
-        <div class="checkout-summary">
-
-            <div
-                id="checkoutItems"
-            ></div>
+</div>
 
 
-            <div class="checkout-summary-total">
+<!-- ======================================================
+     MAIN
+====================================================== -->
 
-                <span>
-                    Total
-                </span>
+<div class="main-grid">
 
-                <span id="checkoutTotal">
-                    ₹0
-                </span>
 
-            </div>
+<!-- ======================================================
+     DISHES
+====================================================== -->
+
+<div class="card content-card">
+
+    <div class="section-header">
+
+        <div>
+
+            <h2>
+                Our Dishes
+            </h2>
+
+            <p>
+                Select dishes and add them to your cart.
+            </p>
 
         </div>
 
+    </div>
 
-        <div class="modal-actions">
 
-            <button
-                class="cancel-btn"
-                onclick="closeCheckout()"
-            >
-                Cancel
-            </button>
+    <div
+        id="dishGrid"
+        class="dish-grid"
+    >
 
-            <button
-                class="place-order-btn"
-                onclick="placeOrder()"
-                id="placeOrderButton"
-            >
-                Place Order
-            </button>
-
+        <div class="empty-state">
+            Loading dishes...
         </div>
 
     </div>
@@ -976,1182 +628,1068 @@
 </div>
 
 
-<!-- =========================================================
-     SUCCESS MODAL
-========================================================= -->
+<!-- ======================================================
+     CART
+====================================================== -->
 
-<div
-    class="modal-overlay"
-    id="successModal"
->
+<div class="card cart-card">
 
-    <div class="modal">
+    <div class="cart-header">
 
-        <div class="success-content">
+        <h2>
+            Your Cart
+        </h2>
 
-            <div class="success-icon">
-                ✓
-            </div>
+        <span
+            id="cartCount"
+            class="cart-count"
+        >
+            0 items
+        </span>
 
-            <h2>
-                Order Placed Successfully
-            </h2>
+    </div>
 
-            <p>
-                Your order has been successfully
-                submitted to the restaurant.
-            </p>
 
-            <div class="order-id">
-                Order ID:
-                <span id="successOrderId">
-                    -
-                </span>
-            </div>
+    <div
+        id="cartList"
+        class="cart-list"
+    >
 
-            <p>
-                Please remember your Order ID
-                for future reference.
-            </p>
-
-            <button
-                class="success-close-btn"
-                onclick="closeSuccess()"
-            >
-                Continue
-            </button>
-
+        <div class="empty-state">
+            Your cart is empty.
         </div>
 
     </div>
+
+
+    <div class="cart-total">
+
+        <span>
+            Total
+        </span>
+
+        <span>
+            ₹<span id="cartTotal">0.00</span>
+        </span>
+
+    </div>
+
+
+    <button
+        id="placeOrderButton"
+        class="primary-btn"
+        style="width:100%;"
+        onclick="placeOrder()"
+    >
+        Place Order
+    </button>
+
+
+    <div
+        id="orderResult"
+        class="order-result hidden"
+    >
+
+        <h3>
+            Order Placed
+        </h3>
+
+        <p id="orderResultText"></p>
+
+    </div>
+
+</div>
+
+</div>
+
+</div>
 
 </div>
 
 
 <script>
 
-    /* =========================================================
-       CONFIGURATION
-    ========================================================= */
+/* =========================================================
+   CONFIGURATION
+========================================================= */
 
-    const API_BASE = "";
+const API_BASE = window.location.origin;
 
-    let dishes = [];
+let dishes = [];
 
-    let cart = [];
-
-
-    /* =========================================================
-       INITIALIZATION
-    ========================================================= */
-
-    document.addEventListener(
-        "DOMContentLoaded",
-        function () {
-
-            loadCustomerName();
-
-            loadCart();
-
-            loadDishes();
-
-        }
-    );
+let cart = {};
 
 
-    /* =========================================================
-       CUSTOMER NAME
-    ========================================================= */
+/* =========================================================
+   MESSAGE
+========================================================= */
 
-    function loadCustomerName() {
+function showMessage(
+    message,
+    type = "info"
+){
 
-        const savedName =
-            localStorage.getItem(
-                "customerName"
-            );
+    const element =
+        document.getElementById(
+            "orderMessage"
+        );
 
-        if (savedName) {
+    element.textContent =
+        message;
 
-            document.getElementById(
-                "welcomeCustomer"
-            ).textContent = savedName;
+    element.className =
+        "message show " + type;
+}
 
-            document.getElementById(
-                "headerCustomerName"
-            ).textContent = savedName;
 
-            document.getElementById(
-                "customerName"
-            ).value = savedName;
-        }
+function clearMessage(){
+
+    const element =
+        document.getElementById(
+            "orderMessage"
+        );
+
+    element.textContent = "";
+
+    element.className =
+        "message";
+}
+
+
+/* =========================================================
+   HTML ESCAPE
+========================================================= */
+
+function escapeHtml(value){
+
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================================================
+   IMAGE URL
+========================================================= */
+
+function getImageUrl(imageUrl){
+
+    if(!imageUrl){
+        return "";
     }
 
+    imageUrl =
+        String(imageUrl).trim();
 
-    /* =========================================================
-       LOAD DISHES
-    ========================================================= */
+    if(!imageUrl){
+        return "";
+    }
 
-    async function loadDishes() {
+    if(
+        imageUrl.startsWith("http://") ||
+        imageUrl.startsWith("https://") ||
+        imageUrl.startsWith("data:")
+    ){
 
-        const container =
-            document.getElementById(
-                "dishesContainer"
+        return imageUrl;
+
+    }
+
+    if(imageUrl.startsWith("/")){
+        return API_BASE + imageUrl;
+    }
+
+    return API_BASE + "/" + imageUrl;
+
+}
+
+
+/* =========================================================
+   LOAD DISHES
+========================================================= */
+
+async function loadDishes(){
+
+    const grid =
+        document.getElementById(
+            "dishGrid"
+        );
+
+    grid.innerHTML = `
+        <div class="empty-state">
+            Loading dishes...
+        </div>
+    `;
+
+    try{
+
+        const response =
+            await fetch(
+                API_BASE +
+                "/api/dishes"
             );
 
-        container.innerHTML = `
-            <div class="loading">
-                Loading dishes...
+        const result =
+            await response.json();
+
+        if(
+            !response.ok ||
+            !result.success
+        ){
+
+            throw new Error(
+                result.message ||
+                "Unable to load dishes."
+            );
+
+        }
+
+        dishes =
+            result.dishes || [];
+
+        renderDishes();
+
+    }
+    catch(error){
+
+        console.error(
+            "Load dishes error:",
+            error
+        );
+
+        grid.innerHTML = `
+            <div class="empty-state">
+                Unable to load dishes.
+                <br><br>
+                Check whether Flask is running.
             </div>
         `;
 
-        try {
-
-            const response =
-                await fetch(
-                    API_BASE +
-                    "/api/dishes"
-                );
-
-            const result =
-                await response.json();
-
-            if (
-                !response.ok ||
-                !result.success
-            ) {
-
-                throw new Error(
-                    result.message ||
-                    "Unable to load dishes."
-                );
-            }
-
-            dishes =
-                result.dishes || [];
-
-            renderDishes();
-
-        } catch (error) {
-
-            console.error(
-                "Dishes error:",
-                error
-            );
-
-            container.innerHTML = `
-                <div class="error-message">
-                    Unable to load dishes.
-                    <br><br>
-                    ${escapeHtml(error.message)}
-                </div>
-            `;
-        }
     }
 
+}
 
-    /* =========================================================
-       RENDER DISHES
-    ========================================================= */
 
-    function renderDishes() {
+/* =========================================================
+   RENDER DISHES
+========================================================= */
 
-        const container =
-            document.getElementById(
-                "dishesContainer"
-            );
+function renderDishes(){
 
-        const availableDishes =
-            dishes.filter(
-                dish =>
-                    Boolean(dish.IsAvailable) &&
-                    Number(dish.AvailableQuantity) > 0
-            );
-
+    const grid =
         document.getElementById(
-            "totalDishes"
-        ).textContent =
-            availableDishes.length;
+            "dishGrid"
+        );
 
 
-        if (dishes.length === 0) {
-
-            container.innerHTML = `
-                <div class="error-message">
-                    No dishes available.
-                </div>
-            `;
-
-            return;
-        }
-
-
-        container.innerHTML =
-            dishes.map(
-                dish => {
-
-                    const available =
-                        Boolean(
-                            dish.IsAvailable
-                        ) &&
-                        Number(
-                            dish.AvailableQuantity
-                        ) > 0;
-
-                    const image =
-                        dish.ImageURL;
-
-                    return `
-                        <div class="dish-card">
-
-                            <div class="dish-image">
-
-                                ${
-                                    image
-                                    ?
-                                    `
-                                    <img
-                                        src="${escapeHtml(image)}"
-                                        alt="${escapeHtml(dish.DishName)}"
-                                        onerror="this.style.display='none'; this.parentElement.innerHTML='No Image';"
-                                    >
-                                    `
-                                    :
-                                    `No Image`
-                                }
-
-                            </div>
-
-
-                            <div class="dish-content">
-
-                                <div class="dish-category">
-                                    ${escapeHtml(
-                                        dish.Category ||
-                                        "Restaurant"
-                                    )}
-                                </div>
-
-
-                                <div class="dish-name">
-                                    ${escapeHtml(
-                                        dish.DishName
-                                    )}
-                                </div>
-
-
-                                <div class="dish-description">
-                                    ${escapeHtml(
-                                        dish.Description ||
-                                        "Delicious restaurant dish."
-                                    )}
-                                </div>
-
-
-                                <div class="dish-bottom">
-
-                                    <div class="price">
-                                        ₹${Number(
-                                            dish.Price || 0
-                                        ).toFixed(2)}
-                                    </div>
-
-
-                                    <div class="rating">
-                                        ★ ${Number(
-                                            dish.Rating || 0
-                                        ).toFixed(1)}
-                                    </div>
-
-                                </div>
-
-
-                                <div class="${
-                                    available
-                                    ? "available"
-                                    : "unavailable"
-                                }"
-                                style="margin-bottom:10px;">
-
-                                    ${
-                                        available
-                                        ?
-                                        `Available: ${
-                                            dish.AvailableQuantity
-                                        }`
-                                        :
-                                        "Currently unavailable"
-                                    }
-
-                                </div>
-
-
-                                <button
-                                    class="add-btn"
-                                    ${
-                                        available
-                                        ? ""
-                                        : "disabled"
-                                    }
-                                    onclick="addToCart(${dish.DishID})"
-                                >
-                                    ${
-                                        available
-                                        ?
-                                        "Add to Cart"
-                                        :
-                                        "Unavailable"
-                                    }
-                                </button>
-
-                            </div>
-
-                        </div>
-                    `;
-                }
-            ).join("");
-    }
-
-
-    /* =========================================================
-       ADD TO CART
-    ========================================================= */
-
-    function addToCart(dishId) {
-
-        const dish =
-            dishes.find(
-                d =>
-                    Number(d.DishID) ===
-                    Number(dishId)
-            );
-
-        if (!dish) {
-
-            alert(
-                "Dish not found."
-            );
-
-            return;
-        }
-
-
-        if (
-            !Boolean(dish.IsAvailable) ||
-            Number(
-                dish.AvailableQuantity
-            ) <= 0
-        ) {
-
-            alert(
-                "This dish is unavailable."
-            );
-
-            return;
-        }
-
-
-        const existing =
-            cart.find(
-                item =>
-                    Number(item.dish_id) ===
-                    Number(dishId)
-            );
-
-
-        if (existing) {
-
-            if (
-                existing.quantity >=
+    const available =
+        dishes.filter(
+            dish =>
+                Boolean(dish.IsAvailable) &&
                 Number(
                     dish.AvailableQuantity
-                )
-            ) {
+                ) > 0
+        );
 
-                alert(
-                    "Maximum available quantity reached."
-                );
 
-                return;
+    if(!available.length){
+
+        grid.innerHTML = `
+            <div class="empty-state">
+                No dishes are currently available.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    grid.innerHTML =
+        available.map(
+            dish => {
+
+                const quantity =
+                    cart[dish.DishID] || 0;
+
+                const image =
+                    getImageUrl(
+                        dish.ImageURL
+                    );
+
+
+                return `
+
+                <div class="card dish-card">
+
+                    ${
+                        image
+                        ?
+                        `
+                        <img
+                            src="${escapeHtml(image)}"
+                            class="dish-image"
+                            alt="${escapeHtml(dish.DishName)}"
+                            onerror="this.style.display='none';this.nextElementSibling.classList.remove('hidden');"
+                        >
+
+                        <div class="no-image hidden">
+                            Image unavailable
+                        </div>
+                        `
+                        :
+                        `
+                        <div class="no-image">
+                            No image available
+                        </div>
+                        `
+                    }
+
+
+                    <div class="dish-category">
+
+                        ${escapeHtml(
+                            dish.Category || ""
+                        )}
+
+                    </div>
+
+
+                    <h3>
+
+                        ${escapeHtml(
+                            dish.DishName || ""
+                        )}
+
+                    </h3>
+
+
+                    <div class="dish-description">
+
+                        ${escapeHtml(
+                            dish.Description || ""
+                        )}
+
+                    </div>
+
+
+                    <div class="dish-bottom">
+
+                        <div class="dish-price">
+
+                            ₹${Number(
+                                dish.Price || 0
+                            ).toFixed(2)}
+
+                        </div>
+
+
+                        <div class="dish-rating">
+
+                            ★ ${Number(
+                                dish.Rating || 0
+                            ).toFixed(1)}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stock">
+
+                        ${Number(
+                            dish.AvailableQuantity
+                        )} available
+
+                    </div>
+
+
+                    <div
+                        class="cart-controls"
+                        style="margin-top:14px;"
+                    >
+
+                        <button
+                            class="qty-btn"
+                            onclick="changeQuantity(
+                                ${dish.DishID},
+                                -1
+                            )"
+                        >
+                            −
+                        </button>
+
+
+                        <span class="qty-number">
+
+                            ${quantity}
+
+                        </span>
+
+
+                        <button
+                            class="qty-btn"
+                            onclick="changeQuantity(
+                                ${dish.DishID},
+                                1
+                            )"
+                        >
+                            +
+                        </button>
+
+                    </div>
+
+                </div>
+
+                `;
+
             }
+        ).join("");
 
-            existing.quantity++;
+}
 
-        } else {
 
-            cart.push({
+/* =========================================================
+   CHANGE QUANTITY
+========================================================= */
+
+function changeQuantity(
+    dishId,
+    change
+){
+
+    const dish =
+        dishes.find(
+            item =>
+                Number(item.DishID) ===
+                Number(dishId)
+        );
+
+
+    if(!dish){
+        return;
+    }
+
+
+    let quantity =
+        cart[dishId] || 0;
+
+
+    quantity += change;
+
+
+    if(quantity < 0){
+        quantity = 0;
+    }
+
+
+    const stock =
+        Number(
+            dish.AvailableQuantity
+        );
+
+
+    if(quantity > stock){
+
+        quantity = stock;
+
+    }
+
+
+    if(quantity === 0){
+
+        delete cart[dishId];
+
+    }
+    else{
+
+        cart[dishId] =
+            quantity;
+
+    }
+
+
+    renderDishes();
+
+    renderCart();
+
+}
+
+
+/* =========================================================
+   RENDER CART
+========================================================= */
+
+function renderCart(){
+
+    const list =
+        document.getElementById(
+            "cartList"
+        );
+
+    let total = 0;
+
+    let totalItems = 0;
+
+
+    const selected =
+        Object.entries(cart);
+
+
+    if(!selected.length){
+
+        list.innerHTML = `
+            <div class="empty-state">
+                Your cart is empty.
+            </div>
+        `;
+
+        document
+            .getElementById(
+                "cartTotal"
+            )
+            .textContent =
+            "0.00";
+
+        document
+            .getElementById(
+                "cartCount"
+            )
+            .textContent =
+            "0 items";
+
+        return;
+
+    }
+
+
+    list.innerHTML =
+        selected.map(
+            ([dishId,quantity]) => {
+
+                const dish =
+                    dishes.find(
+                        item =>
+                            Number(
+                                item.DishID
+                            ) ===
+                            Number(dishId)
+                    );
+
+
+                if(!dish){
+                    return "";
+                }
+
+
+                const price =
+                    Number(
+                        dish.Price || 0
+                    );
+
+
+                const qty =
+                    Number(quantity);
+
+
+                const subtotal =
+                    price * qty;
+
+
+                total += subtotal;
+
+                totalItems += qty;
+
+
+                return `
+
+                <div class="cart-item">
+
+                    <div class="cart-item-top">
+
+                        <div>
+
+                            <div class="cart-item-name">
+
+                                ${escapeHtml(
+                                    dish.DishName
+                                )}
+
+                            </div>
+
+                            <div class="cart-item-info">
+
+                                ${qty}
+                                ×
+                                ₹${price.toFixed(2)}
+
+                            </div>
+
+                        </div>
+
+
+                        <strong>
+
+                            ₹${subtotal.toFixed(2)}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div class="cart-controls">
+
+                        <button
+                            class="qty-btn"
+                            onclick="changeQuantity(
+                                ${dish.DishID},
+                                -1
+                            )"
+                        >
+                            −
+                        </button>
+
+
+                        <span class="qty-number">
+
+                            ${qty}
+
+                        </span>
+
+
+                        <button
+                            class="qty-btn"
+                            onclick="changeQuantity(
+                                ${dish.DishID},
+                                1
+                            )"
+                        >
+                            +
+                        </button>
+
+
+                        <button
+                            class="danger-btn"
+                            style="margin-left:auto;"
+                            onclick="removeFromCart(
+                                ${dish.DishID}
+                            )"
+                        >
+                            Remove
+                        </button>
+
+                    </div>
+
+                </div>
+
+                `;
+
+            }
+        ).join("");
+
+
+    document
+        .getElementById(
+            "cartTotal"
+        )
+        .textContent =
+        total.toFixed(2);
+
+
+    document
+        .getElementById(
+            "cartCount"
+        )
+        .textContent =
+        totalItems +
+        (totalItems === 1
+            ? " item"
+            : " items");
+
+}
+
+
+/* =========================================================
+   REMOVE ITEM
+========================================================= */
+
+function removeFromCart(
+    dishId
+){
+
+    delete cart[dishId];
+
+    renderDishes();
+
+    renderCart();
+
+}
+
+
+/* =========================================================
+   CLEAR CART
+========================================================= */
+
+function clearCart(){
+
+    cart = {};
+
+    renderDishes();
+
+    renderCart();
+
+    clearMessage();
+
+    document
+        .getElementById(
+            "orderResult"
+        )
+        .classList.add(
+            "hidden"
+        );
+
+}
+
+
+/* =========================================================
+   PLACE ORDER
+========================================================= */
+
+async function placeOrder(){
+
+    clearMessage();
+
+
+    const customerName =
+        document
+            .getElementById(
+                "customerName"
+            )
+            .value
+            .trim();
+
+
+    const phone =
+        document
+            .getElementById(
+                "customerPhone"
+            )
+            .value
+            .trim();
+
+
+    const tableNumber =
+        document
+            .getElementById(
+                "tableNumber"
+            )
+            .value
+            .trim();
+
+
+    const selected =
+        Object.entries(cart);
+
+
+    /* -------------------------------------------------------
+       VALIDATION
+    ------------------------------------------------------- */
+
+    if(!customerName){
+
+        showMessage(
+            "Please enter your name.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if(
+        !/^[0-9]{10}$/.test(phone)
+    ){
+
+        showMessage(
+            "Please enter a valid 10-digit phone number.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if(!tableNumber){
+
+        showMessage(
+            "Please enter your table number.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if(!selected.length){
+
+        showMessage(
+            "Please select at least one dish.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const items =
+        selected.map(
+            ([dish_id,quantity]) => ({
 
                 dish_id:
-                    Number(dish.DishID),
+                    Number(dish_id),
 
-                dish_name:
-                    dish.DishName,
+                quantity:
+                    Number(quantity)
 
-                price:
-                    Number(dish.Price),
-
-                quantity: 1,
-
-                available_quantity:
-                    Number(
-                        dish.AvailableQuantity
-                    )
-            });
-        }
-
-
-        saveCart();
-
-        updateCart();
-
-    }
-
-
-    /* =========================================================
-       SAVE CART
-    ========================================================= */
-
-    function saveCart() {
-
-        localStorage.setItem(
-            "customerCart",
-            JSON.stringify(cart)
+            })
         );
-    }
 
 
-    /* =========================================================
-       LOAD CART
-    ========================================================= */
+    const button =
+        document.getElementById(
+            "placeOrderButton"
+        );
 
-    function loadCart() {
 
-        try {
+    button.disabled = true;
 
-            const saved =
-                localStorage.getItem(
-                    "customerCart"
-                );
+    button.textContent =
+        "Placing Order...";
 
-            if (saved) {
 
-                const parsed =
-                    JSON.parse(saved);
+    try{
 
-                if (
-                    Array.isArray(parsed)
-                ) {
-                    cart = parsed;
+        const response =
+            await fetch(
+                API_BASE +
+                "/api/customer/place-order",
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            customer_name:
+                                customerName,
+
+                            phone:
+                                phone,
+
+                            table_number:
+                                tableNumber,
+
+                            items:
+                                items
+
+                        })
+
                 }
-            }
-
-        } catch (error) {
-
-            console.error(
-                "Cart loading error:",
-                error
             );
 
-            cart = [];
+
+        const result =
+            await response.json();
+
+
+        if(
+            !response.ok ||
+            !result.success
+        ){
+
+            showMessage(
+                result.message ||
+                "Unable to place order.",
+                "error"
+            );
+
+            return;
+
         }
 
 
-        updateCart();
+        /* ---------------------------------------------------
+           SUCCESS
+        --------------------------------------------------- */
 
-    }
-
-
-    /* =========================================================
-       UPDATE CART
-    ========================================================= */
-
-    function updateCart() {
-
-        const cartItems =
-            document.getElementById(
-                "cartItems"
-            );
-
-        const cartCount =
-            cart.reduce(
-                (total, item) =>
-                    total +
-                    Number(item.quantity),
-                0
-            );
+        showMessage(
+            "Your order has been placed successfully.",
+            "success"
+        );
 
 
-        const total =
-            calculateCartTotal();
+        const order =
+            result.order || {};
 
 
-        document.getElementById(
-            "cartCount"
-        ).textContent =
-            cartCount;
+        document
+            .getElementById(
+                "orderResultText"
+            )
+            .innerHTML = `
 
+                Order ID:
+                <strong>
+                    #${escapeHtml(
+                        order.order_id || ""
+                    )}
+                </strong>
+                <br>
 
-        document.getElementById(
-            "dashboardCartCount"
-        ).textContent =
-            cartCount;
+                Customer:
+                ${escapeHtml(
+                    customerName
+                )}
+                <br>
 
+                Table:
+                ${escapeHtml(
+                    tableNumber
+                )}
+                <br>
 
-        document.getElementById(
-            "cartTotal"
-        ).textContent =
-            "₹" +
-            total.toFixed(2);
+                Total:
+                ₹${Number(
+                    order.total_amount || 0
+                ).toFixed(2)}
+                <br>
 
+                Status:
+                ${escapeHtml(
+                    order.status || "Pending"
+                )}
 
-        document.getElementById(
-            "dashboardCartTotal"
-        ).textContent =
-            "₹" +
-            total.toFixed(2);
-
-
-        if (cart.length === 0) {
-
-            cartItems.innerHTML = `
-                <div class="empty-cart">
-                    Your cart is empty.
-                </div>
             `;
 
-            return;
-        }
-
-
-        cartItems.innerHTML =
-            cart.map(
-                (item, index) => {
-
-                    return `
-                        <div class="cart-item">
-
-                            <div>
-
-                                <div class="cart-item-name">
-                                    ${escapeHtml(
-                                        item.dish_name
-                                    )}
-                                </div>
-
-                                <div class="cart-item-price">
-                                    ₹${Number(
-                                        item.price
-                                    ).toFixed(2)}
-                                    ×
-                                    ${item.quantity}
-                                </div>
-
-
-                                <div class="quantity-controls">
-
-                                    <button
-                                        onclick="changeQuantity(${index}, -1)"
-                                    >
-                                        −
-                                    </button>
-
-                                    <span>
-                                        ${item.quantity}
-                                    </span>
-
-                                    <button
-                                        onclick="changeQuantity(${index}, 1)"
-                                    >
-                                        +
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-
-                            <div>
-
-                                <div style="font-weight:700;">
-                                    ₹${(
-                                        Number(item.price) *
-                                        Number(item.quantity)
-                                    ).toFixed(2)}
-                                </div>
-
-                                <button
-                                    class="remove-item"
-                                    onclick="removeFromCart(${index})"
-                                >
-                                    Remove
-                                </button>
-
-                            </div>
-
-                        </div>
-                    `;
-                }
-            ).join("");
-    }
-
-
-    /* =========================================================
-       CALCULATE TOTAL
-    ========================================================= */
-
-    function calculateCartTotal() {
-
-        return cart.reduce(
-            (total, item) =>
-                total +
-                (
-                    Number(item.price) *
-                    Number(item.quantity)
-                ),
-            0
-        );
-
-    }
-
-
-    /* =========================================================
-       CHANGE QUANTITY
-    ========================================================= */
-
-    function changeQuantity(
-        index,
-        change
-    ) {
-
-        if (!cart[index]) {
-            return;
-        }
-
-
-        const newQuantity =
-            Number(
-                cart[index].quantity
-            ) +
-            change;
-
-
-        if (newQuantity <= 0) {
-
-            cart.splice(
-                index,
-                1
-            );
-
-        } else {
-
-            if (
-                cart[index].available_quantity &&
-                newQuantity >
-                Number(
-                    cart[index].available_quantity
-                )
-            ) {
-
-                alert(
-                    "Maximum available quantity reached."
-                );
-
-                return;
-            }
-
-            cart[index].quantity =
-                newQuantity;
-        }
-
-
-        saveCart();
-
-        updateCart();
-
-    }
-
-
-    /* =========================================================
-       REMOVE CART ITEM
-    ========================================================= */
-
-    function removeFromCart(index) {
-
-        cart.splice(
-            index,
-            1
-        );
-
-        saveCart();
-
-        updateCart();
-
-    }
-
-
-    /* =========================================================
-       OPEN CART
-    ========================================================= */
-
-    function openCart() {
 
         document
             .getElementById(
-                "cartOverlay"
-            )
-            .classList.add(
-                "active"
-            );
-
-    }
-
-
-    /* =========================================================
-       CLOSE CART
-    ========================================================= */
-
-    function closeCart() {
-
-        document
-            .getElementById(
-                "cartOverlay"
+                "orderResult"
             )
             .classList.remove(
-                "active"
+                "hidden"
             );
 
-    }
+
+        /* ---------------------------------------------------
+           CLEAR CART AFTER SUCCESS
+        --------------------------------------------------- */
+
+        cart = {};
+
+        renderCart();
+
+        await loadDishes();
 
 
-    function closeCartOutside(event) {
-
-        if (
-            event.target.id ===
-            "cartOverlay"
-        ) {
-
-            closeCart();
-
-        }
-
-    }
-
-
-    /* =========================================================
-       OPEN CHECKOUT
-    ========================================================= */
-
-    function openCheckout() {
-
-        if (
-            cart.length === 0
-        ) {
-
-            alert(
-                "Your cart is empty."
-            );
-
-            return;
-        }
-
-
-        renderCheckoutSummary();
-
-
-        const savedName =
-            localStorage.getItem(
-                "customerName"
-            );
-
-        if (savedName) {
-
-            document.getElementById(
-                "customerName"
-            ).value =
-                savedName;
-        }
-
-
-        closeCart();
-
+        /* Keep customer information.
+           It is intentionally NOT automatically filled. */
 
         document
             .getElementById(
-                "checkoutModal"
+                "customerName"
             )
-            .classList.add(
-                "active"
-            );
-
-    }
-
-
-    /* =========================================================
-       CLOSE CHECKOUT
-    ========================================================= */
-
-    function closeCheckout() {
+            .value = "";
 
         document
             .getElementById(
-                "checkoutModal"
-            )
-            .classList.remove(
-                "active"
-            );
-
-    }
-
-
-    /* =========================================================
-       CHECKOUT SUMMARY
-    ========================================================= */
-
-    function renderCheckoutSummary() {
-
-        const container =
-            document.getElementById(
-                "checkoutItems"
-            );
-
-
-        container.innerHTML =
-            cart.map(
-                item => {
-
-                    return `
-                        <div class="checkout-summary-row">
-
-                            <span>
-                                ${escapeHtml(
-                                    item.dish_name
-                                )}
-                                ×
-                                ${item.quantity}
-                            </span>
-
-                            <span>
-                                ₹${(
-                                    Number(item.price) *
-                                    Number(item.quantity)
-                                ).toFixed(2)}
-                            </span>
-
-                        </div>
-                    `;
-                }
-            ).join("");
-
-
-        document.getElementById(
-            "checkoutTotal"
-        ).textContent =
-            "₹" +
-            calculateCartTotal().toFixed(2);
-
-    }
-
-
-    /* =========================================================
-       PLACE ORDER
-    ========================================================= */
-
-    async function placeOrder() {
-
-        const customerName =
-            document.getElementById(
-                "customerName"
-            ).value.trim();
-
-
-        const phone =
-            document.getElementById(
                 "customerPhone"
-            ).value.trim();
+            )
+            .value = "";
 
-
-        const tableNumber =
-            document.getElementById(
+        document
+            .getElementById(
                 "tableNumber"
-            ).value.trim();
+            )
+            .value = "";
 
 
-        /* -----------------------------------------------------
-           VALIDATION
-        ----------------------------------------------------- */
+    }
+    catch(error){
 
-        if (!customerName) {
-
-            alert(
-                "Please enter your name."
-            );
-
-            return;
-        }
-
-
-        if (!phone) {
-
-            alert(
-                "Please enter your phone number."
-            );
-
-            return;
-        }
-
-
-        if (!/^\d{10}$/.test(phone)) {
-
-            alert(
-                "Please enter a valid 10-digit phone number."
-            );
-
-            return;
-        }
-
-
-        if (!tableNumber) {
-
-            alert(
-                "Please enter your table number."
-            );
-
-            return;
-        }
-
-
-        if (
-            cart.length === 0
-        ) {
-
-            alert(
-                "Your cart is empty."
-            );
-
-            return;
-        }
-
-
-        /* -----------------------------------------------------
-           SAVE CUSTOMER NAME
-        ----------------------------------------------------- */
-
-        localStorage.setItem(
-            "customerName",
-            customerName
+        console.error(
+            "Place order error:",
+            error
         );
 
+        showMessage(
+            "Unable to connect to the server. Make sure Flask is running.",
+            "error"
+        );
 
-        /* -----------------------------------------------------
-           PREPARE ORDER ITEMS
-        ----------------------------------------------------- */
+    }
+    finally{
 
-        const items =
-            cart.map(
-                item => ({
-
-                    dish_id:
-                        Number(
-                            item.dish_id
-                        ),
-
-                    quantity:
-                        Number(
-                            item.quantity
-                        )
-
-                })
-            );
-
-
-        const button =
-            document.getElementById(
-                "placeOrderButton"
-            );
-
-
-        button.disabled = true;
+        button.disabled = false;
 
         button.textContent =
-            "Placing Order...";
-
-
-        try {
-
-            const response =
-                await fetch(
-                    API_BASE +
-                    "/api/customer/place-order",
-                    {
-                        method: "POST",
-
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
-
-                        body:
-                            JSON.stringify({
-
-                                customer_name:
-                                    customerName,
-
-                                phone:
-                                    phone,
-
-                                table_number:
-                                    tableNumber,
-
-                                items:
-                                    items
-
-                            })
-                    }
-                );
-
-
-            const result =
-                await response.json();
-
-
-            if (
-                !response.ok ||
-                !result.success
-            ) {
-
-                throw new Error(
-                    result.message ||
-                    result.error ||
-                    "Unable to place order."
-                );
-
-            }
-
-
-            /* -------------------------------------------------
-               CLEAR CART
-            ------------------------------------------------- */
-
-            cart = [];
-
-            localStorage.removeItem(
-                "customerCart"
-            );
-
-            updateCart();
-
-
-            /* -------------------------------------------------
-               CLOSE CHECKOUT
-            ------------------------------------------------- */
-
-            closeCheckout();
-
-
-            /* -------------------------------------------------
-               SHOW SUCCESS
-            ------------------------------------------------- */
-
-            document.getElementById(
-                "successOrderId"
-            ).textContent =
-                result.order.order_id;
-
-
-            document
-                .getElementById(
-                    "successModal"
-                )
-                .classList.add(
-                    "active"
-                );
-
-
-            /* -------------------------------------------------
-               REFRESH DISHES
-            ------------------------------------------------- */
-
-            loadDishes();
-
-        } catch (error) {
-
-            console.error(
-                "Place order error:",
-                error
-            );
-
-
-            alert(
-                error.message ||
-                "Unable to place order."
-            );
-
-        } finally {
-
-            button.disabled = false;
-
-            button.textContent =
-                "Place Order";
-
-        }
+            "Place Order";
 
     }
 
+}
 
-    /* =========================================================
-       CLOSE SUCCESS
-    ========================================================= */
 
-    function closeSuccess() {
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+window.addEventListener(
+    "DOMContentLoaded",
+    function(){
+
+        /* IMPORTANT:
+           Do not automatically put any name,
+           phone or previous cart into the form. */
 
         document
             .getElementById(
-                "successModal"
+                "customerName"
             )
-            .classList.remove(
-                "active"
-            );
+            .value = "";
+
+        document
+            .getElementById(
+                "customerPhone"
+            )
+            .value = "";
+
+        document
+            .getElementById(
+                "tableNumber"
+            )
+            .value = "";
+
+
+        cart = {};
+
+        renderCart();
+
+        loadDishes();
 
     }
-
-
-    /* =========================================================
-       ESCAPE HTML
-    ========================================================= */
-
-    function escapeHtml(value) {
-
-        if (
-            value === null ||
-            value === undefined
-        ) {
-
-            return "";
-
-        }
-
-        return String(value)
-            .replace(
-                /&/g,
-                "&amp;"
-            )
-            .replace(
-                /</g,
-                "&lt;"
-            )
-            .replace(
-                />/g,
-                "&gt;"
-            )
-            .replace(
-                /"/g,
-                "&quot;"
-            )
-            .replace(
-                /'/g,
-                "&#039;"
-            );
-
-    }
+);
 
 </script>
 
