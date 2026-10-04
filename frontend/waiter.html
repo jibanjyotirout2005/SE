@@ -116,7 +116,9 @@ button{
     color:#bae6fd;
 }
 
-/* AUTH */
+/* =========================================================
+   AUTH
+========================================================= */
 
 .auth-header{
     display:flex;
@@ -218,7 +220,9 @@ button{
     font-weight:700;
 }
 
-/* PENDING */
+/* =========================================================
+   PENDING
+========================================================= */
 
 .pending-card{
     max-width:620px;
@@ -250,7 +254,9 @@ button{
     margin-bottom:25px;
 }
 
-/* DASHBOARD */
+/* =========================================================
+   DASHBOARD
+========================================================= */
 
 .dashboard-header{
     display:flex;
@@ -349,7 +355,9 @@ button{
     font-size:13px;
 }
 
-/* DISHES */
+/* =========================================================
+   DISHES
+========================================================= */
 
 .dish-grid{
     display:grid;
@@ -416,7 +424,9 @@ button{
     text-align:center;
 }
 
-/* ORDER */
+/* =========================================================
+   ORDER
+========================================================= */
 
 .customer-form{
     display:grid;
@@ -466,7 +476,9 @@ button{
     color:#9ca8ba;
 }
 
-/* ORDERS */
+/* =========================================================
+   ORDERS
+========================================================= */
 
 .orders-list{
     display:flex;
@@ -499,6 +511,47 @@ button{
     background:rgba(0,198,255,.12);
     color:#00c6ff;
 }
+
+.status.ready{
+    background:rgba(34,197,94,.15);
+    color:#86efac;
+}
+
+.status.preparing{
+    background:rgba(250,204,21,.15);
+    color:#fde68a;
+}
+
+.status.completed{
+    background:rgba(148,163,184,.15);
+    color:#cbd5e1;
+}
+
+.status.cancelled{
+    background:rgba(239,68,68,.15);
+    color:#fca5a5;
+}
+
+.order-items{
+    margin-top:10px;
+    padding:10px;
+    border-radius:8px;
+    background:rgba(0,0,0,.15);
+    font-size:12px;
+    color:#b8c3d3;
+}
+
+.order-item-line{
+    margin-bottom:4px;
+}
+
+.order-item-line:last-child{
+    margin-bottom:0;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
 
 @media(max-width:950px){
 
@@ -551,6 +604,10 @@ button{
     .nav-btn{
         white-space:nowrap;
     }
+
+    .order-row{
+        grid-template-columns:1fr;
+    }
 }
 </style>
 </head>
@@ -563,207 +620,212 @@ button{
 
 <div id="authSection" class="page">
 
-<div class="container">
+    <div class="container">
 
-<div class="auth-header">
+        <div class="auth-header">
 
-<div class="brand">
-HOTEL <span>RESTAURANT</span>
-</div>
+            <div class="brand">
+                HOTEL <span>RESTAURANT</span>
+            </div>
 
-<a href="/" class="back-btn">
-← Back
-</a>
+            <a href="/" class="back-btn">
+                ← Back
+            </a>
 
-</div>
+        </div>
 
+        <!-- REGISTER -->
 
-<!-- REGISTER -->
+        <div id="registerView" class="auth-wrapper">
 
-<div id="registerView" class="auth-wrapper">
+            <div class="card auth-card">
 
-<div class="card auth-card">
+                <h1 class="auth-title">
+                    Waiter Registration
+                </h1>
 
-<h1 class="auth-title">
-Waiter Registration
-</h1>
+                <p class="auth-subtitle">
+                    Create your waiter account.
+                    Your account must be approved by the Manager before login.
+                </p>
 
-<p class="auth-subtitle">
-Create your waiter account. Your account must be approved by the Manager before login.
-</p>
+                <div id="registerMessage" class="message"></div>
 
-<div id="registerMessage" class="message"></div>
+                <form id="registerForm">
 
-<form id="registerForm">
+                    <div class="form-group">
 
-<div class="form-group">
+                        <label for="registerName">
+                            Full Name
+                        </label>
 
-<label>Full Name</label>
+                        <input
+                            type="text"
+                            id="registerName"
+                            placeholder="Enter full name"
+                            required
+                        >
 
-<input
-type="text"
-id="registerName"
-placeholder="Enter full name"
-required
->
+                    </div>
 
-</div>
+                    <div class="form-group">
 
+                        <label for="registerPhone">
+                            Phone Number
+                        </label>
 
-<div class="form-group">
+                        <input
+                            type="tel"
+                            id="registerPhone"
+                            placeholder="10-digit phone number"
+                            maxlength="10"
+                            inputmode="numeric"
+                            required
+                        >
 
-<label>Phone Number</label>
+                    </div>
 
-<input
-type="tel"
-id="registerPhone"
-placeholder="10-digit phone number"
-maxlength="10"
-required
->
+                    <div class="form-group">
 
-</div>
+                        <label for="registerEmail">
+                            Email
+                        </label>
 
+                        <input
+                            type="email"
+                            id="registerEmail"
+                            placeholder="Enter email"
+                        >
 
-<div class="form-group">
+                    </div>
 
-<label>Email</label>
+                    <div class="form-group">
 
-<input
-type="email"
-id="registerEmail"
-placeholder="Enter email"
-required
->
+                        <label for="registerPassword">
+                            Password
+                        </label>
 
-</div>
+                        <input
+                            type="password"
+                            id="registerPassword"
+                            placeholder="Create password"
+                            minlength="6"
+                            required
+                        >
 
+                    </div>
 
-<div class="form-group">
+                    <div class="form-actions">
 
-<label>Password</label>
+                        <button
+                            type="submit"
+                            class="primary-btn"
+                        >
+                            Register as Waiter
+                        </button>
 
-<input
-type="password"
-id="registerPassword"
-placeholder="Create password"
-required
->
+                    </div>
 
-</div>
+                </form>
 
+                <div class="switch-auth">
 
-<div class="form-actions">
+                    Already registered?
 
-<button
-type="submit"
-class="primary-btn"
->
-Register as Waiter
-</button>
+                    <button
+                        type="button"
+                        onclick="showLogin()"
+                    >
+                        Login
+                    </button>
 
-</div>
+                </div>
 
-</form>
+            </div>
 
+        </div>
 
-<div class="switch-auth">
+        <!-- LOGIN -->
 
-Already registered?
+        <div id="loginView" class="auth-wrapper hidden">
 
-<button
-type="button"
-onclick="showLogin()"
->
-Login
-</button>
+            <div class="card auth-card">
 
-</div>
+                <h1 class="auth-title">
+                    Waiter Login
+                </h1>
 
-</div>
+                <p class="auth-subtitle">
+                    Login after your Manager approves your account.
+                </p>
 
-</div>
+                <div id="loginMessage" class="message"></div>
 
+                <form id="loginForm">
 
-<!-- LOGIN -->
+                    <div class="form-group">
 
-<div id="loginView" class="auth-wrapper hidden">
+                        <label for="loginPhone">
+                            Phone Number
+                        </label>
 
-<div class="card auth-card">
+                        <input
+                            type="tel"
+                            id="loginPhone"
+                            placeholder="10-digit phone number"
+                            maxlength="10"
+                            inputmode="numeric"
+                            required
+                        >
 
-<h1 class="auth-title">
-Waiter Login
-</h1>
+                    </div>
 
-<p class="auth-subtitle">
-Login after your Manager approves your account.
-</p>
+                    <div class="form-group">
 
-<div id="loginMessage" class="message"></div>
+                        <label for="loginPassword">
+                            Password
+                        </label>
 
-<form id="loginForm">
+                        <input
+                            type="password"
+                            id="loginPassword"
+                            placeholder="Enter password"
+                            required
+                        >
 
-<div class="form-group">
+                    </div>
 
-<label>Phone Number</label>
+                    <div class="form-actions">
 
-<input
-type="tel"
-id="loginPhone"
-placeholder="10-digit phone number"
-maxlength="10"
-required
->
+                        <button
+                            type="submit"
+                            class="primary-btn"
+                        >
+                            Login
+                        </button>
 
-</div>
+                    </div>
 
+                </form>
 
-<div class="form-group">
+                <div class="switch-auth">
 
-<label>Password</label>
+                    New waiter?
 
-<input
-type="password"
-id="loginPassword"
-placeholder="Enter password"
-required
->
+                    <button
+                        type="button"
+                        onclick="showRegister()"
+                    >
+                        Register
+                    </button>
 
-</div>
+                </div>
 
+            </div>
 
-<div class="form-actions">
+        </div>
 
-<button
-type="submit"
-class="primary-btn"
->
-Login
-</button>
-
-</div>
-
-</form>
-
-
-<div class="switch-auth">
-
-New waiter?
-
-<button
-type="button"
-onclick="showRegister()"
->
-Register
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
+    </div>
 
 </div>
 
@@ -774,42 +836,42 @@ Register
 
 <div id="pendingSection" class="page hidden">
 
-<div class="container">
+    <div class="container">
 
-<div class="card pending-card">
+        <div class="card pending-card">
 
-<div class="pending-icon">
-⏳
-</div>
+            <div class="pending-icon">
+                ⏳
+            </div>
 
-<h2>
-Waiting for Manager Approval
-</h2>
+            <h2>
+                Waiting for Manager Approval
+            </h2>
 
-<p>
-Your waiter account has been created successfully.
-The Manager must approve your account before you can login.
-</p>
+            <p>
+                Your waiter account has been created successfully.
+                The Manager must approve your account before you can login.
+            </p>
 
-<button
-class="primary-btn"
-onclick="checkApproval()"
->
-Check Approval Status
-</button>
+            <button
+                class="primary-btn"
+                onclick="checkApproval()"
+            >
+                Check Approval Status
+            </button>
 
-<br><br>
+            <br><br>
 
-<button
-class="secondary-btn"
-onclick="showLoginFromPending()"
->
-Go to Login
-</button>
+            <button
+                class="secondary-btn"
+                onclick="showLoginFromPending()"
+            >
+                Go to Login
+            </button>
 
-</div>
+        </div>
 
-</div>
+    </div>
 
 </div>
 
@@ -820,405 +882,403 @@ Go to Login
 
 <div id="dashboardSection" class="page hidden">
 
-<div class="container">
+    <div class="container">
 
+        <div class="dashboard-header">
 
-<div class="dashboard-header">
+            <div class="dashboard-title">
 
-<div class="dashboard-title">
+                <h1>
+                    Waiter Dashboard
+                </h1>
 
-<h1>
-Waiter Dashboard
-</h1>
+                <p>
+                    Take and manage restaurant orders
+                </p>
 
-<p>
-Take and manage restaurant orders
-</p>
+            </div>
 
-</div>
+            <div class="user-info">
 
+                <strong id="waiterName">
+                    Waiter
+                </strong>
 
-<div class="user-info">
+                <span>
+                    WAITER
+                </span>
 
-<strong id="waiterName">
-Waiter
-</strong>
+                <br><br>
 
-<span>
-WAITER
-</span>
+                <button
+                    class="secondary-btn"
+                    onclick="logout()"
+                >
+                    Logout
+                </button>
 
-<br><br>
+            </div>
 
-<button
-class="secondary-btn"
-onclick="logout()"
->
-Logout
-</button>
+        </div>
 
-</div>
 
-</div>
+        <!-- =====================================================
+             STATS
+        ====================================================== -->
 
+        <div class="stats-grid">
 
-<!-- STATS -->
+            <div class="card stat-card">
 
-<div class="stats-grid">
+                <div class="stat-label">
+                    Available Dishes
+                </div>
 
-<div class="card stat-card">
+                <div
+                    class="stat-value"
+                    id="availableDishes"
+                >
+                    0
+                </div>
 
-<div class="stat-label">
-Available Dishes
-</div>
+            </div>
 
-<div
-class="stat-value"
-id="availableDishes"
->
-0
-</div>
+            <div class="card stat-card">
 
-</div>
+                <div class="stat-label">
+                    Total Orders
+                </div>
 
+                <div
+                    class="stat-value"
+                    id="totalOrders"
+                >
+                    0
+                </div>
 
-<div class="card stat-card">
+            </div>
 
-<div class="stat-label">
-Total Orders
-</div>
+            <div class="card stat-card">
 
-<div
-class="stat-value"
-id="totalOrders"
->
-0
-</div>
+                <div class="stat-label">
+                    Pending Orders
+                </div>
 
-</div>
+                <div
+                    class="stat-value"
+                    id="pendingOrders"
+                >
+                    0
+                </div>
 
+            </div>
 
-<div class="card stat-card">
+            <div class="card stat-card">
 
-<div class="stat-label">
-Pending Orders
-</div>
+                <div class="stat-label">
+                    Ready Orders
+                </div>
 
-<div
-class="stat-value"
-id="pendingOrders"
->
-0
-</div>
+                <div
+                    class="stat-value"
+                    id="readyOrders"
+                >
+                    0
+                </div>
 
-</div>
+            </div>
 
+        </div>
 
-<div class="card stat-card">
 
-<div class="stat-label">
-Ready Orders
-</div>
+        <!-- =====================================================
+             NAVIGATION
+        ====================================================== -->
 
-<div
-class="stat-value"
-id="readyOrders"
->
-0
-</div>
+        <div class="card dashboard-nav">
 
-</div>
+            <button
+                class="nav-btn active"
+                onclick="showDashboardTab('takeOrder',this)"
+            >
+                Take Order
+            </button>
 
-</div>
+            <button
+                class="nav-btn"
+                onclick="showDashboardTab('orders',this)"
+            >
+                Orders
+            </button>
 
+            <button
+                class="nav-btn"
+                onclick="showDashboardTab('dishes',this)"
+            >
+                Dishes
+            </button>
 
-<!-- NAV -->
+        </div>
 
-<div class="card dashboard-nav">
 
-<button
-class="nav-btn active"
-onclick="showDashboardTab('takeOrder',this)"
->
-Take Order
-</button>
+        <!-- =====================================================
+             TAKE ORDER
+        ====================================================== -->
 
-<button
-class="nav-btn"
-onclick="showDashboardTab('orders',this)"
->
-Orders
-</button>
+        <div
+            id="takeOrderTab"
+            class="card content-card"
+        >
 
-<button
-class="nav-btn"
-onclick="showDashboardTab('dishes',this)"
->
-Dishes
-</button>
+            <div class="section-header">
 
-</div>
+                <div>
 
+                    <h2>
+                        Take New Order
+                    </h2>
 
-<!-- =====================================================
-     TAKE ORDER
-===================================================== -->
+                    <p>
+                        Enter customer details and select dishes.
+                    </p>
 
-<div
-id="takeOrderTab"
-class="card content-card"
->
+                </div>
 
-<div class="section-header">
+            </div>
 
-<div>
+            <div id="orderMessage" class="message"></div>
 
-<h2>
-Take New Order
-</h2>
 
-<p>
-Enter customer details and select dishes.
-</p>
+            <!-- CUSTOMER DETAILS -->
 
-</div>
+            <div class="customer-form">
 
-</div>
+                <div class="form-group">
 
+                    <label for="customerName">
+                        Customer Name
+                    </label>
 
-<div id="orderMessage" class="message"></div>
+                    <input
+                        type="text"
+                        id="customerName"
+                        placeholder="Enter customer name"
+                    >
 
+                </div>
 
-<div class="customer-form">
+                <div class="form-group">
 
-<div class="form-group">
+                    <label for="customerPhone">
+                        Customer Phone
+                    </label>
 
-<label>
-Customer Name
-</label>
+                    <input
+                        type="tel"
+                        id="customerPhone"
+                        placeholder="10-digit phone number"
+                        maxlength="10"
+                        inputmode="numeric"
+                    >
 
-<input
-type="text"
-id="customerName"
-placeholder="Enter customer name"
->
+                </div>
 
-</div>
+                <div class="form-group">
 
+                    <label for="tableNumber">
+                        Table Number
+                    </label>
 
-<div class="form-group">
+                    <input
+                        type="number"
+                        id="tableNumber"
+                        placeholder="Table number"
+                        min="1"
+                    >
 
-<label>
-Customer Phone
-</label>
+                </div>
 
-<input
-type="tel"
-id="customerPhone"
-placeholder="10-digit phone number"
-maxlength="10"
->
+            </div>
 
-</div>
 
+            <!-- DISH SELECTION -->
 
-<div class="form-group">
+            <div class="section-header">
 
-<label>
-Table Number
-</label>
+                <div>
 
-<input
-type="number"
-id="tableNumber"
-placeholder="Table number"
-min="1"
->
+                    <h2>
+                        Select Dishes
+                    </h2>
 
-</div>
+                </div>
 
-</div>
+                <button
+                    class="secondary-btn"
+                    onclick="loadDishes()"
+                >
+                    Refresh
+                </button>
 
+            </div>
 
-<div class="section-header">
+            <div
+                id="dishGrid"
+                class="dish-grid"
+            >
 
-<div>
+                <div class="empty-state">
+                    Loading dishes...
+                </div>
 
-<h2>
-Select Dishes
-</h2>
+            </div>
 
-</div>
 
-<button
-class="secondary-btn"
-onclick="loadDishes()"
->
-Refresh
-</button>
+            <!-- CURRENT ORDER -->
 
-</div>
+            <div style="margin-top:35px;">
 
+                <div class="section-header">
 
-<div
-id="dishGrid"
-class="dish-grid"
->
+                    <div>
 
-<div class="empty-state">
-Loading dishes...
-</div>
+                        <h2>
+                            Current Order
+                        </h2>
 
-</div>
+                    </div>
 
+                </div>
 
-<div style="margin-top:35px;">
+                <div
+                    id="cartList"
+                    class="cart-list"
+                >
 
-<div class="section-header">
+                    <div class="empty-state">
+                        No dishes selected.
+                    </div>
 
-<div>
+                </div>
 
-<h2>
-Current Order
-</h2>
+                <div class="cart-total">
 
-</div>
+                    <span>
+                        Total
+                    </span>
 
-</div>
+                    <span>
+                        ₹<span id="cartTotal">0.00</span>
+                    </span>
 
+                </div>
 
-<div
-id="cartList"
-class="cart-list"
->
+                <button
+                    id="placeOrderButton"
+                    class="primary-btn"
+                    style="width:100%;"
+                    onclick="placeWaiterOrder()"
+                >
+                    Place Order
+                </button>
 
-<div class="empty-state">
-No dishes selected.
-</div>
+            </div>
 
-</div>
+        </div>
 
 
-<div class="cart-total">
+        <!-- =====================================================
+             ORDERS
+        ====================================================== -->
 
-<span>
-Total
-</span>
+        <div
+            id="ordersTab"
+            class="card content-card hidden"
+        >
 
-<span>
-₹<span id="cartTotal">0.00</span>
-</span>
+            <div class="section-header">
 
-</div>
+                <div>
 
+                    <h2>
+                        Orders
+                    </h2>
 
-<button
-class="primary-btn"
-style="width:100%;"
-onclick="placeWaiterOrder()"
->
-Place Order
-</button>
+                    <p>
+                        Restaurant orders.
+                    </p>
 
-</div>
+                </div>
 
-</div>
+                <button
+                    class="secondary-btn"
+                    onclick="loadOrders()"
+                >
+                    Refresh
+                </button>
 
+            </div>
 
-<!-- =====================================================
-     ORDERS
-===================================================== -->
+            <div
+                id="ordersList"
+                class="orders-list"
+            >
 
-<div
-id="ordersTab"
-class="card content-card hidden"
->
+                <div class="empty-state">
+                    Loading orders...
+                </div>
 
-<div class="section-header">
+            </div>
 
-<div>
+        </div>
 
-<h2>
-Orders
-</h2>
 
-<p>
-Restaurant orders.
-</p>
+        <!-- =====================================================
+             DISHES
+        ====================================================== -->
 
-</div>
+        <div
+            id="dishesTab"
+            class="card content-card hidden"
+        >
 
-<button
-class="secondary-btn"
-onclick="loadOrders()"
->
-Refresh
-</button>
+            <div class="section-header">
 
-</div>
+                <div>
 
+                    <h2>
+                        Restaurant Dishes
+                    </h2>
 
-<div
-id="ordersList"
-class="orders-list"
->
+                    <p>
+                        Current dishes and availability.
+                    </p>
 
-<div class="empty-state">
-Loading orders...
-</div>
+                </div>
 
-</div>
+                <button
+                    class="secondary-btn"
+                    onclick="loadAllDishes()"
+                >
+                    Refresh
+                </button>
 
-</div>
+            </div>
 
+            <div
+                id="allDishesGrid"
+                class="dish-grid"
+            >
 
-<!-- =====================================================
-     DISHES
-===================================================== -->
+                <div class="empty-state">
+                    Loading dishes...
+                </div>
 
-<div
-id="dishesTab"
-class="card content-card hidden"
->
+            </div>
 
-<div class="section-header">
+        </div>
 
-<div>
-
-<h2>
-Restaurant Dishes
-</h2>
-
-<p>
-Current dishes and availability.
-</p>
-
-</div>
-
-<button
-class="secondary-btn"
-onclick="loadAllDishes()"
->
-Refresh
-</button>
-
-</div>
-
-
-<div
-id="allDishesGrid"
-class="dish-grid"
->
-
-<div class="empty-state">
-Loading dishes...
-</div>
-
-</div>
-
-</div>
-
-</div>
+    </div>
 
 </div>
 
@@ -1269,6 +1329,17 @@ function showLogin(){
 
     clearMessage("registerMessage");
     clearMessage("loginMessage");
+
+    const savedPhone =
+        localStorage.getItem("waiterPhone");
+
+    if(savedPhone){
+
+        document
+            .getElementById("loginPhone")
+            .value = savedPhone;
+
+    }
 }
 
 
@@ -1358,13 +1429,14 @@ function showDashboardTab(tab,button){
     button.classList.add("active");
 
 
-    if(tab==="orders"){
+    if(tab === "orders"){
         loadOrders();
     }
 
-    if(tab==="dishes"){
+    if(tab === "dishes"){
         loadAllDishes();
     }
+
 }
 
 
@@ -1382,7 +1454,7 @@ function showMessage(elementId,message,type="info"){
     element.textContent = message;
 
     element.className =
-        "message show "+type;
+        "message show " + type;
 }
 
 
@@ -1413,13 +1485,11 @@ document
 
             clearMessage("registerMessage");
 
-
             const full_name =
                 document
                     .getElementById("registerName")
                     .value
                     .trim();
-
 
             const phone =
                 document
@@ -1427,19 +1497,16 @@ document
                     .value
                     .trim();
 
-
             const email =
                 document
                     .getElementById("registerEmail")
                     .value
                     .trim();
 
-
             const password =
                 document
                     .getElementById("registerPassword")
                     .value;
-
 
             if(!/^[0-9]{10}$/.test(phone)){
 
@@ -1452,12 +1519,22 @@ document
                 return;
             }
 
+            if(password.length < 6){
+
+                showMessage(
+                    "registerMessage",
+                    "Password must contain at least 6 characters.",
+                    "error"
+                );
+
+                return;
+            }
 
             try{
 
                 const response =
                     await fetch(
-                        API_BASE+
+                        API_BASE +
                         "/api/waiter/register",
                         {
                             method:"POST",
@@ -1477,10 +1554,8 @@ document
                         }
                     );
 
-
                 const result =
                     await response.json();
-
 
                 if(!response.ok ||
                    !result.success){
@@ -1495,12 +1570,10 @@ document
                     return;
                 }
 
-
                 localStorage.setItem(
                     "waiterPhone",
                     phone
                 );
-
 
                 showMessage(
                     "registerMessage",
@@ -1508,7 +1581,6 @@ document
                     "Registration successful. Waiting for Manager approval.",
                     "success"
                 );
-
 
                 setTimeout(
                     showPending,
@@ -1525,6 +1597,7 @@ document
                     "Unable to connect to server.",
                     "error"
                 );
+
             }
 
         }
@@ -1549,19 +1622,16 @@ async function waiterLogin(event){
 
     clearMessage("loginMessage");
 
-
     const phone =
         document
             .getElementById("loginPhone")
             .value
             .trim();
 
-
     const password =
         document
             .getElementById("loginPassword")
             .value;
-
 
     if(!/^[0-9]{10}$/.test(phone)){
 
@@ -1574,7 +1644,6 @@ async function waiterLogin(event){
         return;
     }
 
-
     if(!password){
 
         showMessage(
@@ -1586,12 +1655,11 @@ async function waiterLogin(event){
         return;
     }
 
-
     try{
 
         const response =
             await fetch(
-                API_BASE+
+                API_BASE +
                 "/api/waiter/login",
                 {
                     method:"POST",
@@ -1609,10 +1677,8 @@ async function waiterLogin(event){
                 }
             );
 
-
         const result =
             await response.json();
-
 
         if(!response.ok ||
            !result.success){
@@ -1627,14 +1693,12 @@ async function waiterLogin(event){
             return;
         }
 
-
         const user =
-            result.user;
-
+            result.user || {};
 
         if(
-            String(user.Role||"")
-            .toUpperCase() !== "WAITER"
+            String(user.Role || "")
+                .toUpperCase() !== "WAITER"
         ){
 
             showMessage(
@@ -1645,7 +1709,6 @@ async function waiterLogin(event){
 
             return;
         }
-
 
         if(
             user.IsActive === false ||
@@ -1661,15 +1724,17 @@ async function waiterLogin(event){
             return;
         }
 
-
         currentUser = user;
-
 
         localStorage.setItem(
             "waiterUser",
             JSON.stringify(user)
         );
 
+        localStorage.setItem(
+            "waiterPhone",
+            phone
+        );
 
         showDashboard();
 
@@ -1683,7 +1748,9 @@ async function waiterLogin(event){
             "Unable to connect to server.",
             "error"
         );
+
     }
+
 }
 
 
@@ -1696,7 +1763,6 @@ async function checkApproval(){
     const phone =
         localStorage.getItem("waiterPhone");
 
-
     if(!phone){
 
         showLoginFromPending();
@@ -1704,20 +1770,17 @@ async function checkApproval(){
         return;
     }
 
-
     try{
 
         const response =
             await fetch(
-                API_BASE+
-                "/api/waiter/check-status?phone="+
+                API_BASE +
+                "/api/waiter/check-status?phone=" +
                 encodeURIComponent(phone)
             );
 
-
         const result =
             await response.json();
-
 
         if(!response.ok ||
            !result.success){
@@ -1729,7 +1792,6 @@ async function checkApproval(){
 
             return;
         }
-
 
         if(result.is_active){
 
@@ -1745,6 +1807,7 @@ async function checkApproval(){
             alert(
                 "Your account is still waiting for Manager approval."
             );
+
         }
 
     }
@@ -1755,7 +1818,9 @@ async function checkApproval(){
         alert(
             "Unable to connect to server."
         );
+
     }
+
 }
 
 
@@ -1769,14 +1834,12 @@ async function loadDishes(){
 
         const response =
             await fetch(
-                API_BASE+
+                API_BASE +
                 "/api/dishes"
             );
 
-
         const result =
             await response.json();
-
 
         if(!response.ok ||
            !result.success){
@@ -1785,22 +1848,20 @@ async function loadDishes(){
                 result.message ||
                 "Unable to load dishes."
             );
-        }
 
+        }
 
         dishes =
             result.dishes || [];
-
 
         document
             .getElementById("availableDishes")
             .textContent =
             dishes.filter(
                 dish =>
-                    Boolean(dish.IsAvailable) &&
-                    Number(dish.AvailableQuantity)>0
+                    isAvailable(dish) &&
+                    Number(dish.AvailableQuantity || 0) > 0
             ).length;
-
 
         renderTakeOrderDishes();
 
@@ -1815,12 +1876,31 @@ async function loadDishes(){
             `<div class="empty-state">
                 Unable to load dishes.
             </div>`;
+
     }
+
 }
 
 
 /* =========================================================
-   RENDER DISHES
+   BOOLEAN / AVAILABILITY HELPER
+========================================================= */
+
+function isAvailable(dish){
+
+    return (
+        dish.IsAvailable === true ||
+        dish.IsAvailable === 1 ||
+        String(dish.IsAvailable)
+            .toLowerCase() === "true" ||
+        String(dish.IsAvailable) === "1"
+    );
+
+}
+
+
+/* =========================================================
+   RENDER TAKE ORDER DISHES
 ========================================================= */
 
 function renderTakeOrderDishes(){
@@ -1828,14 +1908,12 @@ function renderTakeOrderDishes(){
     const grid =
         document.getElementById("dishGrid");
 
-
     const available =
         dishes.filter(
             dish =>
-                Boolean(dish.IsAvailable) &&
-                Number(dish.AvailableQuantity)>0
+                isAvailable(dish) &&
+                Number(dish.AvailableQuantity || 0) > 0
         );
-
 
     if(!available.length){
 
@@ -1847,65 +1925,91 @@ function renderTakeOrderDishes(){
         return;
     }
 
-
     grid.innerHTML =
-        available.map(dish=>{
+        available.map(
+            dish => {
 
-            const quantity =
-                cart[dish.DishID] || 0;
+                const quantity =
+                    cart[dish.DishID] || 0;
 
+                const stock =
+                    Number(
+                        dish.AvailableQuantity || 0
+                    );
 
-            return `
-            <div class="card dish-card">
+                return `
+                <div class="card dish-card">
 
-                <div class="dish-category">
-                    ${escapeHtml(dish.Category||"")}
-                </div>
-
-                <h3>
-                    ${escapeHtml(dish.DishName||"")}
-                </h3>
-
-                <div class="dish-description">
-                    ${escapeHtml(dish.Description||"")}
-                </div>
-
-                <div class="dish-bottom">
-
-                    <div class="dish-price">
-                        ₹${Number(dish.Price||0).toFixed(2)}
+                    <div class="dish-category">
+                        ${escapeHtml(dish.Category || "")}
                     </div>
 
-                    <div class="dish-rating">
-                        ★ ${Number(dish.Rating||0).toFixed(1)}
+                    <h3>
+                        ${escapeHtml(dish.DishName || "")}
+                    </h3>
+
+                    <div class="dish-description">
+                        ${escapeHtml(dish.Description || "")}
                     </div>
 
-                </div>
+                    <div class="dish-bottom">
 
-                <div class="quantity-control">
+                        <div class="dish-price">
+                            ₹${Number(
+                                dish.Price || 0
+                            ).toFixed(2)}
+                        </div>
 
-                    <button
-                        type="button"
-                        onclick="changeQuantity(${dish.DishID},-1)"
+                        <div class="dish-rating">
+                            ★ ${Number(
+                                dish.Rating || 0
+                            ).toFixed(1)}
+                        </div>
+
+                    </div>
+
+                    <div
+                        style="
+                            margin-top:10px;
+                            color:#9ca8ba;
+                            font-size:12px;
+                        "
                     >
-                        −
-                    </button>
+                        ${stock} available
+                    </div>
 
-                    <span>
-                        ${quantity}
-                    </span>
+                    <div class="quantity-control">
 
-                    <button
-                        type="button"
-                        onclick="changeQuantity(${dish.DishID},1)"
-                    >
-                        +
-                    </button>
+                        <button
+                            type="button"
+                            onclick="changeQuantity(
+                                ${dish.DishID},
+                                -1
+                            )"
+                        >
+                            −
+                        </button>
 
-                </div>
+                        <span>
+                            ${quantity}
+                        </span>
 
-            </div>`;
-        }).join("");
+                        <button
+                            type="button"
+                            onclick="changeQuantity(
+                                ${dish.DishID},
+                                1
+                            )"
+                        >
+                            +
+                        </button>
+
+                    </div>
+
+                </div>`;
+            }
+        ).join("");
+
 }
 
 
@@ -1922,39 +2026,40 @@ function changeQuantity(dishId,change){
                 Number(dishId)
         );
 
-
     if(!dish) return;
-
 
     let quantity =
         cart[dishId] || 0;
 
-
     quantity += change;
 
-
-    if(quantity<0)
-        quantity=0;
-
+    if(quantity < 0){
+        quantity = 0;
+    }
 
     const available =
-        Number(dish.AvailableQuantity);
+        Number(
+            dish.AvailableQuantity || 0
+        );
 
+    if(quantity > available){
+        quantity = available;
+    }
 
-    if(quantity>available)
-        quantity=available;
+    if(quantity === 0){
 
-
-    if(quantity===0)
         delete cart[dishId];
 
-    else
-        cart[dishId]=quantity;
+    }
+    else{
 
+        cart[dishId] = quantity;
+
+    }
 
     renderTakeOrderDishes();
-
     renderCart();
+
 }
 
 
@@ -1967,10 +2072,8 @@ function renderCart(){
     const cartList =
         document.getElementById("cartList");
 
-
     const selected =
         Object.entries(cart);
-
 
     if(!selected.length){
 
@@ -1981,95 +2084,101 @@ function renderCart(){
 
         document
             .getElementById("cartTotal")
-            .textContent="0.00";
+            .textContent = "0.00";
 
         return;
     }
 
-
-    let total=0;
-
+    let total = 0;
 
     cartList.innerHTML =
-        selected.map(
-            ([dishId,quantity])=>{
+        selected
+            .map(
+                ([dishId,quantity]) => {
 
-                const dish =
-                    dishes.find(
-                        item =>
-                            Number(item.DishID) ===
-                            Number(dishId)
-                    );
+                    const dish =
+                        dishes.find(
+                            item =>
+                                Number(item.DishID) ===
+                                Number(dishId)
+                        );
 
+                    if(!dish){
+                        return "";
+                    }
 
-                if(!dish)
-                    return "";
+                    const subtotal =
+                        Number(dish.Price || 0) *
+                        Number(quantity);
 
+                    total += subtotal;
 
-                const subtotal =
-                    Number(dish.Price)*
-                    Number(quantity);
+                    return `
+                    <div class="cart-item">
 
+                        <div>
 
-                total+=subtotal;
+                            <div class="cart-item-name">
+                                ${escapeHtml(
+                                    dish.DishName
+                                )}
+                            </div>
 
+                            <div class="cart-item-info">
+                                ${quantity}
+                                × ₹${Number(
+                                    dish.Price || 0
+                                ).toFixed(2)}
+                                =
+                                ₹${subtotal.toFixed(2)}
+                            </div>
 
-                return `
-                <div class="cart-item">
-
-                    <div>
-
-                        <div class="cart-item-name">
-                            ${escapeHtml(dish.DishName)}
                         </div>
 
-                        <div class="cart-item-info">
-                            ${quantity}
-                            × ₹${Number(dish.Price).toFixed(2)}
-                            =
-                            ₹${subtotal.toFixed(2)}
-                        </div>
+                        <button
+                            type="button"
+                            class="danger-btn"
+                            onclick="removeFromCart(
+                                ${dish.DishID}
+                            )"
+                        >
+                            Remove
+                        </button>
 
-                    </div>
-
-                    <button
-                        type="button"
-                        class="danger-btn"
-                        onclick="removeFromCart(${dish.DishID})"
-                    >
-                        Remove
-                    </button>
-
-                </div>`;
-            }
-        ).join("");
-
+                    </div>`;
+                }
+            )
+            .join("");
 
     document
         .getElementById("cartTotal")
         .textContent =
         total.toFixed(2);
+
 }
 
+
+/* =========================================================
+   REMOVE CART ITEM
+========================================================= */
 
 function removeFromCart(dishId){
 
     delete cart[dishId];
 
     renderTakeOrderDishes();
-
     renderCart();
+
 }
 
 
 /* =========================================================
-   PLACE ORDER
+   PLACE WAITER ORDER
 ========================================================= */
 
 async function placeWaiterOrder(){
 
     clearMessage("orderMessage");
-
 
     const customer_name =
         document
@@ -2077,13 +2186,11 @@ async function placeWaiterOrder(){
             .value
             .trim();
 
-
     const phone =
         document
             .getElementById("customerPhone")
             .value
             .trim();
-
 
     const table_number =
         document
@@ -2091,10 +2198,8 @@ async function placeWaiterOrder(){
             .value
             .trim();
 
-
     const selected =
         Object.entries(cart);
-
 
     if(!customer_name){
 
@@ -2107,7 +2212,6 @@ async function placeWaiterOrder(){
         return;
     }
 
-
     if(!/^[0-9]{10}$/.test(phone)){
 
         showMessage(
@@ -2118,7 +2222,6 @@ async function placeWaiterOrder(){
 
         return;
     }
-
 
     if(!table_number){
 
@@ -2131,7 +2234,6 @@ async function placeWaiterOrder(){
         return;
     }
 
-
     if(!selected.length){
 
         showMessage(
@@ -2143,22 +2245,36 @@ async function placeWaiterOrder(){
         return;
     }
 
-
     const items =
         selected.map(
-            ([dish_id,quantity])=>({
+            ([dish_id,quantity]) => ({
                 dish_id:Number(dish_id),
                 quantity:Number(quantity)
             })
         );
 
+    const button =
+        document.getElementById(
+            "placeOrderButton"
+        );
+
+    button.disabled = true;
+    button.textContent = "Placing Order...";
 
     try{
 
+        /*
+         * IMPORTANT:
+         * Waiter uses /api/waiter/place-order.
+         *
+         * The backend currently reuses the same validated
+         * order logic for this route.
+         */
+
         const response =
             await fetch(
-                API_BASE+
-                "/api/customer/place-order",
+                API_BASE +
+                "/api/waiter/place-order",
                 {
                     method:"POST",
 
@@ -2177,10 +2293,8 @@ async function placeWaiterOrder(){
                 }
             );
 
-
         const result =
             await response.json();
-
 
         if(!response.ok ||
            !result.success){
@@ -2195,37 +2309,33 @@ async function placeWaiterOrder(){
             return;
         }
 
-
         showMessage(
             "orderMessage",
-            "Order placed successfully. Order ID: "+
-            result.order.order_id,
+            "Order placed successfully. Order ID: " +
+            (
+                result.order?.order_id ||
+                "N/A"
+            ),
             "success"
         );
 
-
-        cart={};
-
+        cart = {};
 
         document
             .getElementById("customerName")
-            .value="";
-
+            .value = "";
 
         document
             .getElementById("customerPhone")
-            .value="";
-
+            .value = "";
 
         document
             .getElementById("tableNumber")
-            .value="";
-
+            .value = "";
 
         renderCart();
 
         await loadDishes();
-
         await loadOrders();
 
     }
@@ -2238,7 +2348,15 @@ async function placeWaiterOrder(){
             "Unable to connect to server.",
             "error"
         );
+
     }
+    finally{
+
+        button.disabled = false;
+        button.textContent = "Place Order";
+
+    }
+
 }
 
 
@@ -2252,14 +2370,12 @@ async function loadOrders(){
 
         const response =
             await fetch(
-                API_BASE+
+                API_BASE +
                 "/api/orders"
             );
 
-
         const result =
             await response.json();
-
 
         if(!response.ok ||
            !result.success){
@@ -2268,38 +2384,38 @@ async function loadOrders(){
                 result.message ||
                 "Unable to load orders."
             );
-        }
 
+        }
 
         const orders =
             result.orders || [];
-
 
         document
             .getElementById("totalOrders")
             .textContent =
             orders.length;
 
-
         document
             .getElementById("pendingOrders")
             .textContent =
             orders.filter(
                 order =>
-                    String(order.Status||"")
-                    .toUpperCase()==="PENDING"
+                    String(
+                        order.Status || ""
+                    ).toLowerCase() ===
+                    "pending"
             ).length;
-
 
         document
             .getElementById("readyOrders")
             .textContent =
             orders.filter(
                 order =>
-                    String(order.Status||"")
-                    .toUpperCase()==="READY"
+                    String(
+                        order.Status || ""
+                    ).toLowerCase() ===
+                    "ready"
             ).length;
-
 
         renderOrders(orders);
 
@@ -2314,7 +2430,9 @@ async function loadOrders(){
             `<div class="empty-state">
                 Unable to load orders.
             </div>`;
+
     }
+
 }
 
 
@@ -2327,7 +2445,6 @@ function renderOrders(orders){
     const list =
         document.getElementById("ordersList");
 
-
     if(!orders.length){
 
         list.innerHTML =
@@ -2338,57 +2455,126 @@ function renderOrders(orders){
         return;
     }
 
-
     list.innerHTML =
-        orders.map(order=>{
+        orders
+            .map(
+                order => {
 
-            return `
-            <div class="order-row">
+                    const status =
+                        String(
+                            order.Status || ""
+                        );
 
-                <div class="order-id">
-                    #${order.OrderID}
-                </div>
+                    const statusClass =
+                        status.toLowerCase();
 
-                <div>
+                    const items =
+                        Array.isArray(order.Items)
+                        ? order.Items
+                        : [];
 
-                    <strong>
-                        ${escapeHtml(order.CustomerName||"")}
-                    </strong>
+                    const itemsHtml =
+                        items.length
+                        ?
+                        `
+                        <div class="order-items">
 
-                    <div
-                        style="
-                            color:#9ca8ba;
-                            font-size:12px;
-                            margin-top:4px;
-                        "
-                    >
-                        Table ${escapeHtml(
-                            String(order.TableNumber||"")
-                        )}
-                    </div>
+                            ${
+                                items.map(
+                                    item => `
+                                    <div class="order-item-line">
+                                        ${escapeHtml(
+                                            item.DishName || ""
+                                        )}
+                                        ×
+                                        ${Number(
+                                            item.Quantity || 0
+                                        )}
+                                        —
+                                        ₹${Number(
+                                            item.TotalPrice || 0
+                                        ).toFixed(2)}
+                                    </div>
+                                    `
+                                ).join("")
+                            }
 
-                </div>
+                        </div>
+                        `
+                        :
+                        "";
 
-                <div>
-                    ₹${Number(
-                        order.TotalAmount||0
-                    ).toFixed(2)}
-                </div>
+                    return `
+                    <div class="order-row">
 
-                <div>
-                    <span class="status">
-                        ${escapeHtml(order.Status||"")}
-                    </span>
-                </div>
+                        <div class="order-id">
+                            #${escapeHtml(
+                                String(
+                                    order.OrderID || ""
+                                )
+                            )}
+                        </div>
 
-                <div>
-                    ${escapeHtml(
-                        order.MobileNumber||""
-                    )}
-                </div>
+                        <div>
 
-            </div>`;
-        }).join("");
+                            <strong>
+                                ${escapeHtml(
+                                    order.CustomerName || ""
+                                )}
+                            </strong>
+
+                            <div
+                                style="
+                                    color:#9ca8ba;
+                                    font-size:12px;
+                                    margin-top:4px;
+                                "
+                            >
+                                Table
+                                ${escapeHtml(
+                                    String(
+                                        order.TableNumber || ""
+                                    )
+                                )}
+                            </div>
+
+                            ${itemsHtml}
+
+                        </div>
+
+                        <div>
+
+                            ₹${Number(
+                                order.TotalAmount || 0
+                            ).toFixed(2)}
+
+                        </div>
+
+                        <div>
+
+                            <span
+                                class="status ${escapeHtml(
+                                    statusClass
+                                )}"
+                            >
+                                ${escapeHtml(status)}
+                            </span>
+
+                        </div>
+
+                        <div>
+
+                            ${escapeHtml(
+                                order.MobileNumber || ""
+                            )}
+
+                        </div>
+
+                    </div>`;
+                }
+            )
+            .join("");
+
 }
 
 
@@ -2400,12 +2586,10 @@ async function loadAllDishes(){
 
     await loadDishes();
 
-
     const grid =
         document.getElementById(
             "allDishesGrid"
         );
-
 
     if(!dishes.length){
 
@@ -2417,61 +2601,82 @@ async function loadAllDishes(){
         return;
     }
 
-
     grid.innerHTML =
-        dishes.map(dish=>{
+        dishes
+            .map(
+                dish => {
 
-            const available =
-                Boolean(dish.IsAvailable) &&
-                Number(dish.AvailableQuantity)>0;
+                    const available =
+                        isAvailable(dish) &&
+                        Number(
+                            dish.AvailableQuantity || 0
+                        ) > 0;
 
+                    return `
+                    <div class="card dish-card">
 
-            return `
-            <div class="card dish-card">
+                        <div class="dish-category">
+                            ${escapeHtml(
+                                dish.Category || ""
+                            )}
+                        </div>
 
-                <div class="dish-category">
-                    ${escapeHtml(dish.Category||"")}
-                </div>
+                        <h3>
+                            ${escapeHtml(
+                                dish.DishName || ""
+                            )}
+                        </h3>
 
-                <h3>
-                    ${escapeHtml(dish.DishName||"")}
-                </h3>
+                        <div class="dish-description">
+                            ${escapeHtml(
+                                dish.Description || ""
+                            )}
+                        </div>
 
-                <div class="dish-description">
-                    ${escapeHtml(dish.Description||"")}
-                </div>
+                        <div class="dish-bottom">
 
-                <div class="dish-bottom">
+                            <div class="dish-price">
+                                ₹${Number(
+                                    dish.Price || 0
+                                ).toFixed(2)}
+                            </div>
 
-                    <div class="dish-price">
-                        ₹${Number(dish.Price||0).toFixed(2)}
-                    </div>
+                            <div class="dish-rating">
+                                ★ ${Number(
+                                    dish.Rating || 0
+                                ).toFixed(1)}
+                            </div>
 
-                    <div class="dish-rating">
-                        ★ ${Number(dish.Rating||0).toFixed(1)}
-                    </div>
+                        </div>
 
-                </div>
+                        <div
+                            style="
+                                margin-top:15px;
+                                color:${available
+                                    ? "#22c55e"
+                                    : "#ef4444"};
+                                font-size:13px;
+                                font-weight:700;
+                            "
+                        >
+                            ${
+                                available
+                                ?
+                                "Available • " +
+                                Number(
+                                    dish.AvailableQuantity || 0
+                                ) +
+                                " left"
+                                :
+                                "Unavailable"
+                            }
+                        </div>
 
-                <div
-                    style="
-                        margin-top:15px;
-                        color:${available?"#22c55e":"#ef4444"};
-                        font-size:13px;
-                        font-weight:700;
-                    "
-                >
-                    ${
-                        available
-                        ? "Available • "+
-                          dish.AvailableQuantity+
-                          " left"
-                        : "Unavailable"
-                    }
-                </div>
+                    </div>`;
+                }
+            )
+            .join("");
 
-            </div>`;
-        }).join("");
 }
 
 
@@ -2481,29 +2686,27 @@ async function loadAllDishes(){
 
 function logout(){
 
-    currentUser=null;
+    currentUser = null;
+    cart = {};
 
-    cart={};
-
-    localStorage.removeItem("waiterUser");
-
+    localStorage.removeItem(
+        "waiterUser"
+    );
 
     document
         .getElementById("dashboardSection")
         .classList.add("hidden");
 
-
     document
         .getElementById("pendingSection")
         .classList.add("hidden");
-
 
     document
         .getElementById("authSection")
         .classList.remove("hidden");
 
-
     showLogin();
+
 }
 
 
@@ -2513,12 +2716,70 @@ function logout(){
 
 function escapeHtml(value){
 
-    return String(value??"")
+    return String(value ?? "")
         .replace(/&/g,"&amp;")
         .replace(/</g,"&lt;")
         .replace(/>/g,"&gt;")
         .replace(/"/g,"&quot;")
         .replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================================================
+   AUTO REFRESH
+========================================================= */
+
+let refreshTimer = null;
+
+function startAutoRefresh(){
+
+    stopAutoRefresh();
+
+    refreshTimer =
+        setInterval(
+            async function(){
+
+                if(!currentUser){
+                    return;
+                }
+
+                await loadDishes();
+                await loadOrders();
+
+                const activeTab =
+                    document.querySelector(
+                        ".nav-btn.active"
+                    );
+
+                if(
+                    activeTab &&
+                    activeTab.textContent
+                        .trim()
+                        .toLowerCase()
+                        === "dishes"
+                ){
+
+                    await loadAllDishes();
+
+                }
+
+            },
+            10000
+        );
+
+}
+
+
+function stopAutoRefresh(){
+
+    if(refreshTimer){
+
+        clearInterval(refreshTimer);
+        refreshTimer = null;
+
+    }
+
 }
 
 
@@ -2535,7 +2796,6 @@ window.addEventListener(
                 "waiterUser"
             );
 
-
         if(savedUser){
 
             try{
@@ -2543,22 +2803,21 @@ window.addEventListener(
                 currentUser =
                     JSON.parse(savedUser);
 
-
                 if(
                     String(
-                        currentUser.Role||""
-                    ).toUpperCase()==="WAITER" &&
+                        currentUser.Role || ""
+                    ).toUpperCase() === "WAITER" &&
                     (
-                        currentUser.IsActive===true ||
-                        currentUser.IsActive===1
+                        currentUser.IsActive === true ||
+                        currentUser.IsActive === 1
                     )
                 ){
 
                     showDashboard();
+                    startAutoRefresh();
 
                     return;
                 }
-
 
                 localStorage.removeItem(
                     "waiterUser"
@@ -2572,9 +2831,10 @@ window.addEventListener(
                 localStorage.removeItem(
                     "waiterUser"
                 );
-            }
-        }
 
+            }
+
+        }
 
         showRegister();
 

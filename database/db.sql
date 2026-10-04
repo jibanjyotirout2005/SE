@@ -1,27 +1,18 @@
 /* ============================================================
    HOTEL RESTAURANT MANAGEMENT SYSTEM
-   COMPLETE DATABASE
-   ROLES:
-       CUSTOMER
-       WAITER
-       MANAGER
-
-   NO HEAD OF HOTEL
-
-   MANAGER PHONE:
-       8260611800
+   COMPLETE DATABASE SCRIPT
+   SQL SERVER
    ============================================================ */
 
+
+/* ============================================================
+   1. DELETE OLD DATABASE IF IT EXISTS
+   ============================================================ */
 
 USE master;
 GO
 
-
-/* ============================================================
-   1. DELETE OLD DATABASE
-   ============================================================ */
-
-IF DB_ID('HotelRestaurantDB') IS NOT NULL
+IF DB_ID(N'HotelRestaurantDB') IS NOT NULL
 BEGIN
     ALTER DATABASE HotelRestaurantDB
     SET SINGLE_USER
@@ -39,300 +30,264 @@ GO
 CREATE DATABASE HotelRestaurantDB;
 GO
 
-
 USE HotelRestaurantDB;
 GO
 
 
 /* ============================================================
    3. USERS TABLE
+   Roles:
+      MANAGER
+      HEAD
+      WAITER
    ============================================================ */
 
 CREATE TABLE Users
 (
-    UserID INT IDENTITY(1,1)
-        CONSTRAINT PK_Users PRIMARY KEY,
+    UserID INT IDENTITY(1,1) NOT NULL,
 
     FullName NVARCHAR(100) NOT NULL,
 
-    Phone VARCHAR(10) NOT NULL
-        CONSTRAINT UQ_Users_Phone UNIQUE,
+    Phone VARCHAR(15) NOT NULL,
 
-    Email NVARCHAR(150) NULL
-        CONSTRAINT UQ_Users_Email UNIQUE,
+    Email VARCHAR(150) NULL,
 
-    PasswordHash NVARCHAR(255) NULL,
+    PasswordHash NVARCHAR(255) NOT NULL,
 
-    Role VARCHAR(20) NOT NULL
-        CONSTRAINT CK_Users_Role
+    Role VARCHAR(20) NOT NULL,
+
+    IsActive BIT NOT NULL
+        CONSTRAINT DF_Users_IsActive DEFAULT (1),
+
+    CreatedAt DATETIME NOT NULL
+        CONSTRAINT DF_Users_CreatedAt DEFAULT (GETDATE()),
+
+
+    CONSTRAINT PK_Users
+        PRIMARY KEY (UserID),
+
+    CONSTRAINT UQ_Users_Phone
+        UNIQUE (Phone),
+
+    CONSTRAINT CK_Users_Role
         CHECK
         (
             Role IN
             (
-                'CUSTOMER',
-                'WAITER',
-                'MANAGER'
+                'MANAGER',
+                'HEAD',
+                'WAITER'
             )
-        ),
-
-    IsActive BIT NOT NULL
-        CONSTRAINT DF_Users_IsActive
-        DEFAULT 0,
-
-    CreatedAt DATETIME NOT NULL
-        CONSTRAINT DF_Users_CreatedAt
-        DEFAULT GETDATE(),
-
-    UpdatedAt DATETIME NULL
+        )
 );
 GO
 
 
 /* ============================================================
-   4. MANAGER ACCOUNT
-   ============================================================ */
-
-INSERT INTO Users
-(
-    FullName,
-    Phone,
-    Email,
-    PasswordHash,
-    Role,
-    IsActive
-)
-VALUES
-(
-    'Jiban Rout',
-    '8260611800',
-    'manager@hotelrestaurant.com',
-    '8260611800',
-    'MANAGER',
-    1
-);
-GO
-
-
-/* ============================================================
-   5. CUSTOMERS TABLE
-   ============================================================ */
-
-CREATE TABLE Customers
-(
-    CustomerID INT IDENTITY(1,1)
-        CONSTRAINT PK_Customers PRIMARY KEY,
-
-    CustomerName NVARCHAR(100) NOT NULL,
-
-    Phone VARCHAR(10) NOT NULL
-        CONSTRAINT UQ_Customers_Phone UNIQUE,
-
-    CreatedAt DATETIME NOT NULL
-        CONSTRAINT DF_Customers_CreatedAt
-        DEFAULT GETDATE(),
-
-    UpdatedAt DATETIME NULL
-);
-GO
-
-
-/* ============================================================
-   6. DISHES TABLE
+   4. DISHES TABLE
    ============================================================ */
 
 CREATE TABLE Dishes
 (
-    DishID INT IDENTITY(1,1)
-        CONSTRAINT PK_Dishes PRIMARY KEY,
+    DishID INT IDENTITY(1,1) NOT NULL,
 
     DishName NVARCHAR(150) NOT NULL,
 
-    Category NVARCHAR(100) NOT NULL,
+    Category NVARCHAR(100) NULL,
 
     Description NVARCHAR(500) NULL,
 
-    Price DECIMAL(10,2) NOT NULL
-        CONSTRAINT CK_Dishes_Price
-        CHECK (Price >= 0),
+    Price DECIMAL(10,2) NOT NULL,
 
     AvailableQuantity INT NOT NULL
-        CONSTRAINT CK_Dishes_Quantity
-        CHECK (AvailableQuantity >= 0),
+        CONSTRAINT DF_Dishes_AvailableQuantity
+        DEFAULT (0),
 
-    Rating DECIMAL(3,2) NOT NULL
+    Rating DECIMAL(2,1) NOT NULL
         CONSTRAINT DF_Dishes_Rating
-        DEFAULT 0
-        CONSTRAINT CK_Dishes_Rating
-        CHECK (Rating >= 0 AND Rating <= 5),
+        DEFAULT (0),
 
-    ImageURL NVARCHAR(500) NULL,
+    ImageURL NVARCHAR(1000) NULL,
 
     IsAvailable BIT NOT NULL
         CONSTRAINT DF_Dishes_IsAvailable
-        DEFAULT 1,
+        DEFAULT (1),
 
-    CreatedAt DATETIME NOT NULL
-        CONSTRAINT DF_Dishes_CreatedAt
-        DEFAULT GETDATE(),
+    UpdatedAt DATETIME NOT NULL
+        CONSTRAINT DF_Dishes_UpdatedAt
+        DEFAULT (GETDATE()),
 
-    UpdatedAt DATETIME NULL
+
+    CONSTRAINT PK_Dishes
+        PRIMARY KEY (DishID),
+
+    CONSTRAINT CK_Dishes_Price
+        CHECK (Price >= 0),
+
+    CONSTRAINT CK_Dishes_AvailableQuantity
+        CHECK (AvailableQuantity >= 0),
+
+    CONSTRAINT CK_Dishes_Rating
+        CHECK
+        (
+            Rating >= 0
+            AND Rating <= 5
+        )
 );
 GO
 
 
 /* ============================================================
-   7. ORDERS TABLE
+   5. ORDERS TABLE
    ============================================================ */
 
 CREATE TABLE Orders
 (
-    OrderID INT IDENTITY(1,1)
-        CONSTRAINT PK_Orders PRIMARY KEY,
+    OrderID INT IDENTITY(1,1) NOT NULL,
 
-    CustomerID INT NOT NULL,
+    CustomerName NVARCHAR(100) NOT NULL,
 
-    TableNumber INT NOT NULL
-        CONSTRAINT CK_Orders_TableNumber
-        CHECK (TableNumber > 0),
+    MobileNumber VARCHAR(15) NOT NULL,
+
+    TableNumber NVARCHAR(30) NOT NULL,
 
     TotalAmount DECIMAL(12,2) NOT NULL
-        CONSTRAINT CK_Orders_TotalAmount
-        CHECK (TotalAmount >= 0),
+        CONSTRAINT DF_Orders_TotalAmount
+        DEFAULT (0),
 
-    OrderStatus VARCHAR(20) NOT NULL
-        CONSTRAINT DF_Orders_OrderStatus
-        DEFAULT 'Pending',
-
-    OrderSource VARCHAR(20) NOT NULL
-        CONSTRAINT DF_Orders_OrderSource
-        DEFAULT 'CUSTOMER',
-
-    WaiterID INT NULL,
+    Status VARCHAR(20) NOT NULL
+        CONSTRAINT DF_Orders_Status
+        DEFAULT ('Pending'),
 
     OrderDate DATETIME NOT NULL
         CONSTRAINT DF_Orders_OrderDate
-        DEFAULT GETDATE(),
+        DEFAULT (GETDATE()),
 
-    UpdatedAt DATETIME NULL,
+
+    CONSTRAINT PK_Orders
+        PRIMARY KEY (OrderID),
+
+    CONSTRAINT CK_Orders_TotalAmount
+        CHECK (TotalAmount >= 0),
 
     CONSTRAINT CK_Orders_Status
-    CHECK
-    (
-        OrderStatus IN
+        CHECK
         (
-            'Pending',
-            'Preparing',
-            'Ready',
-            'Completed',
-            'Cancelled'
+            Status IN
+            (
+                'Pending',
+                'Preparing',
+                'Ready',
+                'Completed',
+                'Cancelled'
+            )
         )
-    ),
-
-    CONSTRAINT CK_Orders_Source
-    CHECK
-    (
-        OrderSource IN
-        (
-            'CUSTOMER',
-            'WAITER'
-        )
-    )
 );
 GO
 
 
 /* ============================================================
-   8. ORDER DETAILS TABLE
+   6. ORDER DETAILS TABLE
    ============================================================ */
 
 CREATE TABLE OrderDetails
 (
-    OrderDetailID INT IDENTITY(1,1)
-        CONSTRAINT PK_OrderDetails PRIMARY KEY,
+    OrderDetailID INT IDENTITY(1,1) NOT NULL,
 
     OrderID INT NOT NULL,
 
     DishID INT NOT NULL,
 
-    Quantity INT NOT NULL
-        CONSTRAINT CK_OrderDetails_Quantity
+    Quantity INT NOT NULL,
+
+    UnitPrice DECIMAL(10,2) NOT NULL,
+
+    TotalPrice DECIMAL(12,2) NOT NULL,
+
+
+    CONSTRAINT PK_OrderDetails
+        PRIMARY KEY (OrderDetailID),
+
+
+    CONSTRAINT CK_OrderDetails_Quantity
         CHECK (Quantity > 0),
 
-    UnitPrice DECIMAL(10,2) NOT NULL
-        CONSTRAINT CK_OrderDetails_UnitPrice
+
+    CONSTRAINT CK_OrderDetails_UnitPrice
         CHECK (UnitPrice >= 0),
 
-    TotalPrice AS
-    (
-        Quantity * UnitPrice
-    ) PERSISTED
+
+    CONSTRAINT CK_OrderDetails_TotalPrice
+        CHECK (TotalPrice >= 0),
+
+
+    CONSTRAINT FK_OrderDetails_Orders
+        FOREIGN KEY (OrderID)
+        REFERENCES Orders(OrderID),
+
+
+    CONSTRAINT FK_OrderDetails_Dishes
+        FOREIGN KEY (DishID)
+        REFERENCES Dishes(DishID)
 );
 GO
 
 
 /* ============================================================
-   9. FOREIGN KEYS
+   7. INDEXES
    ============================================================ */
 
-ALTER TABLE Orders
-ADD CONSTRAINT FK_Orders_Customers
-FOREIGN KEY (CustomerID)
-REFERENCES Customers(CustomerID);
+CREATE INDEX IX_Dishes_IsAvailable
+ON Dishes
+(
+    IsAvailable,
+    AvailableQuantity
+);
 GO
 
 
-ALTER TABLE Orders
-ADD CONSTRAINT FK_Orders_Waiter
-FOREIGN KEY (WaiterID)
-REFERENCES Users(UserID);
-GO
-
-
-ALTER TABLE OrderDetails
-ADD CONSTRAINT FK_OrderDetails_Orders
-FOREIGN KEY (OrderID)
-REFERENCES Orders(OrderID);
-GO
-
-
-ALTER TABLE OrderDetails
-ADD CONSTRAINT FK_OrderDetails_Dishes
-FOREIGN KEY (DishID)
-REFERENCES Dishes(DishID);
-GO
-
-
-/* ============================================================
-   10. INDEXES
-   ============================================================ */
-
-CREATE INDEX IX_Orders_CustomerID
-ON Orders(CustomerID);
-GO
-
-
-CREATE INDEX IX_Orders_WaiterID
-ON Orders(WaiterID);
+CREATE INDEX IX_Dishes_Category
+ON Dishes
+(
+    Category
+);
 GO
 
 
 CREATE INDEX IX_Orders_Status
-ON Orders(OrderStatus);
+ON Orders
+(
+    Status
+);
+GO
+
+
+CREATE INDEX IX_Orders_OrderDate
+ON Orders
+(
+    OrderDate
+);
 GO
 
 
 CREATE INDEX IX_OrderDetails_OrderID
-ON OrderDetails(OrderID);
+ON OrderDetails
+(
+    OrderID
+);
 GO
 
 
 CREATE INDEX IX_OrderDetails_DishID
-ON OrderDetails(DishID);
+ON OrderDetails
+(
+    DishID
+);
 GO
 
 
 /* ============================================================
-   11. SAMPLE DISHES
+   8. INITIAL DISH DATA
    ============================================================ */
 
 INSERT INTO Dishes
@@ -347,132 +302,83 @@ INSERT INTO Dishes
     IsAvailable
 )
 VALUES
-
 (
-    'Chicken Biryani',
-    'Main Course',
-    'Aromatic basmati rice cooked with chicken and traditional spices.',
+    N'Chicken Biryani',
+    N'Main Course',
+    N'Aromatic chicken biryani',
     250.00,
     20,
-    4.50,
-    'https://images.unsplash.com/photo-1563379091339-03246963d51a',
+    4.5,
+    N'',
     1
 ),
-
 (
-    'Paneer Butter Masala',
-    'Main Course',
-    'Soft paneer cooked in a rich and creamy tomato gravy.',
+    N'Paneer Butter Masala',
+    N'Main Course',
+    N'Creamy paneer curry',
     220.00,
     15,
-    4.30,
-    'https://images.unsplash.com/photo-1631452180519-c014fe946bc7',
+    4.3,
+    N'',
     1
 ),
-
 (
-    'Veg Fried Rice',
-    'Rice',
-    'Fried rice prepared with fresh vegetables and aromatic seasoning.',
+    N'Veg Fried Rice',
+    N'Rice',
+    N'Fried rice with fresh vegetables',
     180.00,
     20,
-    4.20,
-    'https://images.unsplash.com/photo-1603133872878-684f208fb84b',
+    4.2,
+    N'',
     1
 ),
-
 (
-    'Chicken Tikka',
-    'Starter',
-    'Grilled chicken pieces marinated with Indian spices.',
-    280.00,
-    12,
-    4.60,
-    'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0',
-    1
-),
-
-(
-    'Masala Dosa',
-    'South Indian',
-    'Crispy dosa served with potato masala, sambar and chutney.',
-    120.00,
-    25,
-    4.40,
-    'https://images.unsplash.com/photo-1668236543090-82eba5ee5976',
-    1
-),
-
-(
-    'Veg Manchurian',
-    'Chinese',
-    'Crispy vegetable balls served with spicy Manchurian sauce.',
-    160.00,
-    18,
-    4.10,
-    'https://images.unsplash.com/photo-1625398407796-82650a8c135f',
-    1
-),
-
-(
-    'Butter Naan',
-    'Bread',
-    'Soft Indian naan topped with butter.',
-    50.00,
-    40,
-    4.50,
-    'https://images.unsplash.com/photo-1601050690597-df0568f70950',
-    1
-),
-
-(
-    'Gulab Jamun',
-    'Dessert',
-    'Soft milk-solid dumplings served in sweet sugar syrup.',
-    80.00,
+    N'Butter Naan',
+    N'Bread',
+    N'Soft naan with butter',
+    60.00,
     30,
-    4.70,
-    'https://images.unsplash.com/photo-1666190094765-2c1c5b5e5c8e',
+    4.4,
+    N'',
     1
 );
 GO
 
 
 /* ============================================================
-   12. AUTOMATIC AVAILABILITY TRIGGER
+   9. VERIFY TABLES
    ============================================================ */
 
-CREATE TRIGGER TR_Dishes_Availability
-ON Dishes
-AFTER INSERT, UPDATE
-AS
-BEGIN
-
-    SET NOCOUNT ON;
-
-    UPDATE Dishes
-    SET
-        IsAvailable =
-            CASE
-                WHEN AvailableQuantity > 0
-                THEN 1
-                ELSE 0
-            END,
-
-        UpdatedAt = GETDATE()
-
-    WHERE DishID IN
-    (
-        SELECT DishID
-        FROM inserted
-    );
-
-END;
+SELECT
+    TABLE_NAME
+FROM INFORMATION_SCHEMA.TABLES
+WHERE TABLE_TYPE = 'BASE TABLE'
+ORDER BY TABLE_NAME;
 GO
 
 
 /* ============================================================
-   13. VERIFY MANAGER
+   10. VERIFY DISHES
+   ============================================================ */
+
+SELECT
+    DishID,
+    DishName,
+    Category,
+    Description,
+    Price,
+    AvailableQuantity,
+    Rating,
+    ImageURL,
+    IsAvailable,
+    UpdatedAt
+FROM Dishes
+ORDER BY DishID;
+GO
+
+
+/* ============================================================
+   11. VERIFY USERS
    ============================================================ */
 
 SELECT
@@ -484,34 +390,38 @@ SELECT
     IsActive,
     CreatedAt
 FROM Users
-WHERE Phone = '8260611800';
+ORDER BY UserID;
 GO
 
 
 /* ============================================================
-   14. VERIFY DISHES
+   12. VERIFY ORDERS
    ============================================================ */
 
 SELECT
-    DishID,
-    DishName,
-    Category,
-    Price,
-    AvailableQuantity,
-    Rating,
-    ImageURL,
-    IsAvailable
-FROM Dishes
-ORDER BY DishID;
+    OrderID,
+    CustomerName,
+    MobileNumber,
+    TableNumber,
+    TotalAmount,
+    Status,
+    OrderDate
+FROM Orders
+ORDER BY OrderID DESC;
 GO
 
 
 /* ============================================================
-   15. VERIFY TABLES
+   13. VERIFY ORDER DETAILS
    ============================================================ */
 
-SELECT TABLE_NAME
-FROM INFORMATION_SCHEMA.TABLES
-WHERE TABLE_TYPE = 'BASE TABLE'
-ORDER BY TABLE_NAME;
+SELECT
+    OrderDetailID,
+    OrderID,
+    DishID,
+    Quantity,
+    UnitPrice,
+    TotalPrice
+FROM OrderDetails
+ORDER BY OrderDetailID DESC;
 GO
