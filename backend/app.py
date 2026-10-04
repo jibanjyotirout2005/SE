@@ -1,16 +1,7 @@
+
 # ============================================================
 # HOTEL RESTAURANT MANAGEMENT SYSTEM
 # backend/app.py
-#
-# STRUCTURE
-# 1. IMPORTS + DATABASE CONNECTION
-# 2. FRONTEND PAGES
-# 3. COMMON HELPERS
-# 4. DATABASE TEST
-# 5. CUSTOMER PART
-# 6. WAITER PART
-# 7. MANAGER PART
-# 8. MAIN
 # ============================================================
 
 from flask import Flask, jsonify, request, send_from_directory
@@ -34,13 +25,13 @@ CORS(app)
 # PROJECT DIRECTORIES
 # ============================================================
 
-# app.py is inside:
-# E:\HOTEL_MGMT\SE\backend
+# app.py:
+# E:\HOTEL_MGMT\SE\backend\app.py
 #
-# BASE_DIR becomes:
+# BASE_DIR:
 # E:\HOTEL_MGMT\SE
 #
-# FRONTEND_DIR becomes:
+# FRONTEND_DIR:
 # E:\HOTEL_MGMT\SE\frontend
 
 BASE_DIR = os.path.dirname(
@@ -62,25 +53,50 @@ FRONTEND_DIR = os.path.join(
 @app.route("/")
 @app.route("/index.html")
 def home_page():
-    return send_from_directory(FRONTEND_DIR, "index.html")
+    return send_from_directory(
+        FRONTEND_DIR,
+        "index.html"
+    )
 
 
 @app.route("/customer")
 @app.route("/customer.html")
 def customer_page():
-    return send_from_directory(FRONTEND_DIR, "customer.html")
+    return send_from_directory(
+        FRONTEND_DIR,
+        "customer.html"
+    )
 
 
 @app.route("/manager")
 @app.route("/manager.html")
 def manager_page():
-    return send_from_directory(FRONTEND_DIR, "manager.html")
+    return send_from_directory(
+        FRONTEND_DIR,
+        "manager.html"
+    )
 
 
 @app.route("/waiter")
 @app.route("/waiter.html")
 def waiter_page():
-    return send_from_directory(FRONTEND_DIR, "waiter.html")
+    return send_from_directory(
+        FRONTEND_DIR,
+        "waiter.html"
+    )
+
+
+# ============================================================
+# FRONTEND STATIC FILES
+# ============================================================
+
+@app.route("/<path:filename>")
+def frontend_files(filename):
+    return send_from_directory(
+        FRONTEND_DIR,
+        filename
+    )
+
 
 # ============================================================
 # COMMON HELPERS

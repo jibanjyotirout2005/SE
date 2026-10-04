@@ -1,470 +1,1654 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Hotel Restaurant Management System</title>
 
+
     <style>
+
+        /* =========================================================
+           RESET
+        ========================================================= */
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
             min-height: 100vh;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
             color: #ffffff;
+
             background:
-                radial-gradient(circle at top left, #243b55 0%, transparent 40%),
-                radial-gradient(circle at bottom right, #141e30 0%, transparent 45%),
-                #0b1220;
+                radial-gradient(
+                    circle at 15% 20%,
+                    rgba(0, 116, 255, 0.16),
+                    transparent 35%
+                ),
+                radial-gradient(
+                    circle at 85% 70%,
+                    rgba(0, 80, 180, 0.13),
+                    transparent 35%
+                ),
+                #020d20;
+
+            overflow-x: hidden;
         }
+
+
+        /* =========================================================
+           MAIN PAGE
+        ========================================================= */
 
         .page {
             min-height: 100vh;
-            padding: 30px;
+            width: 100%;
         }
 
         .container {
             width: 100%;
-            max-width: 1200px;
-            margin: auto;
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 0 28px;
         }
 
-        .card {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 20px;
-            backdrop-filter: blur(14px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
-        }
+
+        /* =========================================================
+           HEADER
+        ========================================================= */
 
         header {
+            height: 70px;
+            width: 100%;
+
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 18px 0;
-            margin-bottom: 50px;
+            justify-content: space-between;
+
+            padding: 0 64px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #082a57 0%,
+                    #0a2345 45%,
+                    #101b36 100%
+                );
+
+            border-bottom:
+                1px solid
+                rgba(0, 198, 255, 0.35);
+
+            box-shadow:
+                0 4px 25px
+                rgba(0, 0, 0, 0.30);
+
+            position: relative;
+            z-index: 10;
         }
+
+
+        /* =========================================================
+           LOGO
+        ========================================================= */
 
         .logo {
-            font-size: 25px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+
+            font-size: 31px;
             font-weight: 800;
-            letter-spacing: 0.5px;
+
+            letter-spacing: 0.3px;
         }
 
-        .logo span {
-            color: #00c6ff;
-        }
+        .logo-icon {
+            width: 48px;
+            height: 48px;
 
-        .header-status {
-            color: #aeb8c8;
-            font-size: 14px;
-        }
-
-        .hero {
-            text-align: center;
-            padding: 55px 25px 45px;
-        }
-
-        .hero-badge {
-            display: inline-block;
-            padding: 8px 16px;
-            margin-bottom: 20px;
-            border-radius: 30px;
-            background: rgba(0, 198, 255, 0.10);
-            border: 1px solid rgba(0, 198, 255, 0.25);
-            color: #00c6ff;
-            font-size: 13px;
-            font-weight: 700;
-        }
-
-        .hero h1 {
-            font-size: 48px;
-            line-height: 1.15;
-            margin-bottom: 18px;
-        }
-
-        .hero h1 span {
-            color: #00c6ff;
-        }
-
-        .hero p {
-            max-width: 700px;
-            margin: auto;
-            color: #aeb8c8;
-            line-height: 1.7;
-            font-size: 16px;
-        }
-
-        .roles {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 22px;
-            margin-top: 35px;
-        }
-
-        .role-card {
-            padding: 30px;
-            text-align: center;
-            transition: 0.25s ease;
-        }
-
-        .role-card:hover {
-            transform: translateY(-7px);
-            border-color: rgba(0, 198, 255, 0.4);
-            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
-        }
-
-        .role-icon {
-            width: 75px;
-            height: 75px;
-            margin: 0 auto 20px;
             display: flex;
             align-items: center;
             justify-content: center;
+
             border-radius: 50%;
-            background: rgba(0, 198, 255, 0.10);
-            border: 1px solid rgba(0, 198, 255, 0.25);
-            font-size: 34px;
+
+            border:
+                3px solid
+                #00d9ff;
+
+            color: #00d9ff;
+
+            font-size: 25px;
+
+            box-shadow:
+                0 0 15px
+                rgba(0, 217, 255, 0.30);
+
+            background:
+                rgba(0, 120, 220, 0.08);
         }
 
-        .role-card h2 {
-            margin-bottom: 12px;
-            font-size: 23px;
+        .logo-white {
+            color: #ffffff;
         }
 
-        .role-card p {
-            min-height: 65px;
-            color: #aeb8c8;
-            font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 22px;
+        .logo-blue {
+            color: #00d9ff;
         }
 
-        .role-btn {
-            display: inline-block;
+
+        /* =========================================================
+           HEADER RIGHT
+        ========================================================= */
+
+        .header-title {
+            color: #d6e4f8;
+
+            font-size: 15px;
+
+            font-weight: 500;
+
+            letter-spacing: 0.1px;
+        }
+
+
+        /* =========================================================
+           HERO
+        ========================================================= */
+
+        .hero {
+    min-height: 408px;
+
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+
+    border-bottom: 1px solid rgba(0, 198, 255, 0.25);
+
+    background-image:
+        linear-gradient(
+            rgba(20, 49, 90, 0.55),
+            rgba(3, 24, 51, 0.65)
+        ),
+        url("./restaurantimg.png");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    box-shadow:
+        inset 0 -50px 80px rgba(0, 7, 20, 0.35);
+}
+
+
+        /* =========================================================
+           HERO OVERLAY
+        ========================================================= */
+
+        .hero::before {
+            content: "";
+
+            position: absolute;
+
+            inset: 0;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(0, 20, 48, 0.38),
+                    rgba(0, 0, 0, 0.04),
+                    rgba(0, 20, 48, 0.30)
+                );
+
+            pointer-events: none;
+
+            z-index: 1;
+        }
+
+
+        /* =========================================================
+           HERO CONTENT
+        ========================================================= */
+
+        .hero-content {
+            position: relative;
+
+            z-index: 2;
+
             width: 100%;
-            padding: 12px 18px;
-            border: none;
-            border-radius: 10px;
-            background: #00c6ff;
-            color: #07111d;
-            text-decoration: none;
+
+            max-width: 850px;
+
+            padding:
+                42px 20px
+                45px;
+        }
+
+
+        /* =========================================================
+           HERO BADGE
+        ========================================================= */
+
+        .hero-badge {
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 12px;
+
+            padding:
+                10px 27px;
+
+            margin-bottom: 18px;
+
+            border-radius: 30px;
+
+            border:
+                1px solid
+                rgba(0, 217, 255, 0.75);
+
+            background:
+                rgba(0, 150, 220, 0.13);
+
+            color: #00d9ff;
+
+            font-size: 14px;
+
             font-weight: 800;
-            transition: 0.2s;
+
+            letter-spacing: 0.3px;
+
+            box-shadow:
+                0 0 20px
+                rgba(0, 190, 255, 0.12);
         }
 
-        .role-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 198, 255, 0.25);
+        .hero-badge-icon {
+            font-size: 18px;
         }
 
-        .information {
-            margin-top: 28px;
-            padding: 28px;
+
+        /* =========================================================
+           HERO TITLE
+        ========================================================= */
+
+        .hero h1 {
+            font-size: 58px;
+
+            line-height: 1.05;
+
+            font-weight: 800;
+
+            margin-bottom: 20px;
+
+            text-shadow:
+                0 4px 15px
+                rgba(0, 0, 0, 0.35);
         }
 
-        .information h2 {
-            text-align: center;
-            margin-bottom: 22px;
-            font-size: 22px;
+        .hero-title-white {
+            color: #ffffff;
         }
 
-        .features {
+        .hero-title-blue {
+            color: #00d9ff;
+
+            display: block;
+
+            margin-top: 3px;
+        }
+
+
+        /* =========================================================
+           HERO DESCRIPTION
+        ========================================================= */
+
+        .hero-description {
+            max-width: 700px;
+
+            margin: 0 auto;
+
+            color: #d5e7fa;
+
+            font-size: 18px;
+
+            line-height: 1.48;
+
+            font-weight: 400;
+
+            text-shadow:
+                0 2px 7px
+                rgba(0, 0, 0, 0.55);
+        }
+
+
+        /* =========================================================
+           PORTAL SECTION
+        ========================================================= */
+
+        .portal-section {
+            padding:
+                32px 0
+                30px;
+
+            background:
+                radial-gradient(
+                    circle at center,
+                    rgba(0, 55, 115, 0.15),
+                    transparent 60%
+                );
+        }
+
+        .portal-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 18px;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 20px;
         }
 
-        .feature {
-            padding: 18px;
+
+        /* =========================================================
+           PORTAL CARDS
+        ========================================================= */
+
+        .portal-card {
+            min-height: 350px;
+
+            padding:
+                29px 28px
+                28px;
+
+            border-radius: 17px;
+
+            text-align: center;
+
+            position: relative;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease;
+        }
+
+        .portal-card:hover {
+            transform: translateY(-6px);
+        }
+
+
+        /* =========================================================
+           CUSTOMER CARD
+        ========================================================= */
+
+        .customer-card {
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(9, 54, 105, 0.88),
+                    rgba(3, 30, 65, 0.96)
+                );
+
+            border:
+                1px solid
+                rgba(0, 159, 255, 0.75);
+
+            box-shadow:
+                0 12px 35px
+                rgba(0, 78, 160, 0.17);
+        }
+
+        .customer-card:hover {
+            box-shadow:
+                0 18px 45px
+                rgba(0, 140, 255, 0.22);
+        }
+
+
+        /* =========================================================
+           WAITER CARD
+        ========================================================= */
+
+        .waiter-card {
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(0, 72, 77, 0.90),
+                    rgba(0, 39, 48, 0.97)
+                );
+
+            border:
+                1px solid
+                rgba(0, 221, 188, 0.75);
+
+            box-shadow:
+                0 12px 35px
+                rgba(0, 184, 160, 0.13);
+        }
+
+        .waiter-card:hover {
+            box-shadow:
+                0 18px 45px
+                rgba(0, 220, 185, 0.20);
+        }
+
+
+        /* =========================================================
+           MANAGER CARD
+        ========================================================= */
+
+        .manager-card {
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(45, 29, 105, 0.91),
+                    rgba(20, 17, 65, 0.98)
+                );
+
+            border:
+                1px solid
+                rgba(133, 65, 255, 0.82);
+
+            box-shadow:
+                0 12px 35px
+                rgba(100, 50, 210, 0.15);
+        }
+
+        .manager-card:hover {
+            box-shadow:
+                0 18px 45px
+                rgba(140, 70, 255, 0.23);
+        }
+
+
+        /* =========================================================
+           PORTAL ICON
+        ========================================================= */
+
+        .portal-icon {
+            width: 96px;
+            height: 96px;
+
+            margin-bottom: 17px;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 42px;
+
+            color: #ffffff;
+
+            position: relative;
+        }
+
+
+        /* =========================================================
+           CUSTOMER ICON
+        ========================================================= */
+
+        .customer-icon {
+            background:
+                linear-gradient(
+                    145deg,
+                    #159eff,
+                    #1657c7
+                );
+
+            border:
+                2px solid
+                #24c8ff;
+
+            box-shadow:
+                0 0 20px
+                rgba(0, 165, 255, 0.35);
+        }
+
+
+        /* =========================================================
+           WAITER ICON
+        ========================================================= */
+
+        .waiter-icon {
+            background:
+                linear-gradient(
+                    145deg,
+                    #16d9ba,
+                    #039c7f
+                );
+
+            border:
+                2px solid
+                #4ce8d1;
+
+            box-shadow:
+                0 0 20px
+                rgba(0, 224, 190, 0.30);
+        }
+
+
+        /* =========================================================
+           MANAGER ICON
+        ========================================================= */
+
+        .manager-icon {
+            background:
+                linear-gradient(
+                    145deg,
+                    #9754ff,
+                    #5c20d9
+                );
+
+            border:
+                2px solid
+                #b47cff;
+
+            box-shadow:
+                0 0 20px
+                rgba(142, 70, 255, 0.34);
+        }
+
+
+        /* =========================================================
+           PORTAL TEXT
+        ========================================================= */
+
+        .portal-card h2 {
+            font-size: 26px;
+
+            line-height: 1.2;
+
+            margin-bottom: 10px;
+
+            color: #ffffff;
+
+            font-weight: 800;
+        }
+
+        .portal-card p {
+            color: #d3e4f7;
+
+            font-size: 15px;
+
+            line-height: 1.5;
+
+            max-width: 285px;
+
+            min-height: 70px;
+
+            margin-bottom: 22px;
+        }
+
+
+        /* =========================================================
+           PORTAL BUTTON
+        ========================================================= */
+
+        .portal-btn {
+            margin-top: auto;
+
+            width: 245px;
+
+            max-width: 100%;
+
+            height: 48px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 10px;
+
+            border-radius: 30px;
+
+            text-decoration: none;
+
+            color: #ffffff;
+
+            font-size: 14px;
+
+            font-weight: 800;
+
+            transition:
+                transform 0.2s ease,
+                filter 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .portal-btn:hover {
+            transform: translateY(-2px);
+
+            filter: brightness(1.08);
+        }
+
+
+        /* =========================================================
+           CUSTOMER BUTTON
+        ========================================================= */
+
+        .customer-btn {
+            background:
+                linear-gradient(
+                    90deg,
+                    #0ba4ff,
+                    #0d8fe8
+                );
+
+            box-shadow:
+                0 7px 20px
+                rgba(0, 153, 255, 0.32);
+        }
+
+
+        /* =========================================================
+           WAITER BUTTON
+        ========================================================= */
+
+        .waiter-btn {
+            background:
+                linear-gradient(
+                    90deg,
+                    #10d1ae,
+                    #08b99d
+                );
+
+            box-shadow:
+                0 7px 20px
+                rgba(0, 211, 177, 0.27);
+        }
+
+
+        /* =========================================================
+           MANAGER BUTTON
+        ========================================================= */
+
+        .manager-btn {
+            background:
+                linear-gradient(
+                    90deg,
+                    #9149f7,
+                    #7135e5
+                );
+
+            box-shadow:
+                0 7px 20px
+                rgba(132, 59, 245, 0.30);
+        }
+
+        .arrow {
+            font-size: 19px;
+
+            line-height: 1;
+        }
+
+
+        /* =========================================================
+           SYSTEM FEATURES
+        ========================================================= */
+
+        .features-section {
+            margin-top: 0;
+
+            padding:
+                26px 20px
+                20px;
+
+            border-radius: 17px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(8, 40, 79, 0.88),
+                    rgba(4, 25, 54, 0.92)
+                );
+
+            border:
+                1px solid
+                rgba(39, 127, 213, 0.70);
+
+            box-shadow:
+                0 12px 35px
+                rgba(0, 0, 0, 0.15);
+        }
+
+
+        /* =========================================================
+           FEATURE HEADING
+        ========================================================= */
+
+        .features-heading {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 25px;
+
+            margin-bottom: 20px;
+        }
+
+        .heading-line {
+            width: 88px;
+
+            height: 2px;
+
+            background:
+                #00d9ff;
+
+            box-shadow:
+                0 0 8px
+                rgba(0, 217, 255, 0.35);
+        }
+
+        .features-heading h2 {
+            font-size: 30px;
+
+            font-weight: 800;
+
+            color: #ffffff;
+
+            white-space: nowrap;
+        }
+
+
+        /* =========================================================
+           FEATURE GRID
+        ========================================================= */
+
+        .feature-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 20px;
+        }
+
+
+        /* =========================================================
+           FEATURE CARD
+        ========================================================= */
+
+        .feature-card {
+            min-height: 165px;
+
+            display: flex;
+
+            align-items: flex-start;
+
+            gap: 22px;
+
+            padding:
+                20px 22px;
+
+            border-radius: 13px;
+
+            background:
+                rgba(7, 38, 76, 0.66);
+
+            border:
+                1px solid
+                rgba(45, 129, 210, 0.70);
+
+            transition:
+                transform 0.22s ease,
+                background 0.22s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+
+            background:
+                rgba(10, 47, 91, 0.78);
+        }
+
+
+        /* =========================================================
+           FEATURE ICON
+        ========================================================= */
+
+        .feature-icon {
+            flex-shrink: 0;
+
+            width: 64px;
+            height: 64px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
             border-radius: 12px;
-            background: rgba(255, 255, 255, 0.04);
+
+            color: #ffffff;
+
+            font-size: 28px;
+
+            font-weight: 800;
         }
 
-        .feature h3 {
-            color: #00c6ff;
-            font-size: 16px;
+
+        /* BLUE */
+
+        .feature-icon-blue {
+            background:
+                linear-gradient(
+                    145deg,
+                    #1aaaff,
+                    #1168dd
+                );
+
+            border:
+                1px solid
+                #36c8ff;
+
+            box-shadow:
+                0 0 17px
+                rgba(0, 163, 255, 0.24);
+        }
+
+
+        /* GREEN */
+
+        .feature-icon-green {
+            background:
+                linear-gradient(
+                    145deg,
+                    #14d5b0,
+                    #049b86
+                );
+
+            border:
+                1px solid
+                #36e7ca;
+
+            box-shadow:
+                0 0 17px
+                rgba(0, 220, 185, 0.22);
+        }
+
+
+        /* PURPLE */
+
+        .feature-icon-purple {
+            background:
+                linear-gradient(
+                    145deg,
+                    #9856ff,
+                    #6321d7
+                );
+
+            border:
+                1px solid
+                #b17cff;
+
+            box-shadow:
+                0 0 17px
+                rgba(145, 73, 255, 0.25);
+        }
+
+
+        /* =========================================================
+           FEATURE CONTENT
+        ========================================================= */
+
+        .feature-content {
+            padding-top: 4px;
+        }
+
+        .feature-content h3 {
+            color: #ffffff;
+
+            font-size: 19px;
+
+            font-weight: 800;
+
+            margin-bottom: 15px;
+        }
+
+        .feature-content p {
+            color: #c3d8ee;
+
+            font-size: 13px;
+
+            line-height: 1.65;
+
+            max-width: 245px;
+        }
+
+
+        /* =========================================================
+           FOOTER
+        ========================================================= */
+
+        footer {
+            padding:
+                31px 0
+                18px;
+
+            text-align: center;
+
+            color: #b4c9e2;
+
+            font-size: 14px;
+        }
+
+        .footer-top {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 45px;
+
             margin-bottom: 8px;
         }
 
-        .feature p {
-            color: #9ca8ba;
-            font-size: 13px;
-            line-height: 1.5;
+        .footer-line {
+            width: 345px;
+
+            height: 1px;
+
+            background:
+                rgba(36, 122, 205, 0.72);
         }
 
-        footer {
-            text-align: center;
-            color: #718096;
-            font-size: 13px;
-            padding: 30px 0 10px;
+        .footer-main {
+            white-space: nowrap;
         }
 
-        @media (max-width: 900px) {
-            .roles {
-                grid-template-columns: 1fr;
+        .footer-roles {
+            color: #89add2;
+
+            font-size: 12px;
+
+            margin-top: 7px;
+
+            letter-spacing: 0.3px;
+        }
+
+        .footer-dot {
+            margin:
+                0 7px;
+
+            color: #3b79ad;
+        }
+
+
+        /* =========================================================
+           TABLET
+        ========================================================= */
+
+        @media (max-width: 1000px) {
+
+            header {
+                padding: 0 35px;
             }
 
-            .features {
-                grid-template-columns: 1fr;
+            .logo {
+                font-size: 26px;
             }
 
             .hero h1 {
-                font-size: 38px;
+                font-size: 50px;
+            }
+
+            .portal-grid {
+                gap: 15px;
+            }
+
+            .portal-card {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-card {
+                min-height: 130px;
+            }
+
+            .footer-line {
+                width: 240px;
             }
         }
 
-        @media (max-width: 600px) {
-            .page {
-                padding: 18px;
-            }
+
+        /* =========================================================
+           MOBILE
+        ========================================================= */
+
+        @media (max-width: 760px) {
 
             header {
-                margin-bottom: 25px;
+                height: auto;
+
+                min-height: 70px;
+
+                padding:
+                    12px 20px;
+
+                gap: 10px;
             }
 
-            .header-status {
+            .logo {
+                font-size: 22px;
+
+                gap: 9px;
+            }
+
+            .logo-icon {
+                width: 40px;
+                height: 40px;
+
+                font-size: 20px;
+            }
+
+            .header-title {
                 display: none;
             }
 
             .hero {
-                padding: 35px 15px;
+                min-height: 430px;
+            }
+
+            .hero-content {
+                padding:
+                    40px 15px;
+            }
+
+            .hero-badge {
+                font-size: 11px;
+
+                padding:
+                    9px 16px;
             }
 
             .hero h1 {
-                font-size: 32px;
+                font-size: 42px;
             }
 
-            .hero p {
+            .hero-description {
+                font-size: 15px;
+
+                line-height: 1.55;
+            }
+
+            .portal-grid {
+                grid-template-columns: 1fr;
+
+                gap: 18px;
+            }
+
+            .portal-card {
+                min-height: 340px;
+            }
+
+            .features-section {
+                padding:
+                    24px 15px;
+            }
+
+            .features-heading {
+                gap: 12px;
+            }
+
+            .heading-line {
+                width: 35px;
+            }
+
+            .features-heading h2 {
+                font-size: 24px;
+            }
+
+            .feature-card {
+                padding: 18px;
+
+                gap: 15px;
+            }
+
+            .feature-icon {
+                width: 56px;
+                height: 56px;
+
+                font-size: 24px;
+            }
+
+            .feature-content h3 {
+                font-size: 17px;
+
+                margin-bottom: 9px;
+            }
+
+            .feature-content p {
+                font-size: 12px;
+            }
+
+            .footer-top {
+                gap: 15px;
+            }
+
+            .footer-line {
+                width: 80px;
+            }
+
+            .footer-main {
+                font-size: 12px;
+            }
+        }
+
+
+        /* =========================================================
+           SMALL MOBILE
+        ========================================================= */
+
+        @media (max-width: 450px) {
+
+            .container {
+                padding:
+                    0 15px;
+            }
+
+            .logo {
+                font-size: 19px;
+            }
+
+            .logo-icon {
+                width: 36px;
+                height: 36px;
+
+                font-size: 18px;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero-title-blue {
+                margin-top: 5px;
+            }
+
+            .portal-card {
+                min-height: 330px;
+            }
+
+            .portal-icon {
+                width: 88px;
+                height: 88px;
+
+                font-size: 37px;
+            }
+
+            .portal-card h2 {
+                font-size: 24px;
+            }
+
+            .portal-card p {
                 font-size: 14px;
             }
 
-            .role-card {
-                padding: 25px;
+            .footer-line {
+                width: 55px;
             }
         }
+
     </style>
+
 </head>
+
 
 <body>
 
 <div class="page">
 
-    <div class="container">
 
-        <!-- =================================================
-             HEADER
-        ================================================== -->
+    <!-- =========================================================
+         HEADER
+    ========================================================== -->
 
-        <header>
-            <div class="logo">
-                HOTEL <span>RESTAURANT</span>
+    <header>
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                🍴
             </div>
 
-            <div class="header-status">
-                Hotel Restaurant Management System
+            <div>
+
+                <span class="logo-white">
+                    HOTEL
+                </span>
+
+                <span class="logo-blue">
+                    RESTAURANT
+                </span>
+
             </div>
-        </header>
+
+        </div>
 
 
-        <!-- =================================================
-             HERO
-        ================================================== -->
+        <div class="header-title">
+            Hotel Restaurant Management System
+        </div>
 
-        <section class="card hero">
+    </header>
+
+
+
+    <!-- =========================================================
+         HERO
+    ========================================================== -->
+
+    <section class="hero">
+
+        <div class="hero-content">
+
 
             <div class="hero-badge">
-                RESTAURANT MANAGEMENT SYSTEM
+
+                <span class="hero-badge-icon">
+                    🍴
+                </span>
+
+                <span>
+                    RESTAURANT MANAGEMENT SYSTEM
+                </span>
+
             </div>
 
+
             <h1>
-                Welcome to
-                <span>Hotel Restaurant</span>
+
+                <span class="hero-title-white">
+                    Welcome to
+                </span>
+
+                <span class="hero-title-blue">
+                    Hotel Restaurant
+                </span>
+
             </h1>
 
-            <p>
+
+            <p class="hero-description">
+
                 Manage restaurant operations, browse dishes,
                 place orders and control restaurant activities
                 through dedicated Customer, Waiter and Manager
                 portals.
+
             </p>
 
-        </section>
+
+        </div>
+
+    </section>
 
 
-        <!-- =================================================
-             ROLES
-        ================================================== -->
 
-        <section class="roles">
+    <!-- =========================================================
+         PORTALS
+    ========================================================== -->
 
-            <!-- CUSTOMER -->
+    <section class="portal-section">
 
-            <div class="card role-card">
+        <div class="container">
 
-                <div class="role-icon">
-                    🍽️
-                </div>
-
-                <h2>
-                    Customer
-                </h2>
-
-                <p>
-                    Browse available dishes, view prices and
-                    ratings, add dishes to your cart and place
-                    restaurant orders.
-                </p>
-
-                <a
-                    href="./customer.html"
-                    class="role-btn"
-                >
-                    Customer Portal
-                </a>
-
-            </div>
+            <div class="portal-grid">
 
 
-            <!-- WAITER -->
+                <!-- =================================================
+                     CUSTOMER
+                ================================================== -->
 
-            <div class="card role-card">
+                <div class="portal-card customer-card">
 
-                <div class="role-icon">
-                    🧑‍🍳
-                </div>
-
-                <h2>
-                    Waiter
-                </h2>
-
-                <p>
-                    Register or login as a waiter, take customer
-                    orders, select dishes and monitor restaurant
-                    orders.
-                </p>
-
-                <a
-                    href="./waiter.html"
-                    class="role-btn"
-                >
-                    Waiter Portal
-                </a>
-
-            </div>
+                    <div class="portal-icon customer-icon">
+                        🍴
+                    </div>
 
 
-            <!-- MANAGER -->
+                    <h2>
+                        Customer
+                    </h2>
 
-            <div class="card role-card">
-
-                <div class="role-icon">
-                    👨‍💼
-                </div>
-
-                <h2>
-                    Manager
-                </h2>
-
-                <p>
-                    Control dishes, orders, waiters, customers,
-                    stock, pricing and complete restaurant
-                    operations.
-                </p>
-
-                <a
-                    href="./manager.html"
-                    class="role-btn"
-                >
-                    Manager Portal
-                </a>
-
-            </div>
-
-        </section>
-
-
-        <!-- =================================================
-             SYSTEM INFORMATION
-        ================================================== -->
-
-        <section class="card information">
-
-            <h2>
-                System Features
-            </h2>
-
-            <div class="features">
-
-                <div class="feature">
-
-                    <h3>
-                        🍴 Dish Management
-                    </h3>
 
                     <p>
-                        View dishes with price, rating,
-                        description, availability and stock.
+
+                        Browse available dishes, view prices
+                        and ratings, add dishes to your cart
+                        and place restaurant orders.
+
                     </p>
+
+
+                    <a
+                        href="./customer.html"
+                        class="portal-btn customer-btn"
+                    >
+
+                        Customer Portal
+
+                        <span class="arrow">
+                            →
+                        </span>
+
+                    </a>
 
                 </div>
 
 
-                <div class="feature">
 
-                    <h3>
-                        🛒 Order Management
-                    </h3>
+                <!-- =================================================
+                     WAITER
+                ================================================== -->
+
+                <div class="portal-card waiter-card">
+
+                    <div class="portal-icon waiter-icon">
+                        👨‍🍳
+                    </div>
+
+
+                    <h2>
+                        Waiter
+                    </h2>
+
 
                     <p>
-                        Customers and waiters can place orders
-                        while order information is stored in
-                        the database.
+
+                        Register or login as a waiter, take
+                        customer orders, select dishes and
+                        monitor restaurant orders.
+
                     </p>
+
+
+                    <a
+                        href="./waiter.html"
+                        class="portal-btn waiter-btn"
+                    >
+
+                        Waiter Portal
+
+                        <span class="arrow">
+                            →
+                        </span>
+
+                    </a>
 
                 </div>
 
 
-                <div class="feature">
 
-                    <h3>
-                        📊 Manager Control
-                    </h3>
+                <!-- =================================================
+                     MANAGER
+                ================================================== -->
+
+                <div class="portal-card manager-card">
+
+                    <div class="portal-icon manager-icon">
+                        👤
+                    </div>
+
+
+                    <h2>
+                        Manager
+                    </h2>
+
 
                     <p>
-                        The Manager controls restaurant dishes,
-                        orders, waiters, customers and stock.
+
+                        Control dishes, orders, waiters,
+                        customers, stock, pricing and
+                        complete restaurant operations.
+
                     </p>
 
+
+                    <a
+                        href="./manager.html"
+                        class="portal-btn manager-btn"
+                    >
+
+                        Manager Portal
+
+                        <span class="arrow">
+                            →
+                        </span>
+
+                    </a>
+
                 </div>
+
 
             </div>
 
-        </section>
+        </div>
+
+    </section>
 
 
-        <!-- =================================================
-             FOOTER
-        ================================================== -->
 
-        <footer>
+    <!-- =========================================================
+         SYSTEM FEATURES
+    ========================================================== -->
 
-            Hotel Restaurant Management System
+    <section class="container">
 
-            <br>
+        <div class="features-section">
 
-            Customer • Waiter • Manager
 
-        </footer>
+            <div class="features-heading">
 
-    </div>
+                <div class="heading-line"></div>
+
+                <h2>
+                    System Features
+                </h2>
+
+                <div class="heading-line"></div>
+
+            </div>
+
+
+
+            <div class="feature-grid">
+
+
+                <!-- DISH MANAGEMENT -->
+
+                <div class="feature-card">
+
+                    <div
+                        class="
+                            feature-icon
+                            feature-icon-blue
+                        "
+                    >
+                        🍴
+                    </div>
+
+
+                    <div class="feature-content">
+
+                        <h3>
+                            Dish Management
+                        </h3>
+
+                        <p>
+
+                            View dishes with price, rating,
+                            description, availability
+                            and stock.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ORDER MANAGEMENT -->
+
+                <div class="feature-card">
+
+                    <div
+                        class="
+                            feature-icon
+                            feature-icon-green
+                        "
+                    >
+                        🛒
+                    </div>
+
+
+                    <div class="feature-content">
+
+                        <h3>
+                            Order Management
+                        </h3>
+
+                        <p>
+
+                            Customers and waiters can place
+                            orders while order information is
+                            stored in the database.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- MANAGER CONTROL -->
+
+                <div class="feature-card">
+
+                    <div
+                        class="
+                            feature-icon
+                            feature-icon-purple
+                        "
+                    >
+                        📊
+                    </div>
+
+
+                    <div class="feature-content">
+
+                        <h3>
+                            Manager Control
+                        </h3>
+
+                        <p>
+
+                            The Manager controls restaurant
+                            dishes, orders, waiters,
+                            customers and stock.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================================
+         FOOTER
+    ========================================================== -->
+
+    <footer>
+
+        <div class="footer-top">
+
+            <div class="footer-line"></div>
+
+            <div class="footer-main">
+                Hotel Restaurant Management System
+            </div>
+
+            <div class="footer-line"></div>
+
+        </div>
+
+
+        <div class="footer-roles">
+
+            Customer
+
+            <span class="footer-dot">
+                •
+            </span>
+
+            Waiter
+
+            <span class="footer-dot">
+                •
+            </span>
+
+            Manager
+
+        </div>
+
+    </footer>
+
 
 </div>
 
+
 </body>
+
 </html>
