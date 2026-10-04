@@ -2080,18 +2080,31 @@ def update_order_payment(order_id):
 
     data = get_json()
 
+    # Accept all common frontend field names
+    raw_payment_method = (
+        data.get("payment_method")
+        or data.get("paymentMethod")
+        or data.get("payment_mode")
+        or data.get("paymentMode")
+        or ""
+    )
+
     payment_method = str(
-        data.get(
-            "payment_method",
-            ""
-        )
+        raw_payment_method
     ).strip().upper()
 
-    if payment_method not in (
-        "CASH",
-        "UPI",
-        "CARD"
-    ):
+    # Normalize possible frontend values
+    payment_map = {
+        "CASH": "CASH",
+        "CARD": "CARD",
+        "UPI": "UPI"
+    }
+
+    payment_method = payment_map.get(
+        payment_method
+    )
+
+    if not payment_method:
 
         return error(
             "Payment method must be CASH, UPI or CARD."
@@ -2105,11 +2118,16 @@ def update_order_payment(order_id):
         conn = get_connection()
         cursor = conn.cursor()
 
-        # Check whether order exists
+        # -----------------------------------------------------
+        # CHECK ORDER
+        # -----------------------------------------------------
+
         cursor.execute("""
             SELECT
                 OrderID,
-                TotalAmount
+                TotalAmount,
+                Status,
+                PaymentMode
             FROM Orders
             WHERE OrderID = ?
         """, (
@@ -2125,7 +2143,28 @@ def update_order_payment(order_id):
                 404
             )
 
-        # Check whether PaymentMode column exists
+        total_amount = float(
+            order[1] or 0
+        )
+
+        current_status = str(
+            order[2] or ""
+        ).strip()
+
+        # -----------------------------------------------------
+        # ONLY COMPLETED ORDERS CAN BE MARKED PAID
+        # -----------------------------------------------------
+
+        if current_status != "Completed":
+
+            return error(
+                "Order must be completed before payment can be marked as paid."
+            )
+
+        # -----------------------------------------------------
+        # CHECK PAYMENT MODE COLUMN
+        # -----------------------------------------------------
+
         cursor.execute("""
             SELECT COLUMN_NAME
             FROM INFORMATION_SCHEMA.COLUMNS
@@ -2136,15 +2175,41 @@ def update_order_payment(order_id):
         if not cursor.fetchone():
 
             return error(
-                "PaymentMode column is missing "
-                "from Orders table.",
+                "PaymentMode column is missing from Orders table.",
                 500
             )
 
-        # Update payment mode
+        # -----------------------------------------------------
+        # PREVENT DUPLICATE PAYMENT
+        # -----------------------------------------------------
+
+        existing_payment = order[3]
+
+        if existing_payment:
+
+            existing_payment = str(
+                existing_payment
+            ).strip()
+
+            if existing_payment.upper() in (
+                "CASH",
+                "UPI",
+                "CARD"
+            ):
+
+                return error(
+                    "Payment has already been recorded for this order.",
+                    409
+                )
+
+        # -----------------------------------------------------
+        # SAVE PAYMENT METHOD
+        # -----------------------------------------------------
+
         cursor.execute("""
             UPDATE Orders
-            SET PaymentMode = ?
+            SET
+                PaymentMode = ?
             WHERE OrderID = ?
         """, (
             payment_method,
@@ -2158,7 +2223,7 @@ def update_order_payment(order_id):
             "success": True,
 
             "message":
-                "Payment mode updated successfully.",
+                "Payment marked as paid successfully.",
 
             "order_id":
                 order_id,
@@ -2166,8 +2231,12 @@ def update_order_payment(order_id):
             "payment_mode":
                 payment_method,
 
+            "payment_status":
+                "Paid",
+
             "total_amount":
-                float(order[1] or 0)
+                total_amount
+
         })
 
     except Exception as e:
@@ -2186,8 +2255,6 @@ def update_order_payment(order_id):
             cursor,
             conn
         )
-# -------------------- MANAGER KPI -----------------------------
-
 # -------------------- MANAGER KPI -----------------------------
 
 @app.route(
@@ -2216,7 +2283,14 @@ def manager_kpi():
                     COUNT(*) AS TotalOrders,
 
                     ISNULL(
-                        SUM(TotalAmount),
+                        SUM(
+                            CASE
+                                WHEN Status = 'Completed'
+                                     AND PaymentMode IS NOT NULL
+                                THEN TotalAmount
+                                ELSE 0
+                            END
+                        ),
                         0
                     ) AS TotalRevenue,
 
@@ -2256,7 +2330,14 @@ def manager_kpi():
                     COUNT(*) AS TotalOrders,
 
                     ISNULL(
-                        SUM(TotalAmount),
+                        SUM(
+                            CASE
+                                WHEN Status = 'Completed'
+                                     AND PaymentMode IS NOT NULL
+                                THEN TotalAmount
+                                ELSE 0
+                            END
+                        ),
                         0
                     ) AS TotalRevenue,
 
@@ -2325,7 +2406,6 @@ def manager_kpi():
             cursor,
             conn
         )
-
 # -------------------- MANAGER WAITERS -------------------------
 
 @app.route(
@@ -2516,7 +2596,179 @@ def manager_customers():
             conn
         )
 
+# ============================================================
+# GENERATE / GET BILL
+# ============================================================
 
+@app.route(
+    "/api/orders/<int:order_id>/bill",
+    methods=["GET", "POST"]
+)
+def generate_order_bill(order_id):
+
+    conn = None
+    cursor = None
+
+    try:
+
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        # ----------------------------------------------------
+        # GET ORDER
+        # ----------------------------------------------------
+
+        cursor.execute("""
+            SELECT
+                OrderID,
+                CustomerName,
+                MobileNumber,
+                TableNumber,
+                TotalAmount,
+                Status,
+                OrderDate,
+                PaymentMode
+            FROM Orders
+            WHERE OrderID = ?
+        """, (
+            order_id,
+        ))
+
+        order_row = cursor.fetchone()
+
+        if not order_row:
+
+            return error(
+                "Order not found.",
+                404
+            )
+
+        order = row_to_dict(
+            cursor,
+            order_row
+        )
+
+        # ----------------------------------------------------
+        # GET ORDER ITEMS
+        # ----------------------------------------------------
+
+        cursor.execute("""
+            SELECT
+                od.OrderDetailID,
+                od.DishID,
+                d.DishName,
+                od.Quantity,
+                od.UnitPrice,
+                od.TotalPrice
+            FROM OrderDetails AS od
+            INNER JOIN Dishes AS d
+                ON d.DishID = od.DishID
+            WHERE od.OrderID = ?
+            ORDER BY od.OrderDetailID ASC
+        """, (
+            order_id,
+        ))
+
+        items = rows_to_dicts(
+            cursor,
+            cursor.fetchall()
+        )
+
+        # ----------------------------------------------------
+        # BILL DATA
+        # ----------------------------------------------------
+
+        subtotal = sum(
+            float(
+                item["TotalPrice"] or 0
+            )
+            for item in items
+        )
+
+        total_amount = float(
+            order["TotalAmount"] or 0
+        )
+
+        payment_mode = (
+            order.get("PaymentMode")
+            or None
+        )
+
+        payment_status = (
+            "Paid"
+            if payment_mode
+            else "Pending"
+        )
+
+        bill = {
+
+            "bill_number":
+                f"BILL-{order_id}",
+
+            "order_id":
+                order_id,
+
+            "customer_name":
+                order["CustomerName"],
+
+            "phone":
+                order["MobileNumber"],
+
+            "table_number":
+                order["TableNumber"],
+
+            "order_date":
+                order["OrderDate"],
+
+            "status":
+                order["Status"],
+
+            "items":
+                items,
+
+            "subtotal":
+                subtotal,
+
+            "tax_amount":
+                0.0,
+
+            "discount_amount":
+                0.0,
+
+            "final_amount":
+                total_amount,
+
+            "payment_mode":
+                payment_mode,
+
+            "payment_status":
+                payment_status
+        }
+
+        return jsonify({
+
+            "success": True,
+
+            "message":
+                "Bill generated successfully.",
+
+            "bill":
+                bill
+        })
+
+    except Exception as e:
+
+        return error(
+            f"Unable to generate bill: {str(e)}",
+            500
+        )
+
+    finally:
+
+        close_db(
+            cursor,
+            conn
+        )
 # ============================================================
 # MAIN
 # ============================================================

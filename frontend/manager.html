@@ -3387,19 +3387,7 @@ function renderOrders(orders){
                                 </button>
 
 
-                                <!-- PENDING -->
-
-                                <button
-                                    class="warning-btn"
-                                    onclick="
-                                        updateOrderPayment(
-                                            ${orderId},
-                                            'Pending'
-                                        )
-                                    "
-                                >
-                                    Pending
-                                </button>
+                                
 
 
                                 <!-- PRINT -->
@@ -3791,114 +3779,75 @@ async function updateOrderPayment(
    PRINT BILL
 ========================================================= */
 
-async function printBill(orderId){
+async function printBill(orderId) {
 
-    try{
+    try {
 
         const response =
             await fetch(
-                API_BASE +
-                "/api/orders/" +
-                encodeURIComponent(orderId),
-                {
-                    cache:"no-store"
-                }
+                `${API_BASE}/api/orders/${orderId}/bill`
             );
 
+        const contentType =
+            response.headers.get(
+                "content-type"
+            ) || "";
+
+        if (!contentType.includes("application/json")) {
+
+            throw new Error(
+                "Bill API did not return JSON."
+            );
+        }
 
         const result =
             await response.json();
 
-
-        if(
+        if (
             !response.ok ||
             !result.success
-        ){
+        ) {
 
             throw new Error(
                 result.message ||
-                "Unable to load bill."
+                "Unable to generate bill."
             );
-
         }
 
-
-        const order =
-            result.order || {};
-
+        const bill =
+            result.bill;
 
         const items =
-            Array.isArray(order.Items)
-            ?
-            order.Items
-            :
-            [];
-
-
-        const paymentStatus =
-            order.PaymentStatus ??
-            order.Payment_Status ??
-            "Pending";
-
-
-        const paymentMode =
-            order.PaymentMethod ??
-            order.PaymentMode ??
-            order.payment_mode ??
-            "Not Selected";
-
+            Array.isArray(bill.items)
+                ? bill.items
+                : [];
 
         const itemRows =
-            items.map(
-                item => `
-
+            items.map(item => `
                 <tr>
-
                     <td>
                         ${escapeHtml(
-                            item.DishName ||
-                            item.Dish ||
-                            "Dish"
+                            item.DishName || "Dish"
                         )}
                     </td>
 
                     <td>
-                        ${Number(
-                            item.Quantity || 0
-                        )}
+                        ${item.Quantity || 0}
                     </td>
 
                     <td>
                         ₹${Number(
-                            item.UnitPrice ||
-                            item.Price ||
-                            0
+                            item.UnitPrice || 0
                         ).toFixed(2)}
                     </td>
 
                     <td>
                         ₹${Number(
-                            item.TotalPrice ||
-                            (
-                                Number(
-                                    item.UnitPrice ||
-                                    item.Price ||
-                                    0
-                                ) *
-                                Number(
-                                    item.Quantity || 0
-                                )
-                            ) ||
-                            0
+                            item.TotalPrice || 0
                         ).toFixed(2)}
                     </td>
-
                 </tr>
-
-                `
-            )
-            .join("");
-
+            `).join("");
 
         const printWindow =
             window.open(
@@ -3907,318 +3856,395 @@ async function printBill(orderId){
                 "width=900,height=700"
             );
 
-
-        if(!printWindow){
+        if (!printWindow) {
 
             alert(
                 "Please allow pop-ups to print the bill."
             );
 
             return;
-
         }
 
-
         printWindow.document.write(`
+            <!DOCTYPE html>
+
+            <html>
+
+            <head>
+
+                <title>
+                    ${escapeHtml(
+                        bill.bill_number
+                    )}
+                </title>
+
+                <style>
+
+                    body {
+                        font-family: Arial, sans-serif;
+                        padding: 35px;
+                        color: #111;
+                    }
+
+                    .header {
+                        text-align: center;
+                        margin-bottom: 25px;
+                    }
 
-<!DOCTYPE html>
+                    .header h1 {
+                        margin: 0;
+                    }
+
+                    .header p {
+                        margin: 5px 0;
+                        color: #555;
+                    }
+
+                    .info {
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        gap: 10px;
+                        margin-bottom: 25px;
+                    }
+
+                    .info div {
+                        padding: 8px;
+                        border-bottom: 1px solid #ddd;
+                    }
+
+                    table {
+                        width: 100%;
+                        border-collapse: collapse;
+                    }
+
+                    th,
+                    td {
+                        border: 1px solid #ddd;
+                        padding: 10px;
+                        text-align: left;
+                    }
+
+                    th {
+                        background: #f3f3f3;
+                    }
+
+                    .right {
+                        text-align: right;
+                    }
+
+                    .total {
+                        margin-top: 20px;
+                        margin-left: auto;
+                        width: 300px;
+                    }
+
+                    .total-row {
+                        display: flex;
+                        justify-content: space-between;
+                        padding: 7px 0;
+                    }
+
+                    .grand-total {
+                        border-top: 2px solid #111;
+                        margin-top: 8px;
+                        padding-top: 10px;
+                        font-size: 20px;
+                        font-weight: bold;
+                    }
+
+                    .payment {
+                        margin-top: 20px;
+                        padding: 12px;
+                        border: 1px solid #ddd;
+                    }
+
+                    @media print {
+
+                        .no-print {
+                            display: none;
+                        }
+
+                    }
+
+                </style>
 
-<html>
+            </head>
 
-<head>
-
-<meta charset="UTF-8">
-
-<title>
-Hotel Restaurant Bill #${Number(order.OrderID || orderId)}
-</title>
-
-<style>
-
-body{
-    font-family:Arial,Helvetica,sans-serif;
-    padding:40px;
-    color:#111;
-}
-
-.header{
-    text-align:center;
-    margin-bottom:30px;
-}
-
-.header h1{
-    margin-bottom:5px;
-}
-
-.header p{
-    margin:3px 0;
-    color:#555;
-}
-
-.bill-info{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    margin-bottom:25px;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:20px;
-}
-
-th,
-td{
-    border:1px solid #ddd;
-    padding:10px;
-    text-align:left;
-}
-
-th{
-    background:#f3f4f6;
-}
-
-.total{
-    text-align:right;
-    margin-top:20px;
-    font-size:22px;
-    font-weight:bold;
-}
-
-.payment{
-    margin-top:10px;
-    text-align:right;
-    font-weight:bold;
-}
-
-.footer{
-    text-align:center;
-    margin-top:40px;
-    color:#666;
-}
-
-@media print{
-
-    body{
-        padding:20px;
-    }
-
-}
-
-</style>
-
-</head>
-
-
-<body>
-
-
-<div class="header">
-
-    <h1>
-        HOTEL RESTAURANT
-    </h1>
-
-    <p>
-        Restaurant Management System
-    </p>
-
-    <h2>
-        BILL / INVOICE
-    </h2>
-
-</div>
-
-
-<div class="bill-info">
-
-    <div>
-        <strong>Bill No:</strong>
-        #${Number(
-            order.OrderID ||
-            orderId
-        )}
-    </div>
-
-
-    <div>
-        <strong>Date:</strong>
-        ${escapeHtml(
-            String(
-                order.OrderDate ||
-                ""
-            )
-        )}
-    </div>
-
-
-    <div>
-        <strong>Customer:</strong>
-        ${escapeHtml(
-            order.CustomerName ||
-            "N/A"
-        )}
-    </div>
-
-
-    <div>
-        <strong>Phone:</strong>
-        ${escapeHtml(
-            order.MobileNumber ||
-            order.Phone ||
-            "N/A"
-        )}
-    </div>
-
-
-    <div>
-        <strong>Table:</strong>
-        ${escapeHtml(
-            String(
-                order.TableNumber ??
-                "N/A"
-            )
-        )}
-    </div>
-
-
-    <div>
-        <strong>Payment Status:</strong>
-        ${escapeHtml(
-            String(
-                paymentStatus
-            )
-        )}
-    </div>
-
-
-    <div>
-        <strong>Payment Mode:</strong>
-        ${escapeHtml(
-            String(
-                paymentMode
-            )
-        )}
-    </div>
-
-</div>
-
-
-<table>
-
-<thead>
-
-<tr>
-
-    <th>
-        Dish
-    </th>
-
-    <th>
-        Qty
-    </th>
-
-    <th>
-        Price
-    </th>
-
-    <th>
-        Total
-    </th>
-
-</tr>
-
-</thead>
-
-
-<tbody>
-
-${itemRows}
-
-</tbody>
-
-</table>
-
-
-<div class="total">
-
-    Total Amount:
-
-    ₹${Number(
-        order.TotalAmount || 0
-    ).toFixed(2)}
-
-</div>
-
-
-<div class="payment">
-
-    Payment:
-
-    ${escapeHtml(
-        String(paymentStatus)
-    )}
-
-    |
-
-    ${escapeHtml(
-        String(paymentMode)
-    )}
-
-</div>
-
-
-<div class="footer">
-
-    Thank you for visiting us!
-
-    <br>
-
-    Please visit again.
-
-</div>
-
-
-<script>
-
-window.onload = function(){
-
-    window.print();
-
-};
-
-<\/script>
-
-
-</body>
-
-</html>
-
+            <body>
+
+                <div class="header">
+
+                    <h1>
+                        Hotel Restaurant
+                    </h1>
+
+                    <p>
+                        Food Ordering & Management System
+                    </p>
+
+                    <h2>
+                        BILL
+                    </h2>
+
+                </div>
+
+                <div class="info">
+
+                    <div>
+                        <strong>Bill No:</strong>
+                        ${escapeHtml(
+                            bill.bill_number
+                        )}
+                    </div>
+
+                    <div>
+                        <strong>Order ID:</strong>
+                        #${bill.order_id}
+                    </div>
+
+                    <div>
+                        <strong>Customer:</strong>
+                        ${escapeHtml(
+                            bill.customer_name || "-"
+                        )}
+                    </div>
+
+                    <div>
+                        <strong>Phone:</strong>
+                        ${escapeHtml(
+                            bill.phone || "-"
+                        )}
+                    </div>
+
+                    <div>
+                        <strong>Table:</strong>
+                        ${escapeHtml(
+                            String(
+                                bill.table_number || "-"
+                            )
+                        )}
+                    </div>
+
+                    <div>
+                        <strong>Status:</strong>
+                        ${escapeHtml(
+                            bill.status || "-"
+                        )}
+                    </div>
+
+                </div>
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Dish</th>
+                            <th>Qty</th>
+                            <th>Unit Price</th>
+                            <th>Total</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        ${itemRows}
+
+                    </tbody>
+
+                </table>
+
+                <div class="total">
+
+                    <div class="total-row">
+                        <span>Subtotal</span>
+                        <strong>
+                            ₹${Number(
+                                bill.subtotal || 0
+                            ).toFixed(2)}
+                        </strong>
+                    </div>
+
+                    <div class="total-row">
+                        <span>Tax</span>
+                        <strong>
+                            ₹${Number(
+                                bill.tax_amount || 0
+                            ).toFixed(2)}
+                        </strong>
+                    </div>
+
+                    <div class="total-row">
+                        <span>Discount</span>
+                        <strong>
+                            ₹${Number(
+                                bill.discount_amount || 0
+                            ).toFixed(2)}
+                        </strong>
+                    </div>
+
+                    <div class="total-row grand-total">
+                        <span>Total</span>
+                        <strong>
+                            ₹${Number(
+                                bill.final_amount || 0
+                            ).toFixed(2)}
+                        </strong>
+                    </div>
+
+                </div>
+
+                <div class="payment">
+
+                    <strong>
+                        Payment Status:
+                    </strong>
+
+                    ${escapeHtml(
+                        bill.payment_status ||
+                        "Pending"
+                    )}
+
+                    <br>
+
+                    <strong>
+                        Payment Mode:
+                    </strong>
+
+                    ${escapeHtml(
+                        bill.payment_mode ||
+                        "Not selected"
+                    )}
+
+                </div>
+
+                <br>
+
+                <button
+                    class="no-print"
+                    onclick="window.print()"
+                >
+                    Print
+                </button>
+
+                <button
+                    class="no-print"
+                    onclick="window.close()"
+                >
+                    Close
+                </button>
+
+            </body>
+
+            </html>
         `);
-
 
         printWindow.document.close();
 
-    }
-    catch(error){
+        printWindow.focus();
+
+        setTimeout(() => {
+
+            printWindow.print();
+
+        }, 300);
+
+    } catch (error) {
 
         console.error(
-            "printBill:",
+            "Print bill error:",
             error
         );
-
 
         alert(
             "Unable to print bill: " +
             error.message
         );
+    }
+}
+async function markOrderPaid(orderId) {
 
+    const select =
+        document.getElementById(
+            `payment-method-${orderId}`
+        );
+
+    if (!select) {
+        alert("Payment selector not found.");
+        return;
     }
 
+    const paymentMethod =
+        select.value;
+
+    if (!paymentMethod) {
+
+        alert(
+            "Please select Cash, UPI or Card first."
+        );
+
+        return;
+    }
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_BASE}/api/orders/${orderId}/payment`,
+                {
+                    method: "PUT",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        payment_method:
+                            paymentMethod
+
+                    })
+                }
+            );
+
+        const result =
+            await response.json();
+
+        if (
+            !response.ok ||
+            !result.success
+        ) {
+
+            throw new Error(
+                result.message ||
+                "Unable to mark payment as paid."
+            );
+        }
+
+        alert(
+            "Payment marked as Paid."
+        );
+
+        // Reload orders
+        await loadOrders();
+
+        // Reload dashboard KPI
+        await loadDashboard();
+
+    } catch (error) {
+
+        console.error(
+            "Payment error:",
+            error
+        );
+
+        alert(
+            error.message
+        );
+    }
 }
-
-
 /* =========================================================
    LOAD WAITERS
 ========================================================= */
