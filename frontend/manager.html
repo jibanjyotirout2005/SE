@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -24,7 +26,10 @@ body{
     color:#fff;
 }
 
-button,input,select,textarea{
+button,
+input,
+select,
+textarea{
     font:inherit;
 }
 
@@ -292,6 +297,11 @@ button{
     font-size:13px;
 }
 
+
+/* =========================================================
+   KPI
+========================================================= */
+
 .stats-grid{
     display:grid;
     grid-template-columns:repeat(4,1fr);
@@ -314,27 +324,46 @@ button{
     font-weight:800;
 }
 
+
+/* =========================================================
+   NAVIGATION DROPDOWN
+========================================================= */
+
 .dashboard-nav{
     display:flex;
-    gap:8px;
-    flex-wrap:wrap;
+    align-items:center;
+    gap:12px;
     margin-bottom:25px;
-    padding:10px;
+    padding:12px 15px;
 }
 
-.nav-btn{
-    border:none;
-    background:transparent;
-    color:#aeb8c8;
-    padding:11px 16px;
-    border-radius:9px;
+.dashboard-nav-label{
+    color:#9ca8ba;
+    font-size:13px;
+    font-weight:700;
+    white-space:nowrap;
+}
+
+.nav-select{
+    width:240px;
+    padding:11px 14px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,.15);
+    background:#111827;
+    color:#fff;
+    outline:none;
+    cursor:pointer;
     font-weight:600;
 }
 
-.nav-btn.active,
-.nav-btn:hover{
-    background:rgba(0,198,255,.12);
-    color:#00c6ff;
+.nav-select:focus{
+    border-color:#00c6ff;
+    box-shadow:0 0 0 2px rgba(0,198,255,.1);
+}
+
+.nav-select option{
+    background:#111827;
+    color:#fff;
 }
 
 .content-card{
@@ -500,6 +529,55 @@ button{
     width:auto!important;
     padding:9px 12px!important;
     margin:0!important;
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:8px;
+    background:#111827!important;
+    color:#fff!important;
+}
+
+
+/* =========================================================
+   PAYMENT
+========================================================= */
+
+.payment-section{
+    margin-top:15px;
+    padding-top:15px;
+    border-top:1px solid rgba(255,255,255,.08);
+}
+
+.payment-layout{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.payment-controls{
+    display:flex;
+    gap:8px;
+    align-items:center;
+    flex-wrap:wrap;
+}
+
+.payment-select{
+    min-width:165px;
+    padding:9px 12px;
+    border-radius:8px;
+    border:1px solid rgba(255,255,255,.14);
+    background:#111827;
+    color:#fff;
+    outline:none;
+}
+
+.payment-select:focus{
+    border-color:#00c6ff;
+}
+
+.payment-select option{
+    background:#111827;
+    color:#fff;
 }
 
 
@@ -619,6 +697,7 @@ button{
     .order-info{
         grid-template-columns:repeat(2,1fr);
     }
+
 }
 
 @media(max-width:650px){
@@ -642,12 +721,16 @@ button{
     }
 
     .dashboard-nav{
-        overflow-x:auto;
-        flex-wrap:nowrap;
+        flex-direction:column;
+        align-items:stretch;
     }
 
-    .nav-btn{
-        white-space:nowrap;
+    .dashboard-nav-label{
+        white-space:normal;
+    }
+
+    .nav-select{
+        width:100%;
     }
 
     .order-info{
@@ -659,9 +742,18 @@ button{
         align-items:flex-start;
     }
 
+    .payment-controls{
+        width:100%;
+    }
+
+    .payment-select{
+        width:100%;
+    }
+
 }
 
 </style>
+
 </head>
 
 <body>
@@ -701,6 +793,7 @@ Manager access is protected by OTP.
 </p>
 
 <div id="loginMessage" class="message"></div>
+
 
 <div class="form-group">
 
@@ -840,82 +933,187 @@ Logout
 
 <div class="stats-grid">
 
-<div class="card stat-card">
-<div class="stat-label">Total Orders</div>
-<div class="stat-value" id="totalOrders">0</div>
-</div>
 
 <div class="card stat-card">
-<div class="stat-label">Pending Orders</div>
-<div class="stat-value" id="pendingOrders">0</div>
+
+<div class="stat-label">
+Total Orders
 </div>
 
-<div class="card stat-card">
-<div class="stat-label">Preparing Orders</div>
-<div class="stat-value" id="preparingOrders">0</div>
+<div
+class="stat-value"
+id="totalOrders"
+>
+0
 </div>
 
-<div class="card stat-card">
-<div class="stat-label">Ready Orders</div>
-<div class="stat-value" id="readyOrders">0</div>
 </div>
 
-<div class="card stat-card">
-<div class="stat-label">Completed Orders</div>
-<div class="stat-value" id="completedOrders">0</div>
-</div>
 
 <div class="card stat-card">
-<div class="stat-label">Total Dishes</div>
-<div class="stat-value" id="totalDishes">0</div>
+
+<div class="stat-label">
+Total Revenue
 </div>
 
-<div class="card stat-card">
-<div class="stat-label">Available Dishes</div>
-<div class="stat-value" id="availableDishes">0</div>
+<div
+class="stat-value"
+id="totalRevenue"
+>
+₹0.00
 </div>
 
-<div class="card stat-card">
-<div class="stat-label">Waiters</div>
-<div class="stat-value" id="totalWaiters">0</div>
 </div>
+
+
+<div class="card stat-card">
+
+<div class="stat-label">
+Pending Orders
+</div>
+
+<div
+class="stat-value"
+id="pendingOrders"
+>
+0
+</div>
+
+</div>
+
+
+<div class="card stat-card">
+
+<div class="stat-label">
+Preparing Orders
+</div>
+
+<div
+class="stat-value"
+id="preparingOrders"
+>
+0
+</div>
+
+</div>
+
+
+<div class="card stat-card">
+
+<div class="stat-label">
+Ready Orders
+</div>
+
+<div
+class="stat-value"
+id="readyOrders"
+>
+0
+</div>
+
+</div>
+
+
+<div class="card stat-card">
+
+<div class="stat-label">
+Completed Orders
+</div>
+
+<div
+class="stat-value"
+id="completedOrders"
+>
+0
+</div>
+
+</div>
+
+
+<div class="card stat-card">
+
+<div class="stat-label">
+Total Dishes
+</div>
+
+<div
+class="stat-value"
+id="totalDishes"
+>
+0
+</div>
+
+</div>
+
+
+<div class="card stat-card">
+
+<div class="stat-label">
+Available Dishes
+</div>
+
+<div
+class="stat-value"
+id="availableDishes"
+>
+0
+</div>
+
+</div>
+
+
+<div class="card stat-card">
+
+<div class="stat-label">
+Waiters
+</div>
+
+<div
+class="stat-value"
+id="totalWaiters"
+>
+0
+</div>
+
+</div>
+
 
 </div>
 
 
 <!-- =====================================================
-     NAVIGATION
+     NAVIGATION DROPDOWN
 ===================================================== -->
 
 <div class="card dashboard-nav">
 
-<button
-class="nav-btn active"
-onclick="showTab('orders',this)"
+<div class="dashboard-nav-label">
+Manager Sections
+</div>
+
+<select
+id="managerTabSelect"
+class="nav-select"
+onchange="showTabFromDropdown(this.value)"
 >
+
+<option value="orders">
 Orders
-</button>
+</option>
 
-<button
-class="nav-btn"
-onclick="showTab('dishes',this)"
->
+<option value="dishes">
 Dishes
-</button>
+</option>
 
-<button
-class="nav-btn"
-onclick="showTab('waiters',this)"
->
+<option value="waiters">
 Waiters
-</button>
+</option>
 
-<button
-class="nav-btn"
-onclick="showTab('customers',this)"
->
+<option value="customers">
 Customers
-</button>
+</option>
+
+</select>
 
 </div>
 
@@ -924,7 +1122,10 @@ Customers
      ORDERS TAB
 ===================================================== -->
 
-<div id="ordersTab" class="card content-card">
+<div
+id="ordersTab"
+class="card content-card"
+>
 
 <div class="section-header">
 
@@ -950,10 +1151,16 @@ Refresh
 </div>
 
 
-<div id="ordersMessage" class="message"></div>
+<div
+id="ordersMessage"
+class="message"
+></div>
 
 
-<div id="ordersList" class="orders-list">
+<div
+id="ordersList"
+class="orders-list"
+>
 
 <div class="empty-state">
 Loading orders...
@@ -968,7 +1175,10 @@ Loading orders...
      DISHES TAB
 ===================================================== -->
 
-<div id="dishesTab" class="card content-card hidden">
+<div
+id="dishesTab"
+class="card content-card hidden"
+>
 
 <div class="section-header">
 
@@ -994,10 +1204,16 @@ onclick="openDishModal()"
 </div>
 
 
-<div id="dishesMessage" class="message"></div>
+<div
+id="dishesMessage"
+class="message"
+></div>
 
 
-<div id="dishGrid" class="dish-grid">
+<div
+id="dishGrid"
+class="dish-grid"
+>
 
 <div class="empty-state">
 Loading dishes...
@@ -1012,7 +1228,10 @@ Loading dishes...
      WAITERS TAB
 ===================================================== -->
 
-<div id="waitersTab" class="card content-card hidden">
+<div
+id="waitersTab"
+class="card content-card hidden"
+>
 
 <div class="section-header">
 
@@ -1038,7 +1257,10 @@ Refresh
 </div>
 
 
-<div id="waitersMessage" class="message"></div>
+<div
+id="waitersMessage"
+class="message"
+></div>
 
 
 <div class="table-wrapper">
@@ -1071,7 +1293,10 @@ Refresh
      CUSTOMERS TAB
 ===================================================== -->
 
-<div id="customersTab" class="card content-card hidden">
+<div
+id="customersTab"
+class="card content-card hidden"
+>
 
 <div class="section-header">
 
@@ -1097,7 +1322,10 @@ Refresh
 </div>
 
 
-<div id="customersMessage" class="message"></div>
+<div
+id="customersMessage"
+class="message"
+></div>
 
 
 <div class="table-wrapper">
@@ -1133,7 +1361,10 @@ Refresh
      DISH MODAL
 ========================================================= -->
 
-<div id="dishModal" class="modal hidden">
+<div
+id="dishModal"
+class="modal hidden"
+>
 
 <div class="card modal-card">
 
@@ -1153,9 +1384,16 @@ onclick="closeDishModal()"
 </div>
 
 
-<div id="dishModalMessage" class="message"></div>
+<div
+id="dishModalMessage"
+class="message"
+></div>
 
-<input type="hidden" id="editDishId">
+
+<input
+type="hidden"
+id="editDishId"
+>
 
 
 <div class="form-group">
@@ -1309,14 +1547,6 @@ Save Dish
    CONFIGURATION
 ========================================================= */
 
-/*
-    If manager.html is served by Flask:
-        const API_BASE = window.location.origin;
-
-    If frontend is running separately, change this to:
-        const API_BASE = "http://127.0.0.1:5000";
-*/
-
 const API_BASE = window.location.origin;
 
 const MANAGER_PHONE = "8260611800";
@@ -1325,30 +1555,47 @@ let generatedOTP = null;
 let refreshTimer = null;
 let currentTab = "orders";
 
+/*
+    IMPORTANT:
+    Keep selected payment mode during automatic refresh.
+    Otherwise loadOrders() recreates the dropdown and
+    removes the user's selection.
+*/
+const selectedPaymentModes = {};
+
 
 /* =========================================================
    MESSAGE
 ========================================================= */
 
-function showMessage(id, message, type="info"){
+function showMessage(
+    id,
+    message,
+    type="info"
+){
 
-    const el = document.getElementById(id);
+    const el =
+        document.getElementById(id);
 
     if(!el) return;
 
     el.textContent = message;
-    el.className = "message show " + type;
+
+    el.className =
+        "message show " + type;
 
 }
 
 
 function clearMessage(id){
 
-    const el = document.getElementById(id);
+    const el =
+        document.getElementById(id);
 
     if(!el) return;
 
     el.textContent = "";
+
     el.className = "message";
 
 }
@@ -1362,20 +1609,24 @@ function generateOTP(){
 
     generatedOTP =
         Math.floor(
-            100000 + Math.random() * 900000
+            100000 +
+            Math.random() * 900000
         ).toString();
 
 
-    document.getElementById("otpDisplay")
-        .textContent = generatedOTP;
+    document.getElementById(
+        "otpDisplay"
+    ).textContent = generatedOTP;
 
 
-    document.getElementById("otpInputSection")
-        .classList.remove("hidden");
+    document.getElementById(
+        "otpInputSection"
+    ).classList.remove("hidden");
 
 
-    document.getElementById("otpInput")
-        .value = "";
+    document.getElementById(
+        "otpInput"
+    ).value = "";
 
 
     clearMessage("loginMessage");
@@ -1393,9 +1644,9 @@ function generateOTP(){
 function verifyOTP(){
 
     const entered =
-        document.getElementById("otpInput")
-        .value
-        .trim();
+        document.getElementById(
+            "otpInput"
+        ).value.trim();
 
 
     if(!generatedOTP){
@@ -1407,6 +1658,7 @@ function verifyOTP(){
         );
 
         return;
+
     }
 
 
@@ -1419,12 +1671,14 @@ function verifyOTP(){
         );
 
         return;
+
     }
 
 
     if(
-        document.getElementById("managerPhone").value
-        !== MANAGER_PHONE
+        document.getElementById(
+            "managerPhone"
+        ).value !== MANAGER_PHONE
     ){
 
         showMessage(
@@ -1434,6 +1688,7 @@ function verifyOTP(){
         );
 
         return;
+
     }
 
 
@@ -1454,12 +1709,14 @@ function verifyOTP(){
 
 function showDashboard(){
 
-    document.getElementById("loginSection")
-        .classList.add("hidden");
+    document.getElementById(
+        "loginSection"
+    ).classList.add("hidden");
 
 
-    document.getElementById("dashboardSection")
-        .classList.remove("hidden");
+    document.getElementById(
+        "dashboardSection"
+    ).classList.remove("hidden");
 
 
     loadDashboardData();
@@ -1478,32 +1735,28 @@ function startAutoRefresh(){
     stopAutoRefresh();
 
 
-    /*
-       Refresh dashboard every 10 seconds.
-       This makes manager dashboard update
-       when another user creates/changes data.
-    */
+    refreshTimer =
+        setInterval(
+            async function(){
 
-    refreshTimer = setInterval(
-        async function(){
+                if(
+                    localStorage.getItem(
+                        "managerLoggedIn"
+                    ) !== "true"
+                ){
 
-            if(
-                localStorage.getItem(
-                    "managerLoggedIn"
-                ) !== "true"
-            ){
+                    stopAutoRefresh();
 
-                stopAutoRefresh();
-                return;
+                    return;
 
-            }
+                }
 
 
-            await refreshCurrentTab();
+                await refreshCurrentTab();
 
-        },
-        10000
-    );
+            },
+            10000
+        );
 
 }
 
@@ -1513,6 +1766,7 @@ function stopAutoRefresh(){
     if(refreshTimer){
 
         clearInterval(refreshTimer);
+
         refreshTimer = null;
 
     }
@@ -1524,14 +1778,25 @@ async function refreshCurrentTab(){
 
     try{
 
+        /*
+            Refresh dashboard values.
+
+            Payment selections are preserved by
+            selectedPaymentModes, so automatic refresh
+            will not remove the selected mode.
+        */
         await loadOrders();
+
+        await loadTotalRevenue();
 
         await loadDishes();
 
         await loadWaiters();
 
 
-        if(currentTab === "customers"){
+        if(
+            currentTab === "customers"
+        ){
 
             await loadCustomers();
 
@@ -1551,23 +1816,25 @@ async function refreshCurrentTab(){
 
 
 /* =========================================================
-   TAB
+   TAB DROPDOWN
 ========================================================= */
 
-function showTab(tab, button){
+function showTabFromDropdown(tab){
 
     currentTab = tab;
 
 
     document
-    .querySelectorAll(
-        "#dashboardSection .content-card"
-    )
-    .forEach(el => {
+        .querySelectorAll(
+            "#dashboardSection .content-card"
+        )
+        .forEach(
+            el => {
 
-        el.classList.add("hidden");
+                el.classList.add("hidden");
 
-    });
+            }
+        );
 
 
     const target =
@@ -1579,22 +1846,6 @@ function showTab(tab, button){
     if(target){
 
         target.classList.remove("hidden");
-
-    }
-
-
-    document
-    .querySelectorAll(".nav-btn")
-    .forEach(btn => {
-
-        btn.classList.remove("active");
-
-    });
-
-
-    if(button){
-
-        button.classList.add("active");
 
     }
 
@@ -1623,6 +1874,28 @@ function showTab(tab, button){
 }
 
 
+/*
+    Kept for compatibility if another part of the page
+    calls showTab().
+*/
+function showTab(tab){
+
+    const dropdown =
+        document.getElementById(
+            "managerTabSelect"
+        );
+
+    if(dropdown){
+
+        dropdown.value = tab;
+
+    }
+
+    showTabFromDropdown(tab);
+
+}
+
+
 /* =========================================================
    DASHBOARD DATA
 ========================================================= */
@@ -1633,6 +1906,8 @@ async function loadDashboardData(){
 
         loadOrders(),
 
+        loadTotalRevenue(),
+
         loadDishes(),
 
         loadWaiters(),
@@ -1640,6 +1915,102 @@ async function loadDashboardData(){
         loadCustomers()
 
     ]);
+
+}
+
+
+/* =========================================================
+   TOTAL REVENUE
+========================================================= */
+
+async function loadTotalRevenue(){
+
+    try{
+
+        const response =
+            await fetch(
+                API_BASE +
+                "/api/manager/kpi",
+                {
+                    cache:"no-store"
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if(
+            !response.ok ||
+            !data.success
+        ){
+
+            throw new Error(
+                data.message ||
+                "Unable to load total revenue."
+            );
+
+        }
+
+
+        const revenue =
+            Number(
+                data.kpi &&
+                data.kpi.total_revenue
+                    ? data.kpi.total_revenue
+                    : 0
+            );
+
+
+        const revenueElement =
+            document.getElementById(
+                "totalRevenue"
+            );
+
+
+        if(revenueElement){
+
+            revenueElement.textContent =
+                "₹" +
+                revenue.toLocaleString(
+                    "en-IN",
+                    {
+                        minimumFractionDigits:2,
+                        maximumFractionDigits:2
+                    }
+                );
+
+        }
+
+
+        return revenue;
+
+    }
+    catch(error){
+
+        console.error(
+            "Unable to load total revenue:",
+            error
+        );
+
+
+        const revenueElement =
+            document.getElementById(
+                "totalRevenue"
+            );
+
+
+        if(revenueElement){
+
+            revenueElement.textContent =
+                "₹0.00";
+
+        }
+
+        return 0;
+
+    }
 
 }
 
@@ -1654,7 +2025,8 @@ async function loadDishes(){
 
         const response =
             await fetch(
-                API_BASE + "/api/dishes",
+                API_BASE +
+                "/api/dishes",
                 {
                     cache:"no-store"
                 }
@@ -1680,24 +2052,32 @@ async function loadDishes(){
 
         const dishes =
             Array.isArray(result.dishes)
-            ? result.dishes
-            : [];
+            ?
+            result.dishes
+            :
+            [];
 
 
-        document.getElementById("totalDishes")
-            .textContent = dishes.length;
+        document.getElementById(
+            "totalDishes"
+        ).textContent =
+            dishes.length;
 
 
-        document.getElementById("availableDishes")
-            .textContent =
+        document.getElementById(
+            "availableDishes"
+        ).textContent =
             dishes.filter(
                 d =>
                     isTrue(d.IsAvailable) &&
-                    Number(d.AvailableQuantity || 0) > 0
+                    Number(
+                        d.AvailableQuantity || 0
+                    ) > 0
             ).length;
 
 
         renderDishes(dishes);
+
 
         return dishes;
 
@@ -1710,14 +2090,21 @@ async function loadDishes(){
         );
 
 
-        document.getElementById("dishGrid")
-            .innerHTML = `
-                <div class="empty-state">
-                    Unable to load dishes.
-                    <br>
-                    <small>${escapeHtml(error.message)}</small>
-                </div>
-            `;
+        document.getElementById(
+            "dishGrid"
+        ).innerHTML = `
+            <div class="empty-state">
+
+                Unable to load dishes.
+
+                <br>
+
+                <small>
+                    ${escapeHtml(error.message)}
+                </small>
+
+            </div>
+        `;
 
         throw error;
 
@@ -1750,97 +2137,106 @@ function renderDishes(dishes){
 
 
     grid.innerHTML =
-        dishes.map(dish => {
+        dishes.map(
+            dish => {
 
-            const available =
-                isTrue(dish.IsAvailable) &&
-                Number(dish.AvailableQuantity || 0) > 0;
-
-
-            return `
-
-            <div class="card dish-card">
-
-                <div class="dish-category">
-                    ${escapeHtml(
-                        dish.Category || ""
-                    )}
-                </div>
-
-                <h3>
-                    ${escapeHtml(
-                        dish.DishName || ""
-                    )}
-                </h3>
-
-                <div class="dish-description">
-                    ${escapeHtml(
-                        dish.Description || ""
-                    )}
-                </div>
-
-                <div class="dish-bottom">
-
-                    <div class="dish-price">
-                        ₹${Number(
-                            dish.Price || 0
-                        ).toFixed(2)}
-                    </div>
-
-                    <div class="dish-rating">
-                        ★ ${Number(
-                            dish.Rating || 0
-                        ).toFixed(1)}
-                    </div>
-
-                </div>
-
-                <div
-                    style="
-                    margin-top:12px;
-                    color:${available ? "#22c55e" : "#ef4444"};
-                    font-size:13px;
-                    font-weight:700;
-                    "
-                >
-
-                ${
-                    available
-                    ?
-                    "Available • " +
+                const available =
+                    isTrue(dish.IsAvailable) &&
                     Number(
                         dish.AvailableQuantity || 0
-                    ) +
-                    " left"
-                    :
-                    "Unavailable"
-                }
+                    ) > 0;
+
+
+                return `
+
+                <div class="card dish-card">
+
+                    <div class="dish-category">
+                        ${escapeHtml(
+                            dish.Category || ""
+                        )}
+                    </div>
+
+                    <h3>
+                        ${escapeHtml(
+                            dish.DishName || ""
+                        )}
+                    </h3>
+
+                    <div class="dish-description">
+                        ${escapeHtml(
+                            dish.Description || ""
+                        )}
+                    </div>
+
+                    <div class="dish-bottom">
+
+                        <div class="dish-price">
+                            ₹${Number(
+                                dish.Price || 0
+                            ).toFixed(2)}
+                        </div>
+
+                        <div class="dish-rating">
+                            ★ ${Number(
+                                dish.Rating || 0
+                            ).toFixed(1)}
+                        </div>
+
+                    </div>
+
+                    <div
+                        style="
+                        margin-top:12px;
+                        color:${available ? "#22c55e" : "#ef4444"};
+                        font-size:13px;
+                        font-weight:700;
+                        "
+                    >
+
+                        ${
+                            available
+                            ?
+                            "Available • " +
+                            Number(
+                                dish.AvailableQuantity || 0
+                            ) +
+                            " left"
+                            :
+                            "Unavailable"
+                        }
+
+                    </div>
+
+                    <div class="dish-actions">
+
+                        <button
+                            class="warning-btn"
+                            onclick='editDish(${JSON.stringify(dish)})'
+                        >
+                            Edit
+                        </button>
+
+                        <button
+                            class="danger-btn"
+                            onclick="
+                                deleteDish(
+                                    ${Number(dish.DishID)}
+                                )
+                            "
+                        >
+                            Delete
+                        </button>
+
+                    </div>
 
                 </div>
 
-                <div class="dish-actions">
+                `;
 
-                    <button
-                        class="warning-btn"
-                        onclick='editDish(${JSON.stringify(dish)})'
-                    >
-                        Edit
-                    </button>
-
-                    <button
-                        class="danger-btn"
-                        onclick="deleteDish(${Number(dish.DishID)})"
-                    >
-                        Delete
-                    </button>
-
-                </div>
-
-            </div>
-
-            `;
-
-        }).join("");
+            }
+        )
+        .join("");
 
 }
 
@@ -1851,41 +2247,60 @@ function renderDishes(dishes){
 
 function openDishModal(){
 
-    document.getElementById("dishModal")
-        .classList.remove("hidden");
+    document.getElementById(
+        "dishModal"
+    ).classList.remove("hidden");
 
 
-    document.getElementById("dishModalTitle")
-        .textContent = "Add Dish";
+    document.getElementById(
+        "dishModalTitle"
+    ).textContent =
+        "Add Dish";
 
 
-    document.getElementById("editDishId")
-        .value = "";
+    document.getElementById(
+        "editDishId"
+    ).value = "";
 
 
-    document.getElementById("dishName")
-        .value = "";
+    document.getElementById(
+        "dishName"
+    ).value = "";
 
-    document.getElementById("dishCategory")
-        .value = "";
 
-    document.getElementById("dishDescription")
-        .value = "";
+    document.getElementById(
+        "dishCategory"
+    ).value = "";
 
-    document.getElementById("dishPrice")
-        .value = "";
 
-    document.getElementById("dishQuantity")
-        .value = "";
+    document.getElementById(
+        "dishDescription"
+    ).value = "";
 
-    document.getElementById("dishRating")
-        .value = "";
 
-    document.getElementById("dishImage")
-        .value = "";
+    document.getElementById(
+        "dishPrice"
+    ).value = "";
 
-    document.getElementById("dishAvailable")
-        .value = "1";
+
+    document.getElementById(
+        "dishQuantity"
+    ).value = "";
+
+
+    document.getElementById(
+        "dishRating"
+    ).value = "";
+
+
+    document.getElementById(
+        "dishImage"
+    ).value = "";
+
+
+    document.getElementById(
+        "dishAvailable"
+    ).value = "1";
 
 
     clearMessage("dishModalMessage");
@@ -1895,8 +2310,9 @@ function openDishModal(){
 
 function closeDishModal(){
 
-    document.getElementById("dishModal")
-        .classList.add("hidden");
+    document.getElementById(
+        "dishModal"
+    ).classList.add("hidden");
 
 }
 
@@ -1910,47 +2326,68 @@ function editDish(dish){
     openDishModal();
 
 
-    document.getElementById("dishModalTitle")
-        .textContent = "Edit Dish";
+    document.getElementById(
+        "dishModalTitle"
+    ).textContent =
+        "Edit Dish";
 
 
-    document.getElementById("editDishId")
-        .value = dish.DishID || "";
+    document.getElementById(
+        "editDishId"
+    ).value =
+        dish.DishID || "";
 
 
-    document.getElementById("dishName")
-        .value = dish.DishName || "";
+    document.getElementById(
+        "dishName"
+    ).value =
+        dish.DishName || "";
 
 
-    document.getElementById("dishCategory")
-        .value = dish.Category || "";
+    document.getElementById(
+        "dishCategory"
+    ).value =
+        dish.Category || "";
 
 
-    document.getElementById("dishDescription")
-        .value = dish.Description || "";
+    document.getElementById(
+        "dishDescription"
+    ).value =
+        dish.Description || "";
 
 
-    document.getElementById("dishPrice")
-        .value = dish.Price ?? "";
+    document.getElementById(
+        "dishPrice"
+    ).value =
+        dish.Price ?? "";
 
 
-    document.getElementById("dishQuantity")
-        .value = dish.AvailableQuantity ?? 0;
+    document.getElementById(
+        "dishQuantity"
+    ).value =
+        dish.AvailableQuantity ?? 0;
 
 
-    document.getElementById("dishRating")
-        .value = dish.Rating ?? 0;
+    document.getElementById(
+        "dishRating"
+    ).value =
+        dish.Rating ?? 0;
 
 
-    document.getElementById("dishImage")
-        .value = dish.ImageURL || "";
+    document.getElementById(
+        "dishImage"
+    ).value =
+        dish.ImageURL || "";
 
 
-    document.getElementById("dishAvailable")
-        .value =
-            isTrue(dish.IsAvailable)
-            ? "1"
-            : "0";
+    document.getElementById(
+        "dishAvailable"
+    ).value =
+        isTrue(dish.IsAvailable)
+        ?
+        "1"
+        :
+        "0";
 
 }
 
@@ -1965,63 +2402,68 @@ async function saveDish(){
 
 
     const id =
-        document.getElementById("editDishId")
-        .value
-        .trim();
+        document.getElementById(
+            "editDishId"
+        ).value.trim();
 
 
     const price =
         Number(
-            document.getElementById("dishPrice")
-            .value
+            document.getElementById(
+                "dishPrice"
+            ).value
         );
 
 
     const quantity =
         Number(
-            document.getElementById("dishQuantity")
-            .value
+            document.getElementById(
+                "dishQuantity"
+            ).value
         );
 
 
     const rating =
         Number(
-            document.getElementById("dishRating")
-            .value || 0
+            document.getElementById(
+                "dishRating"
+            ).value || 0
         );
 
 
     const data = {
 
         dish_name:
-            document.getElementById("dishName")
-            .value
-            .trim(),
+            document.getElementById(
+                "dishName"
+            ).value.trim(),
 
         category:
-            document.getElementById("dishCategory")
-            .value
-            .trim(),
+            document.getElementById(
+                "dishCategory"
+            ).value.trim(),
 
         description:
-            document.getElementById("dishDescription")
-            .value
-            .trim(),
+            document.getElementById(
+                "dishDescription"
+            ).value.trim(),
 
         price:price,
 
-        available_quantity:quantity,
+        available_quantity:
+            quantity,
 
         rating:rating,
 
         image_url:
-            document.getElementById("dishImage")
-            .value
-            .trim(),
+            document.getElementById(
+                "dishImage"
+            ).value.trim(),
 
         is_available:
-            document.getElementById("dishAvailable")
-            .value === "1"
+            document.getElementById(
+                "dishAvailable"
+            ).value === "1"
 
     };
 
@@ -2093,13 +2535,20 @@ async function saveDish(){
         const url =
             id
             ?
-            API_BASE + "/api/dishes/" + encodeURIComponent(id)
+            API_BASE +
+            "/api/dishes/" +
+            encodeURIComponent(id)
             :
-            API_BASE + "/api/dishes";
+            API_BASE +
+            "/api/dishes";
 
 
         const method =
-            id ? "PUT" : "POST";
+            id
+            ?
+            "PUT"
+            :
+            "POST";
 
 
         const response =
@@ -2137,7 +2586,6 @@ async function saveDish(){
 
 
         closeDishModal();
-
 
         await loadDishes();
 
@@ -2267,11 +2715,44 @@ async function deleteDish(id){
 
 async function loadOrders(){
 
+    /*
+        BEFORE REFRESH:
+        Save the currently selected payment mode from
+        every existing order dropdown.
+
+        This prevents the 10-second automatic refresh
+        from resetting the user's selection.
+    */
+    document
+        .querySelectorAll(
+            '[id^="paymentMethod-"]'
+        )
+        .forEach(
+            select => {
+
+                const orderId =
+                    select.id.replace(
+                        "paymentMethod-",
+                        ""
+                    );
+
+                if(orderId){
+
+                    selectedPaymentModes[orderId] =
+                        select.value;
+
+                }
+
+            }
+        );
+
+
     try{
 
         const response =
             await fetch(
-                API_BASE + "/api/orders",
+                API_BASE +
+                "/api/orders",
                 {
                     cache:"no-store"
                 }
@@ -2297,40 +2778,48 @@ async function loadOrders(){
 
         const orders =
             Array.isArray(result.orders)
-            ? result.orders
-            : [];
+            ?
+            result.orders
+            :
+            [];
 
 
-        document.getElementById("totalOrders")
-            .textContent = orders.length;
+        document.getElementById(
+            "totalOrders"
+        ).textContent =
+            orders.length;
 
 
-        document.getElementById("pendingOrders")
-            .textContent =
+        document.getElementById(
+            "pendingOrders"
+        ).textContent =
             countOrdersByStatus(
                 orders,
                 "PENDING"
             );
 
 
-        document.getElementById("preparingOrders")
-            .textContent =
+        document.getElementById(
+            "preparingOrders"
+        ).textContent =
             countOrdersByStatus(
                 orders,
                 "PREPARING"
             );
 
 
-        document.getElementById("readyOrders")
-            .textContent =
+        document.getElementById(
+            "readyOrders"
+        ).textContent =
             countOrdersByStatus(
                 orders,
                 "READY"
             );
 
 
-        document.getElementById("completedOrders")
-            .textContent =
+        document.getElementById(
+            "completedOrders"
+        ).textContent =
             countOrdersByStatus(
                 orders,
                 "COMPLETED"
@@ -2338,6 +2827,7 @@ async function loadOrders(){
 
 
         renderOrders(orders);
+
 
         return orders;
 
@@ -2350,14 +2840,21 @@ async function loadOrders(){
         );
 
 
-        document.getElementById("ordersList")
-            .innerHTML = `
-                <div class="empty-state">
-                    Unable to load orders.
-                    <br>
-                    <small>${escapeHtml(error.message)}</small>
-                </div>
-            `;
+        document.getElementById(
+            "ordersList"
+        ).innerHTML = `
+            <div class="empty-state">
+
+                Unable to load orders.
+
+                <br>
+
+                <small>
+                    ${escapeHtml(error.message)}
+                </small>
+
+            </div>
+        `;
 
         throw error;
 
@@ -2396,17 +2893,6 @@ function countOrdersByStatus(
 }
 
 
-function isOrderStatus(
-    current,
-    expected
-){
-
-    return normalizeStatus(current)
-        === normalizeStatus(expected);
-
-}
-
-
 /* =========================================================
    RENDER ORDERS
 ========================================================= */
@@ -2433,177 +2919,536 @@ function renderOrders(orders){
 
 
     list.innerHTML =
-        orders.map(order => {
+        orders.map(
+            order => {
 
-            const status =
-                normalizeStatus(
-                    order.Status
-                );
+                const orderId =
+                    Number(order.OrderID);
 
 
-            return `
+                const status =
+                    normalizeStatus(
+                        order.Status
+                    );
 
-            <div class="card order-card">
 
-                <div class="order-top">
+                const paymentStatus =
+                    String(
+                        order.PaymentStatus ??
+                        order.Payment_Status ??
+                        "Pending"
+                    ).trim();
 
-                    <div class="order-id">
-                        #${escapeHtml(
-                            String(order.OrderID ?? "")
-                        )}
+
+                /*
+                    Priority:
+                    1. User's current selection
+                    2. Database payment mode
+                    3. Empty
+                */
+                let paymentMethod =
+                    selectedPaymentModes[
+                        String(orderId)
+                    ];
+
+
+                if(
+                    paymentMethod === undefined
+                ){
+
+                    paymentMethod =
+                        String(
+                            order.PaymentMethod ??
+                            order.PaymentMode ??
+                            order.payment_mode ??
+                            ""
+                        ).trim();
+
+                }
+
+
+                const paymentClass =
+                    paymentStatus.toLowerCase() === "paid"
+                    ?
+                    "approved"
+                    :
+                    "pending";
+
+
+                const selectedMode =
+                    String(
+                        paymentMethod || ""
+                    ).toLowerCase();
+
+
+                return `
+
+                <div class="card order-card">
+
+
+                    <!-- ORDER HEADER -->
+
+                    <div class="order-top">
+
+                        <div class="order-id">
+
+                            #${escapeHtml(
+                                String(orderId)
+                            )}
+
+                        </div>
+
+
+                        <!-- ORDER STATUS DROPDOWN -->
+
+                        <select
+                            class="status-select"
+                            onchange="
+                                updateOrderStatus(
+                                    ${orderId},
+                                    this.value
+                                )
+                            "
+                        >
+
+                            <option
+                                value="Pending"
+                                ${
+                                    status === "PENDING"
+                                    ?
+                                    "selected"
+                                    :
+                                    ""
+                                }
+                            >
+                                Pending
+                            </option>
+
+
+                            <option
+                                value="Preparing"
+                                ${
+                                    status === "PREPARING"
+                                    ?
+                                    "selected"
+                                    :
+                                    ""
+                                }
+                            >
+                                Preparing
+                            </option>
+
+
+                            <option
+                                value="Ready"
+                                ${
+                                    status === "READY"
+                                    ?
+                                    "selected"
+                                    :
+                                    ""
+                                }
+                            >
+                                Ready
+                            </option>
+
+
+                            <option
+                                value="Completed"
+                                ${
+                                    status === "COMPLETED"
+                                    ?
+                                    "selected"
+                                    :
+                                    ""
+                                }
+                            >
+                                Completed
+                            </option>
+
+
+                            <option
+                                value="Cancelled"
+                                ${
+                                    status === "CANCELLED"
+                                    ?
+                                    "selected"
+                                    :
+                                    ""
+                                }
+                            >
+                                Cancelled
+                            </option>
+
+                        </select>
+
                     </div>
 
-                    <select
-                        class="form-group status-select"
-                        onchange="
-                            updateOrderStatus(
-                                ${Number(order.OrderID)},
-                                this.value
+
+                    <!-- CUSTOMER INFORMATION -->
+
+                    <div class="order-info">
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+                                Customer
+                            </div>
+
+                            <div class="info-value">
+                                ${escapeHtml(
+                                    order.CustomerName ||
+                                    "N/A"
+                                )}
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+                                Phone
+                            </div>
+
+                            <div class="info-value">
+                                ${escapeHtml(
+                                    order.MobileNumber ||
+                                    order.Phone ||
+                                    "N/A"
+                                )}
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+                                Table
+                            </div>
+
+                            <div class="info-value">
+                                ${escapeHtml(
+                                    String(
+                                        order.TableNumber ??
+                                        "N/A"
+                                    )
+                                )}
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+                                Date
+                            </div>
+
+                            <div class="info-value">
+                                ${escapeHtml(
+                                    String(
+                                        order.OrderDate ??
+                                        "N/A"
+                                    )
+                                )}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ORDER ITEMS -->
+
+                    <div class="order-items">
+
+                        ${
+                            Array.isArray(order.Items)
+                            ?
+                            renderOrderItems(
+                                order.Items
                             )
-                        "
-                    >
+                            :
+                            `
+                            <div
+                                class="empty-state"
+                                style="padding:10px;"
+                            >
+                                No item details available.
+                            </div>
+                            `
+                        }
 
-                        <option value="Pending"
-                            ${status === "PENDING" ? "selected" : ""}>
-                            Pending
-                        </option>
+                    </div>
 
-                        <option value="Preparing"
-                            ${status === "PREPARING" ? "selected" : ""}>
-                            Preparing
-                        </option>
 
-                        <option value="Ready"
-                            ${status === "READY" ? "selected" : ""}>
-                            Ready
-                        </option>
+                    <!-- ORDER TOTAL -->
 
-                        <option value="Completed"
-                            ${status === "COMPLETED" ? "selected" : ""}>
-                            Completed
-                        </option>
+                    <div class="order-bottom">
 
-                        <option value="Cancelled"
-                            ${status === "CANCELLED" ? "selected" : ""}>
-                            Cancelled
-                        </option>
+                        <div>
 
-                    </select>
+                            Status:
+
+                            <strong>
+                                ${escapeHtml(
+                                    String(
+                                        order.Status ||
+                                        "Pending"
+                                    )
+                                )}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="order-total">
+
+                            ₹${Number(
+                                order.TotalAmount || 0
+                            ).toFixed(2)}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- PAYMENT -->
+
+                    <div class="payment-section">
+
+                        <div class="payment-layout">
+
+
+                            <!-- PAYMENT STATUS -->
+
+                            <div>
+
+                                <div class="info-label">
+                                    Payment Status
+                                </div>
+
+
+                                <span
+                                    class="
+                                        status
+                                        ${paymentClass}
+                                    "
+                                >
+                                    ${escapeHtml(
+                                        paymentStatus
+                                    )}
+                                </span>
+
+
+                                ${
+                                    paymentMethod
+                                    ?
+                                    `
+                                    <span
+                                        style="
+                                            margin-left:8px;
+                                            color:#9ca8ba;
+                                            font-size:12px;
+                                        "
+                                    >
+                                        via
+                                        ${escapeHtml(
+                                            paymentMethod
+                                        )}
+                                    </span>
+                                    `
+                                    :
+                                    `
+                                    <span
+                                        style="
+                                            margin-left:8px;
+                                            color:#9ca8ba;
+                                            font-size:12px;
+                                        "
+                                    >
+                                        No payment mode selected
+                                    </span>
+                                    `
+                                }
+
+                            </div>
+
+
+                            <!-- PAYMENT CONTROLS -->
+
+                            <div class="payment-controls">
+
+
+                                <!-- PAYMENT MODE DROPDOWN -->
+
+                                <select
+                                    id="paymentMethod-${orderId}"
+                                    class="payment-select"
+                                    onchange="
+                                        rememberPaymentMode(
+                                            ${orderId},
+                                            this.value
+                                        )
+                                    "
+                                >
+
+                                    <option value="">
+                                        Select Payment Mode
+                                    </option>
+
+
+                                    <option
+                                        value="Cash"
+                                        ${
+                                            selectedMode === "cash"
+                                            ?
+                                            "selected"
+                                            :
+                                            ""
+                                        }
+                                    >
+                                        Cash
+                                    </option>
+
+
+                                    <option
+                                        value="UPI"
+                                        ${
+                                            selectedMode === "upi"
+                                            ?
+                                            "selected"
+                                            :
+                                            ""
+                                        }
+                                    >
+                                        UPI
+                                    </option>
+
+
+                                    <option
+                                        value="Card"
+                                        ${
+                                            selectedMode === "card"
+                                            ?
+                                            "selected"
+                                            :
+                                            ""
+                                        }
+                                    >
+                                        Card
+                                    </option>
+
+
+                                    <option
+                                        value="Net Banking"
+                                        ${
+                                            selectedMode === "net banking"
+                                            ?
+                                            "selected"
+                                            :
+                                            ""
+                                        }
+                                    >
+                                        Net Banking
+                                    </option>
+
+
+                                    <option
+                                        value="Other"
+                                        ${
+                                            selectedMode === "other"
+                                            ?
+                                            "selected"
+                                            :
+                                            ""
+                                        }
+                                    >
+                                        Other
+                                    </option>
+
+                                </select>
+
+
+                                <!-- MARK PAID -->
+
+                                <button
+                                    class="success-btn"
+                                    onclick="
+                                        updateOrderPayment(
+                                            ${orderId},
+                                            'Paid'
+                                        )
+                                    "
+                                >
+                                    ✓ Mark Paid
+                                </button>
+
+
+                                <!-- PENDING -->
+
+                                <button
+                                    class="warning-btn"
+                                    onclick="
+                                        updateOrderPayment(
+                                            ${orderId},
+                                            'Pending'
+                                        )
+                                    "
+                                >
+                                    Pending
+                                </button>
+
+
+                                <!-- PRINT -->
+
+                                <button
+                                    class="primary-btn"
+                                    onclick="
+                                        printBill(
+                                            ${orderId}
+                                        )
+                                    "
+                                >
+                                    🖨 Print Bill
+                                </button>
+
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
 
                 </div>
 
+                `;
 
-                <div class="order-info">
+            }
+        )
+        .join("");
 
-                    <div class="info-box">
-
-                        <div class="info-label">
-                            Customer
-                        </div>
-
-                        <div class="info-value">
-                            ${escapeHtml(
-                                order.CustomerName || ""
-                            )}
-                        </div>
-
-                    </div>
+}
 
 
-                    <div class="info-box">
+/* =========================================================
+   REMEMBER PAYMENT MODE
+========================================================= */
 
-                        <div class="info-label">
-                            Phone
-                        </div>
+function rememberPaymentMode(
+    orderId,
+    paymentMode
+){
 
-                        <div class="info-value">
-                            ${escapeHtml(
-                                order.MobileNumber || ""
-                            )}
-                        </div>
-
-                    </div>
-
-
-                    <div class="info-box">
-
-                        <div class="info-label">
-                            Table
-                        </div>
-
-                        <div class="info-value">
-                            ${escapeHtml(
-                                String(
-                                    order.TableNumber ?? ""
-                                )
-                            )}
-                        </div>
-
-                    </div>
-
-
-                    <div class="info-box">
-
-                        <div class="info-label">
-                            Date
-                        </div>
-
-                        <div class="info-value">
-                            ${escapeHtml(
-                                String(
-                                    order.OrderDate ?? ""
-                                )
-                            )}
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="order-items">
-
-                    ${
-                        order.Items
-                        ?
-                        renderOrderItems(
-                            order.Items
-                        )
-                        :
-                        `<div class="empty-state" style="padding:10px;">
-                            No item details available.
-                        </div>`
-                    }
-
-                </div>
-
-
-                <div class="order-bottom">
-
-                    <div>
-                        Status:
-                        <strong>
-                            ${escapeHtml(
-                                String(
-                                    order.Status || ""
-                                )
-                            )}
-                        </strong>
-                    </div>
-
-                    <div class="order-total">
-                        ₹${Number(
-                            order.TotalAmount || 0
-                        ).toFixed(2)}
-                    </div>
-
-                </div>
-
-            </div>
-
-            `;
-
-        }).join("");
+    selectedPaymentModes[
+        String(orderId)
+    ] =
+        String(
+            paymentMode || ""
+        ).trim();
 
 }
 
@@ -2628,29 +3473,67 @@ function renderOrderItems(items){
     }
 
 
-    return items.map(item => `
+    if(!items.length){
 
-        <div class="order-item">
+        return `
+            <div
+                class="empty-state"
+                style="padding:10px;"
+            >
+                No items found.
+            </div>
+        `;
 
-            <span>
-                ${escapeHtml(
-                    item.DishName || "Dish"
-                )}
-                ×
-                ${Number(
-                    item.Quantity || 0
-                )}
-            </span>
+    }
 
-            <span>
-                ₹${Number(
-                    item.TotalPrice || 0
-                ).toFixed(2)}
-            </span>
 
-        </div>
+    return items
+        .map(
+            item => `
 
-    `).join("");
+            <div class="order-item">
+
+                <span>
+
+                    ${escapeHtml(
+                        item.DishName ||
+                        item.Dish ||
+                        "Dish"
+                    )}
+
+                    ×
+
+                    ${Number(
+                        item.Quantity || 0
+                    )}
+
+                </span>
+
+
+                <span>
+
+                    ₹${Number(
+                        item.TotalPrice ||
+                        (
+                            Number(
+                                item.UnitPrice ||
+                                item.Price ||
+                                0
+                            ) *
+                            Number(
+                                item.Quantity || 0
+                            )
+                        ) ||
+                        0
+                    ).toFixed(2)}
+
+                </span>
+
+            </div>
+
+            `
+        )
+        .join("");
 
 }
 
@@ -2705,7 +3588,12 @@ async function updateOrderStatus(
         }
 
 
+        /*
+            Refresh orders and revenue immediately.
+        */
         await loadOrders();
+
+        await loadTotalRevenue();
 
 
         showMessage(
@@ -2731,6 +3619,600 @@ async function updateOrderStatus(
 
 
         await loadOrders();
+
+    }
+
+}
+
+
+/* =========================================================
+   UPDATE ORDER PAYMENT
+========================================================= */
+
+async function updateOrderPayment(
+    orderId,
+    paymentStatus
+){
+
+    /*
+        Read the selected payment mode DIRECTLY
+        before doing anything else.
+    */
+    const paymentSelect =
+        document.getElementById(
+            "paymentMethod-" +
+            orderId
+        );
+
+
+    const paymentMode =
+        paymentSelect
+        ?
+        paymentSelect.value.trim()
+        :
+        "";
+
+
+    /*
+        Remember it immediately.
+        This prevents auto-refresh from losing it.
+    */
+    selectedPaymentModes[
+        String(orderId)
+    ] = paymentMode;
+
+
+    /*
+        Only Paid requires a payment mode.
+        Selecting Pending does NOT require a mode.
+    */
+    if(
+        paymentStatus === "Paid" &&
+        !paymentMode
+    ){
+
+        showMessage(
+            "ordersMessage",
+            "Please select a payment mode first.",
+            "error"
+        );
+
+
+        if(paymentSelect){
+
+            paymentSelect.focus();
+
+        }
+
+
+        return;
+
+    }
+
+
+    try{
+
+        const response =
+            await fetch(
+                API_BASE +
+                "/api/orders/" +
+                encodeURIComponent(orderId) +
+                "/payment",
+                {
+                    method:"PUT",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            payment_status:
+                                paymentStatus,
+
+                            payment_mode:
+                                paymentMode || null
+
+                        })
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if(
+            !response.ok ||
+            !result.success
+        ){
+
+            throw new Error(
+                result.message ||
+                "Unable to update payment."
+            );
+
+        }
+
+
+        /*
+            Update revenue immediately after payment.
+        */
+        await loadTotalRevenue();
+
+
+        /*
+            Refresh order display after the payment
+            has been successfully saved.
+        */
+        await loadOrders();
+
+
+        /*
+            Revenue is loaded again after order refresh
+            so the KPI is always synchronized.
+        */
+        await loadTotalRevenue();
+
+
+        showMessage(
+            "ordersMessage",
+            paymentStatus === "Paid"
+            ?
+            "Payment marked as Paid successfully."
+            :
+            "Payment marked as Pending.",
+            "success"
+        );
+
+    }
+    catch(error){
+
+        console.error(
+            "updateOrderPayment:",
+            error
+        );
+
+
+        showMessage(
+            "ordersMessage",
+            error.message,
+            "error"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   PRINT BILL
+========================================================= */
+
+async function printBill(orderId){
+
+    try{
+
+        const response =
+            await fetch(
+                API_BASE +
+                "/api/orders/" +
+                encodeURIComponent(orderId),
+                {
+                    cache:"no-store"
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if(
+            !response.ok ||
+            !result.success
+        ){
+
+            throw new Error(
+                result.message ||
+                "Unable to load bill."
+            );
+
+        }
+
+
+        const order =
+            result.order || {};
+
+
+        const items =
+            Array.isArray(order.Items)
+            ?
+            order.Items
+            :
+            [];
+
+
+        const paymentStatus =
+            order.PaymentStatus ??
+            order.Payment_Status ??
+            "Pending";
+
+
+        const paymentMode =
+            order.PaymentMethod ??
+            order.PaymentMode ??
+            order.payment_mode ??
+            "Not Selected";
+
+
+        const itemRows =
+            items.map(
+                item => `
+
+                <tr>
+
+                    <td>
+                        ${escapeHtml(
+                            item.DishName ||
+                            item.Dish ||
+                            "Dish"
+                        )}
+                    </td>
+
+                    <td>
+                        ${Number(
+                            item.Quantity || 0
+                        )}
+                    </td>
+
+                    <td>
+                        ₹${Number(
+                            item.UnitPrice ||
+                            item.Price ||
+                            0
+                        ).toFixed(2)}
+                    </td>
+
+                    <td>
+                        ₹${Number(
+                            item.TotalPrice ||
+                            (
+                                Number(
+                                    item.UnitPrice ||
+                                    item.Price ||
+                                    0
+                                ) *
+                                Number(
+                                    item.Quantity || 0
+                                )
+                            ) ||
+                            0
+                        ).toFixed(2)}
+                    </td>
+
+                </tr>
+
+                `
+            )
+            .join("");
+
+
+        const printWindow =
+            window.open(
+                "",
+                "_blank",
+                "width=900,height=700"
+            );
+
+
+        if(!printWindow){
+
+            alert(
+                "Please allow pop-ups to print the bill."
+            );
+
+            return;
+
+        }
+
+
+        printWindow.document.write(`
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>
+Hotel Restaurant Bill #${Number(order.OrderID || orderId)}
+</title>
+
+<style>
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    padding:40px;
+    color:#111;
+}
+
+.header{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.header h1{
+    margin-bottom:5px;
+}
+
+.header p{
+    margin:3px 0;
+    color:#555;
+}
+
+.bill-info{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:25px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+}
+
+th,
+td{
+    border:1px solid #ddd;
+    padding:10px;
+    text-align:left;
+}
+
+th{
+    background:#f3f4f6;
+}
+
+.total{
+    text-align:right;
+    margin-top:20px;
+    font-size:22px;
+    font-weight:bold;
+}
+
+.payment{
+    margin-top:10px;
+    text-align:right;
+    font-weight:bold;
+}
+
+.footer{
+    text-align:center;
+    margin-top:40px;
+    color:#666;
+}
+
+@media print{
+
+    body{
+        padding:20px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="header">
+
+    <h1>
+        HOTEL RESTAURANT
+    </h1>
+
+    <p>
+        Restaurant Management System
+    </p>
+
+    <h2>
+        BILL / INVOICE
+    </h2>
+
+</div>
+
+
+<div class="bill-info">
+
+    <div>
+        <strong>Bill No:</strong>
+        #${Number(
+            order.OrderID ||
+            orderId
+        )}
+    </div>
+
+
+    <div>
+        <strong>Date:</strong>
+        ${escapeHtml(
+            String(
+                order.OrderDate ||
+                ""
+            )
+        )}
+    </div>
+
+
+    <div>
+        <strong>Customer:</strong>
+        ${escapeHtml(
+            order.CustomerName ||
+            "N/A"
+        )}
+    </div>
+
+
+    <div>
+        <strong>Phone:</strong>
+        ${escapeHtml(
+            order.MobileNumber ||
+            order.Phone ||
+            "N/A"
+        )}
+    </div>
+
+
+    <div>
+        <strong>Table:</strong>
+        ${escapeHtml(
+            String(
+                order.TableNumber ??
+                "N/A"
+            )
+        )}
+    </div>
+
+
+    <div>
+        <strong>Payment Status:</strong>
+        ${escapeHtml(
+            String(
+                paymentStatus
+            )
+        )}
+    </div>
+
+
+    <div>
+        <strong>Payment Mode:</strong>
+        ${escapeHtml(
+            String(
+                paymentMode
+            )
+        )}
+    </div>
+
+</div>
+
+
+<table>
+
+<thead>
+
+<tr>
+
+    <th>
+        Dish
+    </th>
+
+    <th>
+        Qty
+    </th>
+
+    <th>
+        Price
+    </th>
+
+    <th>
+        Total
+    </th>
+
+</tr>
+
+</thead>
+
+
+<tbody>
+
+${itemRows}
+
+</tbody>
+
+</table>
+
+
+<div class="total">
+
+    Total Amount:
+
+    ₹${Number(
+        order.TotalAmount || 0
+    ).toFixed(2)}
+
+</div>
+
+
+<div class="payment">
+
+    Payment:
+
+    ${escapeHtml(
+        String(paymentStatus)
+    )}
+
+    |
+
+    ${escapeHtml(
+        String(paymentMode)
+    )}
+
+</div>
+
+
+<div class="footer">
+
+    Thank you for visiting us!
+
+    <br>
+
+    Please visit again.
+
+</div>
+
+
+<script>
+
+window.onload = function(){
+
+    window.print();
+
+};
+
+<\/script>
+
+
+</body>
+
+</html>
+
+        `);
+
+
+        printWindow.document.close();
+
+    }
+    catch(error){
+
+        console.error(
+            "printBill:",
+            error
+        );
+
+
+        alert(
+            "Unable to print bill: " +
+            error.message
+        );
 
     }
 
@@ -2773,13 +4255,18 @@ async function loadWaiters(){
 
 
         const waiters =
-            Array.isArray(result.waiters)
-            ? result.waiters
-            : [];
+            Array.isArray(
+                result.waiters
+            )
+            ?
+            result.waiters
+            :
+            [];
 
 
-        document.getElementById("totalWaiters")
-            .textContent =
+        document.getElementById(
+            "totalWaiters"
+        ).textContent =
             waiters.length;
 
 
@@ -2805,106 +4292,124 @@ async function loadWaiters(){
 
 
         table.innerHTML =
-            waiters.map(w => {
+            waiters.map(
+                w => {
 
-                const active =
-                    isTrue(w.IsActive);
+                    const active =
+                        isTrue(
+                            w.IsActive
+                        );
 
 
-                return `
+                    return `
 
-                <tr>
+                    <tr>
 
-                    <td>
-                        ${escapeHtml(
-                            String(w.UserID ?? "")
-                        )}
-                    </td>
+                        <td>
+                            ${escapeHtml(
+                                String(
+                                    w.UserID ?? ""
+                                )
+                            )}
+                        </td>
 
-                    <td>
-                        ${escapeHtml(
-                            w.FullName || ""
-                        )}
-                    </td>
 
-                    <td>
-                        ${escapeHtml(
-                            w.Phone || ""
-                        )}
-                    </td>
+                        <td>
+                            ${escapeHtml(
+                                w.FullName || ""
+                            )}
+                        </td>
 
-                    <td>
-                        ${escapeHtml(
-                            w.Email || ""
-                        )}
-                    </td>
 
-                    <td>
+                        <td>
+                            ${escapeHtml(
+                                w.Phone || ""
+                            )}
+                        </td>
 
-                        <span class="
-                            status
-                            ${active
-                                ? "approved"
-                                : "pending"}
-                        ">
+
+                        <td>
+                            ${escapeHtml(
+                                w.Email || ""
+                            )}
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                class="
+                                status
+                                ${
+                                    active
+                                    ?
+                                    "approved"
+                                    :
+                                    "pending"
+                                }
+                                "
+                            >
+
+                                ${
+                                    active
+                                    ?
+                                    "Approved"
+                                    :
+                                    "Pending"
+                                }
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
 
                             ${
                                 active
                                 ?
-                                "Approved"
+                                `
+                                <button
+                                    class="danger-btn"
+                                    onclick="
+                                        changeWaiterStatus(
+                                            ${Number(
+                                                w.UserID
+                                            )},
+                                            0
+                                        )
+                                    "
+                                >
+                                    Deactivate
+                                </button>
+                                `
                                 :
-                                "Pending"
+                                `
+                                <button
+                                    class="success-btn"
+                                    onclick="
+                                        changeWaiterStatus(
+                                            ${Number(
+                                                w.UserID
+                                            )},
+                                            1
+                                        )
+                                    "
+                                >
+                                    Approve
+                                </button>
+                                `
                             }
 
-                        </span>
+                        </td>
 
-                    </td>
+                    </tr>
 
-                    <td>
+                    `;
 
-                        ${
-                            active
-
-                            ?
-
-                            `
-                            <button
-                                class="danger-btn"
-                                onclick="
-                                    changeWaiterStatus(
-                                        ${Number(w.UserID)},
-                                        0
-                                    )
-                                "
-                            >
-                                Deactivate
-                            </button>
-                            `
-
-                            :
-
-                            `
-                            <button
-                                class="success-btn"
-                                onclick="
-                                    changeWaiterStatus(
-                                        ${Number(w.UserID)},
-                                        1
-                                    )
-                                "
-                            >
-                                Approve
-                            </button>
-                            `
-                        }
-
-                    </td>
-
-                </tr>
-
-                `;
-
-            }).join("");
+                }
+            )
+            .join("");
 
 
         return waiters;
@@ -2923,9 +4428,17 @@ async function loadWaiters(){
         ).innerHTML = `
             <tr>
                 <td colspan="6">
+
                     Unable to load waiters.
+
                     <br>
-                    <small>${escapeHtml(error.message)}</small>
+
+                    <small>
+                        ${escapeHtml(
+                            error.message
+                        )}
+                    </small>
+
                 </td>
             </tr>
         `;
@@ -3057,9 +4570,13 @@ async function loadCustomers(){
 
 
         const customers =
-            Array.isArray(result.customers)
-            ? result.customers
-            : [];
+            Array.isArray(
+                result.customers
+            )
+            ?
+            result.customers
+            :
+            [];
 
 
         const table =
@@ -3084,7 +4601,8 @@ async function loadCustomers(){
 
 
         table.innerHTML =
-            customers.map(c => `
+            customers.map(
+                c => `
 
                 <tr>
 
@@ -3096,17 +4614,20 @@ async function loadCustomers(){
                         )}
                     </td>
 
+
                     <td>
                         ${escapeHtml(
                             c.CustomerName || ""
                         )}
                     </td>
 
+
                     <td>
                         ${escapeHtml(
                             c.Phone || ""
                         )}
                     </td>
+
 
                     <td>
                         ${escapeHtml(
@@ -3118,7 +4639,9 @@ async function loadCustomers(){
 
                 </tr>
 
-            `).join("");
+                `
+            )
+            .join("");
 
 
         return customers;
@@ -3136,11 +4659,21 @@ async function loadCustomers(){
             "customersTable"
         ).innerHTML = `
             <tr>
+
                 <td colspan="4">
+
                     Unable to load customers.
+
                     <br>
-                    <small>${escapeHtml(error.message)}</small>
+
+                    <small>
+                        ${escapeHtml(
+                            error.message
+                        )}
+                    </small>
+
                 </td>
+
             </tr>
         `;
 
@@ -3184,6 +4717,17 @@ function logout(){
     generatedOTP = null;
 
 
+    /*
+        Clear temporary payment selections
+        when manager logs out.
+    */
+    Object.keys(
+        selectedPaymentModes
+    ).forEach(
+        key => delete selectedPaymentModes[key]
+    );
+
+
     document.getElementById(
         "dashboardSection"
     ).classList.add("hidden");
@@ -3196,7 +4740,8 @@ function logout(){
 
     document.getElementById(
         "otpDisplay"
-    ).textContent = "------";
+    ).textContent =
+        "------";
 
 
     document.getElementById(
@@ -3209,7 +4754,9 @@ function logout(){
     ).value = "";
 
 
-    clearMessage("loginMessage");
+    clearMessage(
+        "loginMessage"
+    );
 
 }
 
@@ -3220,12 +4767,29 @@ function logout(){
 
 function escapeHtml(value){
 
-    return String(value ?? "")
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
+    return String(
+        value ?? ""
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
 
 }
 
@@ -3264,7 +4828,9 @@ document.addEventListener(
     "keydown",
     function(event){
 
-        if(event.key === "Escape"){
+        if(
+            event.key === "Escape"
+        ){
 
             const modal =
                 document.getElementById(
@@ -3304,6 +4870,19 @@ window.addEventListener(
 
         if(loggedIn){
 
+            const dropdown =
+                document.getElementById(
+                    "managerTabSelect"
+                );
+
+            if(dropdown){
+
+                dropdown.value = "orders";
+
+            }
+
+            currentTab = "orders";
+
             showDashboard();
 
         }
@@ -3319,4 +4898,5 @@ window.addEventListener(
 </script>
 
 </body>
+
 </html>

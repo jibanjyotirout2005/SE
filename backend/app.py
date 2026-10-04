@@ -346,26 +346,40 @@ def customer_place_order():
         []
     )
 
+    # ---------------------------------------------------------
+    # VALIDATION
+    # ---------------------------------------------------------
+
     if not customer_name:
+
         return error(
             "Customer name is required."
         )
 
     if not phone:
+
         return error(
             "Phone number is required."
         )
 
     if not table_number:
+
         return error(
             "Table number is required."
         )
 
-    if not isinstance(items, list) or not items:
+    if not isinstance(
+        items,
+        list
+    ) or not items:
 
         return error(
             "Please select at least one dish."
         )
+
+    # ---------------------------------------------------------
+    # PREPARE REQUESTED ITEMS
+    # ---------------------------------------------------------
 
     requested_items = {}
 
@@ -374,11 +388,15 @@ def customer_place_order():
         try:
 
             dish_id = int(
-                item.get("dish_id")
+                item.get(
+                    "dish_id"
+                )
             )
 
             quantity = int(
-                item.get("quantity")
+                item.get(
+                    "quantity"
+                )
             )
 
         except (
@@ -404,6 +422,10 @@ def customer_place_order():
             ) + quantity
         )
 
+    # ---------------------------------------------------------
+    # DATABASE
+    # ---------------------------------------------------------
+
     conn = None
     cursor = None
 
@@ -417,7 +439,10 @@ def customer_place_order():
 
         total_amount = 0.0
 
-        # Verify dishes
+        # -----------------------------------------------------
+        # VERIFY DISHES AND STOCK
+        # -----------------------------------------------------
+
         for dish_id, quantity in requested_items.items():
 
             cursor.execute("""
@@ -478,20 +503,30 @@ def customer_place_order():
 
             verified_items.append({
 
-                "dish_id": dish_id,
+                "dish_id":
+                    dish_id,
 
                 "dish_name":
                     dish["DishName"],
 
-                "quantity": quantity,
+                "quantity":
+                    quantity,
 
-                "price": price,
+                "price":
+                    price,
 
                 "line_total":
                     line_total
+
             })
 
-        # Create order
+        # -----------------------------------------------------
+        # CREATE ORDER
+        #
+        # PaymentMode is intentionally NOT required here.
+        # Customer only places the order.
+        # -----------------------------------------------------
+
         cursor.execute("""
             INSERT INTO Orders
             (
@@ -516,7 +551,10 @@ def customer_place_order():
 
         order_id = cursor.fetchone()[0]
 
-        # Create order details
+        # -----------------------------------------------------
+        # CREATE ORDER DETAILS + REDUCE STOCK
+        # -----------------------------------------------------
+
         for item in verified_items:
 
             cursor.execute("""
@@ -543,9 +581,11 @@ def customer_place_order():
                 item["price"],
 
                 item["line_total"]
+
             ))
 
             # Reduce stock
+
             cursor.execute("""
                 UPDATE Dishes
                 SET
@@ -558,13 +598,23 @@ def customer_place_order():
                 item["quantity"],
 
                 item["dish_id"]
+
             ))
+
+        # -----------------------------------------------------
+        # COMMIT
+        # -----------------------------------------------------
 
         conn.commit()
 
+        # -----------------------------------------------------
+        # RESPONSE
+        # -----------------------------------------------------
+
         return jsonify({
 
-            "success": True,
+            "success":
+                True,
 
             "message":
                 "Order placed successfully.",
@@ -588,13 +638,19 @@ def customer_place_order():
 
                 "status":
                     "Pending"
+
             }
 
         }), 201
 
+    # ---------------------------------------------------------
+    # VALIDATION / STOCK ERROR
+    # ---------------------------------------------------------
+
     except ValueError as e:
 
         if conn:
+
             conn.rollback()
 
         return error(
@@ -602,15 +658,24 @@ def customer_place_order():
             400
         )
 
+    # ---------------------------------------------------------
+    # DATABASE ERROR
+    # ---------------------------------------------------------
+
     except Exception as e:
 
         if conn:
+
             conn.rollback()
 
         return error(
             f"Unable to place order: {str(e)}",
             500
         )
+
+    # ---------------------------------------------------------
+    # CLOSE DATABASE
+    # ---------------------------------------------------------
 
     finally:
 
@@ -1757,6 +1822,7 @@ def delete_dish(dish_id):
         )
 
 
+
 # -------------------- GET ORDERS ------------------------------
 
 @app.route(
@@ -1765,32 +1831,66 @@ def delete_dish(dish_id):
 )
 def get_orders():
 
+    selected_date = request.args.get(
+        "date",
+        ""
+    ).strip()
+
     conn = None
     cursor = None
 
     try:
 
         conn = get_connection()
-
         cursor = conn.cursor()
 
-        cursor.execute("""
-            SELECT
-                o.OrderID,
-                o.CustomerName,
-                o.MobileNumber,
-                o.TableNumber,
-                o.TotalAmount,
-                o.Status,
-                o.OrderDate
-            FROM Orders AS o
-            ORDER BY o.OrderID DESC
-        """)
+        # -----------------------------------------------------
+        # GET ORDERS
+        # -----------------------------------------------------
+
+        if selected_date:
+
+            cursor.execute("""
+                SELECT
+                    o.OrderID,
+                    o.CustomerName,
+                    o.MobileNumber,
+                    o.TableNumber,
+                    o.TotalAmount,
+                    o.Status,
+                    o.OrderDate,
+                    o.PaymentMode
+                FROM Orders AS o
+                WHERE CAST(o.OrderDate AS DATE) = ?
+                ORDER BY o.OrderID DESC
+            """, (
+                selected_date,
+            ))
+
+        else:
+
+            cursor.execute("""
+                SELECT
+                    o.OrderID,
+                    o.CustomerName,
+                    o.MobileNumber,
+                    o.TableNumber,
+                    o.TotalAmount,
+                    o.Status,
+                    o.OrderDate,
+                    o.PaymentMode
+                FROM Orders AS o
+                ORDER BY o.OrderID DESC
+            """)
 
         orders = rows_to_dicts(
             cursor,
             cursor.fetchall()
         )
+
+        # -----------------------------------------------------
+        # GET ORDER ITEMS
+        # -----------------------------------------------------
 
         for order in orders:
 
@@ -1816,6 +1916,10 @@ def get_orders():
                 cursor.fetchall()
             )
 
+        # -----------------------------------------------------
+        # RESPONSE
+        # -----------------------------------------------------
+
         return jsonify({
 
             "success": True,
@@ -1823,6 +1927,7 @@ def get_orders():
             "count": len(orders),
 
             "orders": orders
+
         })
 
     except Exception as e:
@@ -1839,7 +1944,7 @@ def get_orders():
             conn
         )
 
-
+# -------------------- ORDER STATUS ----------------------------
 # -------------------- ORDER STATUS ----------------------------
 
 @app.route(
@@ -1851,9 +1956,7 @@ def update_order_status(order_id):
     data = get_json()
 
     new_status = normalize_status(
-        data.get(
-            "status"
-        )
+        data.get("status")
     )
 
     if not new_status:
@@ -1868,7 +1971,6 @@ def update_order_status(order_id):
     try:
 
         conn = get_connection()
-
         cursor = conn.cursor()
 
         cursor.execute("""
@@ -1921,9 +2023,7 @@ def update_order_status(order_id):
                         UpdatedAt = GETDATE()
                     WHERE DishID = ?
                 """, (
-
                     quantity,
-
                     dish_id
                 ))
 
@@ -1932,9 +2032,7 @@ def update_order_status(order_id):
             SET Status = ?
             WHERE OrderID = ?
         """, (
-
             new_status,
-
             order_id
         ))
 
@@ -1970,7 +2068,263 @@ def update_order_status(order_id):
             cursor,
             conn
         )
+# -------------------- ORDER PAYMENT --------------------------
 
+# -------------------- ORDER PAYMENT --------------------------
+
+@app.route(
+    "/api/orders/<int:order_id>/payment",
+    methods=["PUT"]
+)
+def update_order_payment(order_id):
+
+    data = get_json()
+
+    payment_method = str(
+        data.get(
+            "payment_method",
+            ""
+        )
+    ).strip().upper()
+
+    if payment_method not in (
+        "CASH",
+        "UPI",
+        "CARD"
+    ):
+
+        return error(
+            "Payment method must be CASH, UPI or CARD."
+        )
+
+    conn = None
+    cursor = None
+
+    try:
+
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        # Check whether order exists
+        cursor.execute("""
+            SELECT
+                OrderID,
+                TotalAmount
+            FROM Orders
+            WHERE OrderID = ?
+        """, (
+            order_id,
+        ))
+
+        order = cursor.fetchone()
+
+        if not order:
+
+            return error(
+                "Order not found.",
+                404
+            )
+
+        # Check whether PaymentMode column exists
+        cursor.execute("""
+            SELECT COLUMN_NAME
+            FROM INFORMATION_SCHEMA.COLUMNS
+            WHERE TABLE_NAME = 'Orders'
+              AND COLUMN_NAME = 'PaymentMode'
+        """)
+
+        if not cursor.fetchone():
+
+            return error(
+                "PaymentMode column is missing "
+                "from Orders table.",
+                500
+            )
+
+        # Update payment mode
+        cursor.execute("""
+            UPDATE Orders
+            SET PaymentMode = ?
+            WHERE OrderID = ?
+        """, (
+            payment_method,
+            order_id
+        ))
+
+        conn.commit()
+
+        return jsonify({
+
+            "success": True,
+
+            "message":
+                "Payment mode updated successfully.",
+
+            "order_id":
+                order_id,
+
+            "payment_mode":
+                payment_method,
+
+            "total_amount":
+                float(order[1] or 0)
+        })
+
+    except Exception as e:
+
+        if conn:
+            conn.rollback()
+
+        return error(
+            f"Unable to update payment: {str(e)}",
+            500
+        )
+
+    finally:
+
+        close_db(
+            cursor,
+            conn
+        )
+# -------------------- MANAGER KPI -----------------------------
+
+# -------------------- MANAGER KPI -----------------------------
+
+@app.route(
+    "/api/manager/kpi",
+    methods=["GET"]
+)
+def manager_kpi():
+
+    selected_date = request.args.get(
+        "date",
+        ""
+    ).strip()
+
+    conn = None
+    cursor = None
+
+    try:
+
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        if selected_date:
+
+            cursor.execute("""
+                SELECT
+                    COUNT(*) AS TotalOrders,
+
+                    ISNULL(
+                        SUM(TotalAmount),
+                        0
+                    ) AS TotalRevenue,
+
+                    ISNULL(
+                        SUM(
+                            CASE
+                                WHEN Status = 'Completed'
+                                THEN 1
+                                ELSE 0
+                            END
+                        ),
+                        0
+                    ) AS CompletedOrders,
+
+                    ISNULL(
+                        SUM(
+                            CASE
+                                WHEN Status = 'Pending'
+                                THEN 1
+                                ELSE 0
+                            END
+                        ),
+                        0
+                    ) AS PendingOrders
+
+                FROM Orders
+
+                WHERE CAST(OrderDate AS DATE) = ?
+            """, (
+                selected_date,
+            ))
+
+        else:
+
+            cursor.execute("""
+                SELECT
+                    COUNT(*) AS TotalOrders,
+
+                    ISNULL(
+                        SUM(TotalAmount),
+                        0
+                    ) AS TotalRevenue,
+
+                    ISNULL(
+                        SUM(
+                            CASE
+                                WHEN Status = 'Completed'
+                                THEN 1
+                                ELSE 0
+                            END
+                        ),
+                        0
+                    ) AS CompletedOrders,
+
+                    ISNULL(
+                        SUM(
+                            CASE
+                                WHEN Status = 'Pending'
+                                THEN 1
+                                ELSE 0
+                            END
+                        ),
+                        0
+                    ) AS PendingOrders
+
+                FROM Orders
+            """)
+
+        row = cursor.fetchone()
+
+        return jsonify({
+
+            "success": True,
+
+            "date":
+                selected_date
+                if selected_date
+                else None,
+
+            "kpi": {
+
+                "total_orders":
+                    int(row[0] or 0),
+
+                "total_revenue":
+                    float(row[1] or 0),
+
+                "completed_orders":
+                    int(row[2] or 0),
+
+                "pending_orders":
+                    int(row[3] or 0)
+            }
+        })
+
+    except Exception as e:
+
+        return error(
+            f"Unable to load manager KPI: {str(e)}",
+            500
+        )
+
+    finally:
+
+        close_db(
+            cursor,
+            conn
+        )
 
 # -------------------- MANAGER WAITERS -------------------------
 
