@@ -425,3 +425,12 @@ SELECT
 FROM OrderDetails
 ORDER BY OrderDetailID DESC;
 GO
+
+
+
+USE HotelRestaurantDB;
+GO
+
+ALTER TABLE Orders
+ADD PaymentMode VARCHAR(20) NULL;
+GO
